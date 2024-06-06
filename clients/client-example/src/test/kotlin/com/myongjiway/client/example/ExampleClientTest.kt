@@ -1,7 +1,7 @@
 package com.myongjiway.client.example
 
-import feign.RetryableException
 import com.myongjiway.client.ClientExampleContextTest
+import feign.RetryableException
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 

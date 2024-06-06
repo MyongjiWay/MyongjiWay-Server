@@ -1,10 +1,10 @@
 package com.myongjiway.core.api.controller
 
-import io.dodn.springboot.core.api.controller.v1.request.ExampleRequestDto
+import com.myongjiway.core.api.controller.v1.request.ExampleRequestDto
 import com.myongjiway.core.api.controller.v1.response.ExampleResponseDto
-import io.dodn.springboot.core.api.domain.ExampleData
-import io.dodn.springboot.core.api.domain.ExampleService
-import io.dodn.springboot.core.api.support.response.ApiResponse
+import com.myongjiway.core.api.domain.ExampleData
+import com.myongjiway.core.api.domain.ExampleService
+import com.myongjiway.core.api.support.response.ApiResponse
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping

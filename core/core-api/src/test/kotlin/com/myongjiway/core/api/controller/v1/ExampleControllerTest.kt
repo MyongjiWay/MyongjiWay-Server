@@ -1,8 +1,9 @@
 package com.myongjiway.core.api.controller.v1
 
-import io.dodn.springboot.core.api.controller.v1.request.ExampleRequestDto
-import io.dodn.springboot.core.api.domain.ExampleResult
-import io.dodn.springboot.core.api.domain.ExampleService
+import com.myongjiway.core.api.controller.ExampleController
+import com.myongjiway.core.api.controller.v1.request.ExampleRequestDto
+import com.myongjiway.core.api.domain.ExampleResult
+import com.myongjiway.core.api.domain.ExampleService
 import com.myongjiway.test.api.RestDocsTest
 import com.myongjiway.test.api.RestDocsUtils.requestPreprocessor
 import com.myongjiway.test.api.RestDocsUtils.responsePreprocessor

@@ -1,6 +1,6 @@
 package com.myongjiway.core.api.controller.v1.request
 
-import io.dodn.springboot.core.api.domain.ExampleData
+import com.myongjiway.core.api.domain.ExampleData
 
 data class ExampleRequestDto(
     val data: String,

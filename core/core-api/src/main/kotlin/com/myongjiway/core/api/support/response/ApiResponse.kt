@@ -1,7 +1,7 @@
 package com.myongjiway.core.api.support.response
 
-import io.dodn.springboot.core.api.support.error.ErrorMessage
-import io.dodn.springboot.core.api.support.error.ErrorType
+import com.myongjiway.core.api.support.error.ErrorMessage
+import com.myongjiway.core.api.support.error.ErrorType
 
 data class ApiResponse<T> private constructor(
     val result: ResultType,

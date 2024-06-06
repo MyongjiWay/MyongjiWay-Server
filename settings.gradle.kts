@@ -1,4 +1,4 @@
-rootProject.name = "spring-boot-kotlin-template"
+rootProject.name = "myongjiway"
 
 include(
     "core:core-enum",
@@ -7,7 +7,7 @@ include(
     "tests:api-docs",
     "support:logging",
     "support:monitoring",
-    "clients:client-example"
+    "clients:client-example",
 )
 
 pluginManagement {

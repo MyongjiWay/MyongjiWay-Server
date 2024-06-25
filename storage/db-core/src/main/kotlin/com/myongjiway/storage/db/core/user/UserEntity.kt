@@ -7,7 +7,6 @@ import jakarta.persistence.Table
 @Entity
 @Table(name = "user")
 class UserEntity(
-    val email: String,
     val profileImg: String,
     val name: String,
     val providerId: String,

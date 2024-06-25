@@ -6,7 +6,7 @@
 - [DOCS]: 도큐먼트/문서화 업데이트
 - [FEAT]: 새로운 기능/특징**
 - [FIX]: 버그를 고침**
-- [HOTFIX]: 시급한 버그를 고침 - 현 production에 critical
-- [REFACTOR]: production 코드를 리팩토링(아마도 3주차 혹은 앱잼 이후 할듯)
-- [STYLE]: Code의 스타일, 포맷 등이 바뀐 경우 - 세미콜론(;)이 빠졌다거나 등
+- [HOTFIX]: 시급한 버그를 고침
+- [REFACTOR]: production 코드를 리팩토링
+- [STYLE]: Code의 스타일, 포맷 등이 바뀐 경우
 - [TEST]: 테스트 코드 추가 및 업데이트

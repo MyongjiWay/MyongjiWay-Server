@@ -1,8 +1,8 @@
 rootProject.name = "myongjiway"
 
 include(
-    "core:core-enum",
     "core:core-api",
+    "core:core-domain",
     "storage:db-core",
     "tests:api-docs",
     "support:logging",
@@ -31,4 +31,7 @@ pluginManagement {
             }
         }
     }
+}
+plugins {
+    id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0"
 }

@@ -1,6 +1,5 @@
 package com.myongjiway.core.auth.security.jwt
 
-import com.myongjiway.core.auth.domain.token.JwtService
 import jakarta.servlet.FilterChain
 import jakarta.servlet.ServletRequest
 import jakarta.servlet.ServletResponse
@@ -14,10 +13,17 @@ import org.springframework.web.filter.GenericFilterBean
 class JwtFilter(
     private val jwtService: JwtService,
 ) : GenericFilterBean() {
-    override fun doFilter(servletRequest: ServletRequest?, servletResponse: ServletResponse?, filterChain: FilterChain?) {
+    override fun doFilter(
+        servletRequest: ServletRequest?,
+        servletResponse: ServletResponse?,
+        filterChain: FilterChain?,
+    ) {
         val httpServletRequest = servletRequest as HttpServletRequest
         val jwt = getJwt()
-        if (jwt.isNullOrBlank() && )
+        if (jwt.isNullOrBlank() && jwtService.validateAccessTokenFromRequest(servletRequest, jwt)) {
+        } else {
+            (servletResponse as jakarta.servlet.http.HttpServletResponse).sendError(401)
+        }
     }
 
     private fun getJwt(): String? {

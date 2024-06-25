@@ -1,4 +1,4 @@
-package com.myongjiway.storage.db.core
+package com.myongjiway.storage.db.core.common
 
 import jakarta.persistence.Column
 import jakarta.persistence.GeneratedValue

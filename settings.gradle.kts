@@ -1,8 +1,8 @@
 rootProject.name = "myongjiway"
 
 include(
-    "core:core-enum",
     "core:core-api",
+    "core:core-domain",
     "storage:db-core",
     "tests:api-docs",
     "support:logging",

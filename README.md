@@ -1,6 +1,6 @@
 # MyongjiWay Server
 
-## Convetion
+## Convention
 - [CHORE]: 프로덕션 코드가 바뀌지 않고 개발 로직과 상관 없는 가벼운 일들
 - [DEPS]: Dependency와 관련 있는 내용
 - [DOCS]: 도큐먼트/문서화 업데이트

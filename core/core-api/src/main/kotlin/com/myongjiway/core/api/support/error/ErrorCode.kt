@@ -1,6 +1,6 @@
 package com.myongjiway.core.api.support.error
 
-enum class ErrorCode(s: String) {
+enum class ErrorCode(private val description: String) {
     E500("해당 요청에 대한 권한이 없습니다."),
 
     AUTH002("해당 요청에 대한 권한이 없습니다."),
@@ -15,4 +15,7 @@ enum class ErrorCode(s: String) {
 
     U009("해당 유저가 존재하지 않습니다."),
     U010("접근 권한이 없습니다."),
+    ;
+
+    fun getDescription(): String = description
 }

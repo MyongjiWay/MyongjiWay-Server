@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:standard:no-wildcard-imports")
+
 package com.myongjiway.core.auth.security.jwt
 
 import com.myongjiway.core.api.support.error.CoreApiException
@@ -6,8 +8,10 @@ import com.myongjiway.core.auth.security.config.JwtProperty
 import com.myongjiway.storage.db.core.user.UserRepository
 import com.myongjiway.token.Token
 import com.myongjiway.token.TokenType
+import com.myongjiway.token.TokenType.*
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.Jwts.SIG.*
 import io.jsonwebtoken.MalformedJwtException
 import io.jsonwebtoken.UnsupportedJwtException
 import io.jsonwebtoken.security.Keys
@@ -22,18 +26,31 @@ import java.lang.IllegalArgumentException
 import java.util.Date
 
 @Component
-class JwtService(
+class JwtProvider(
     private val jwtProperty: JwtProperty,
     private val userRepository: UserRepository,
 ) {
-    fun generateTokenByUserId(userId: String, tokenType: TokenType): Token {
-        val (expiration, secret) = getExpirationAndSecret(tokenType)
+    fun generateAccessTokenByUserId(userId: String): Token {
+        val (expiration, secret) = getExpirationAndSecret(ACCESS)
         val expirationDate = Date(System.currentTimeMillis() + expiration)
-        return tokenType.generate(
+        return ACCESS.generate(
             token = Jwts.builder()
                 .subject(userId)
                 .expiration(expirationDate)
-                .signWith(Keys.hmacShaKeyFor(secret.toByteArray()), Jwts.SIG.HS512)
+                .signWith(Keys.hmacShaKeyFor(secret.toByteArray()), HS512)
+                .compact(),
+            expiration = expirationDate,
+            userId = userId,
+        )
+    }
+
+    fun generateRefreshTokenByUserId(userId: String): Token {
+        val (expiration, secret) = getExpirationAndSecret(REFRESH)
+        val expirationDate = Date(System.currentTimeMillis() + expiration)
+        return REFRESH.generate(
+            token = Jwts.builder()
+                .expiration(expirationDate)
+                .signWith(Keys.hmacShaKeyFor(secret.toByteArray()), HS512)
                 .compact(),
             expiration = expirationDate,
             userId = userId,
@@ -78,11 +95,11 @@ class JwtService(
     }
 
     private fun getExpirationAndSecret(tokenType: TokenType) = when (tokenType) {
-        TokenType.ACCESS -> jwtProperty.accessToken.expiration to jwtProperty.accessToken.secret
-        TokenType.REFRESH -> jwtProperty.refreshToken.expiration to jwtProperty.refreshToken.secret
+        ACCESS -> jwtProperty.accessToken.expiration to jwtProperty.accessToken.secret
+        REFRESH -> jwtProperty.refreshToken.expiration to jwtProperty.refreshToken.secret
     }
 
     companion object {
-        private val logger = LoggerFactory.getLogger(JwtService::class.java)
+        private val logger = LoggerFactory.getLogger(JwtProvider::class.java)
     }
 }

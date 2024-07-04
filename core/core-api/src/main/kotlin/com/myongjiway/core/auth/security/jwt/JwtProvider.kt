@@ -90,8 +90,8 @@ class JwtProvider(
         } catch (e: Exception) {
             throw CoreApiException(ErrorType.INVALID_TOKEN_ERROR)
         }
-        val users = userRepository.findByIdOrNull(userId)
-        return UsernamePasswordAuthenticationToken(users, "", listOf(GrantedAuthority { "ROLE_USER" }))
+        val user = userRepository.findByIdOrNull(userId)
+        return UsernamePasswordAuthenticationToken(user, "", listOf(GrantedAuthority { "ROLE_USER" }))
     }
 
     private fun getExpirationAndSecret(tokenType: TokenType) = when (tokenType) {

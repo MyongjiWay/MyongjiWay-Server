@@ -20,8 +20,6 @@ import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import org.springframework.data.repository.findByIdOrNull
 import java.util.Date
 
@@ -36,14 +34,12 @@ class JwtProviderTest :
             beforeTest {
                 jwtProperty = mockk()
                 userRepository = mockk()
-                sut = withContext(Dispatchers.IO) {
-                    JwtProvider(jwtProperty, userRepository)
-                }
+                sut = JwtProvider(jwtProperty, userRepository)
 
                 every { jwtProperty.accessToken.secret } returns "lnp1ISIafo9E+U+xZ4xr0kaRGD5uNVCT1tiJ8gXmqWvp32L7JoXC9EjAy0z2F6NVSwrKLxbCkpzT+DZJazy3Pg=="
                 every { jwtProperty.accessToken.expiration } returns 1000
                 every { jwtProperty.refreshToken.secret } returns "lnp1ISIafo9E+U+xZ4xr0kaRGD5uNVCT1tiJ8gXmqWvp32L7JoXC9EjAy0z2F6NVSwrKLxbCkpzT+DZJazy3Pg=="
-                every { jwtProperty.refreshToken.expiration } returns 1000
+                every { jwtProperty.refreshToken.expiration } returns 10000
                 every { userRepository.findByIdOrNull(userId.toLong()) } returns UserEntity(
                     profileImg = "profileImg.img",
                     name = "test",

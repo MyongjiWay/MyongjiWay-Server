@@ -5,10 +5,10 @@ package com.myongjiway.core.auth.security.jwt
 import com.myongjiway.core.api.support.error.CoreApiException
 import com.myongjiway.core.api.support.error.ErrorType
 import com.myongjiway.core.auth.security.config.JwtProperty
-import com.myongjiway.storage.db.core.user.UserRepository
 import com.myongjiway.token.Token
 import com.myongjiway.token.TokenType
 import com.myongjiway.token.TokenType.*
+import com.myongjiway.user.UserRepository
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.Jwts.SIG.*
@@ -17,7 +17,6 @@ import io.jsonwebtoken.UnsupportedJwtException
 import io.jsonwebtoken.security.Keys
 import jakarta.servlet.ServletRequest
 import org.slf4j.LoggerFactory
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
@@ -90,7 +89,7 @@ class JwtProvider(
         } catch (e: Exception) {
             throw CoreApiException(ErrorType.INVALID_TOKEN_ERROR)
         }
-        val user = userRepository.findByIdOrNull(userId)
+        val user = userRepository.findUserById(userId)
         return UsernamePasswordAuthenticationToken(user, "", listOf(GrantedAuthority { "ROLE_USER" }))
     }
 

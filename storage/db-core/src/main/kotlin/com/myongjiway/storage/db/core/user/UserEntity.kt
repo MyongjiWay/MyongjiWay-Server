@@ -15,12 +15,12 @@ class UserEntity(
     val providerType: ProviderType,
 ) : BaseEntity() {
     fun toUser() = User(
-        id!!,
+        id = id,
         profileImg = profileImg,
         name = name,
         providerId = providerId,
         providerType = providerType,
-        createdAt = createdAt!!,
-        updatedAt = updatedAt!!,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
     )
 }

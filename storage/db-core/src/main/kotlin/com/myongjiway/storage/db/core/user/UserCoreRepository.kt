@@ -8,5 +8,8 @@ import org.springframework.stereotype.Repository
 class UserCoreRepository(
     private val userJpaRepository: UserJpaRepository,
 ) : UserRepository {
-    override fun findUserById(id: Long): User? = userJpaRepository.findById(id).orElse(null)?.toUser()
+    override fun findUserById(id: Long): User? {
+        val userEntity = userJpaRepository.findById(id).orElse(null) ?: return null
+        return userEntity.toUser()
+    }
 }

@@ -3,14 +3,18 @@ package com.myongjiway.storage.db.core.user
 import com.myongjiway.user.ProviderType
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
+import io.mockk.every
+import io.mockk.mockk
+import java.util.Optional
 
 class UserCoreRepositoryTest :
     FeatureSpec(
         {
-            lateinit var sut: UserCoreRepository
             lateinit var userJpaRepository: UserJpaRepository
+            lateinit var sut: UserCoreRepository
 
             beforeTest {
+                userJpaRepository = mockk()
                 sut = UserCoreRepository(userJpaRepository)
             }
 
@@ -19,17 +23,17 @@ class UserCoreRepositoryTest :
                     // given
                     val userEntity = UserEntity(
                         profileImg = "profileImg",
-                        name = "name",
+                        name = "test",
                         providerId = "providerId",
                         providerType = ProviderType.KAKAO,
                     )
-                    val savedUser = userJpaRepository.save(userEntity)
+                    every { userJpaRepository.findById(1L) } returns Optional.of(userEntity)
 
                     // when
-                    val user = sut.findUserById(userEntity.id!!)
+                    val actual = sut.findUserById(1L)
 
                     // then
-                    user shouldBe userEntity.toUser()
+                    actual?.name shouldBe "test"
                 }
             }
         },

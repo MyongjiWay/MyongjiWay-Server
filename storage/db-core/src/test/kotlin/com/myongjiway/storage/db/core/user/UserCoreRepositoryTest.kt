@@ -21,19 +21,20 @@ class UserCoreRepositoryTest :
             feature("유저 조회") {
                 scenario("유저 ID로 유저를 조회한다") {
                     // given
-                    val userEntity = UserEntity(
+                    val userEntity = UserEntityProxy(
+                        id = 1000L,
                         profileImg = "profileImg",
                         name = "test",
                         providerId = "providerId",
                         providerType = ProviderType.KAKAO,
                     )
-                    every { userJpaRepository.findById(1L) } returns Optional.of(userEntity)
+                    every { userJpaRepository.findById(1000L) } returns Optional.of(userEntity)
 
                     // when
-                    val actual = sut.findUserById(1L)
+                    val actual = sut.findUserById(1000)
 
                     // then
-                    actual?.name shouldBe "test"
+                    actual?.id shouldBe 1000L
                 }
             }
         },

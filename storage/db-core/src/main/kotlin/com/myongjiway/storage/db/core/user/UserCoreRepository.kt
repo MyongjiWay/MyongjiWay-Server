@@ -9,7 +9,7 @@ class UserCoreRepository(
     private val userJpaRepository: UserJpaRepository,
 ) : UserRepository {
     override fun findUserById(id: Long): User? {
-        val userEntity = userJpaRepository.findById(id).orElse(null) ?: return null
-        return userEntity.toUser()
+        val user = userJpaRepository.findById(id).orElseThrow()
+        return user.toUser()
     }
 }

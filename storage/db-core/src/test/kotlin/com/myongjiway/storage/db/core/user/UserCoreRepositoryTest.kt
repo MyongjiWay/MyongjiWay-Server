@@ -3,6 +3,7 @@ package com.myongjiway.storage.db.core.user
 import com.myongjiway.user.ProviderType
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.every
 import io.mockk.mockk
 import java.util.Optional
@@ -35,6 +36,18 @@ class UserCoreRepositoryTest :
 
                     // then
                     actual?.id shouldBe 1000L
+                }
+
+                scenario("유저 ID 조회시 유저가 없으면 exception을 반환한다") {
+                    // given
+                    every { userJpaRepository.findById(1000L) } returns Optional.empty()
+
+                    // when
+                    val actual = kotlin.runCatching { sut.findUserById(1000) }
+                        .exceptionOrNull()
+
+                    // then
+                    actual.shouldBeInstanceOf<Exception>()
                 }
             }
         },

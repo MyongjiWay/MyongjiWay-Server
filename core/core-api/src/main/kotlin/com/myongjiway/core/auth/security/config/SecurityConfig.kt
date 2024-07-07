@@ -2,7 +2,7 @@ package com.myongjiway.core.auth.security.config
 
 import com.myongjiway.core.auth.security.jwt.JwtAccessDeniedHandler
 import com.myongjiway.core.auth.security.jwt.JwtAuthenticationEntryPoint
-import com.myongjiway.core.auth.security.jwt.JwtService
+import com.myongjiway.core.auth.security.jwt.JwtProvider
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -17,7 +17,7 @@ import org.springframework.security.web.SecurityFilterChain
 @Configuration
 @EnableWebSecurity
 internal class SecurityConfig(
-    private val jwtService: JwtService,
+    private val jwtProvider: JwtProvider,
     private val jwtAccessDeniedHandler: JwtAccessDeniedHandler,
     private val jwtAuthenticationEntryPoint: JwtAuthenticationEntryPoint,
 ) {
@@ -55,7 +55,7 @@ internal class SecurityConfig(
                     .requestMatchers("/error").permitAll()
                     .requestMatchers("/").permitAll()
                     .anyRequest().authenticated()
-            }
+            }.with(JwtSecurityConfig(jwtProvider)) {}
 
         return http.build()
     }

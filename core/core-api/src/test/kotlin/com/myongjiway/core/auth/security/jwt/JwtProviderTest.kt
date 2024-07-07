@@ -5,11 +5,13 @@ package com.myongjiway.core.auth.security.jwt
 import com.myongjiway.core.api.support.error.CoreApiException
 import com.myongjiway.core.api.support.error.ErrorType
 import com.myongjiway.core.auth.security.config.JwtProperty
-import com.myongjiway.storage.db.core.user.UserEntity
-import com.myongjiway.storage.db.core.user.UserRepository
 import com.myongjiway.token.AccessToken
 import com.myongjiway.token.RefreshToken
 import com.myongjiway.token.TokenType
+import com.myongjiway.user.ProviderType
+import com.myongjiway.user.Role
+import com.myongjiway.user.User
+import com.myongjiway.user.UserRepository
 import io.jsonwebtoken.Jwts.*
 import io.jsonwebtoken.Jwts.SIG.*
 import io.jsonwebtoken.security.Keys.*
@@ -20,7 +22,7 @@ import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.springframework.data.repository.findByIdOrNull
+import java.time.LocalDateTime
 import java.util.Date
 
 class JwtProviderTest :
@@ -40,11 +42,15 @@ class JwtProviderTest :
                 every { jwtProperty.accessToken.expiration } returns 1000
                 every { jwtProperty.refreshToken.secret } returns "lnp1ISIafo9E+U+xZ4xr0kaRGD5uNVCT1tiJ8gXmqWvp32L7JoXC9EjAy0z2F6NVSwrKLxbCkpzT+DZJazy3Pg=="
                 every { jwtProperty.refreshToken.expiration } returns 10000
-                every { userRepository.findByIdOrNull(userId.toLong()) } returns UserEntity(
+                every { userRepository.findUserById(userId.toLong()) } returns User(
+                    id = userId.toLong(),
                     profileImg = "profileImg.img",
                     name = "test",
                     providerId = "providerId",
-                    providerType = "providerType",
+                    providerType = ProviderType.KAKAO,
+                    role = Role.USER,
+                    createdAt = LocalDateTime.now(),
+                    updatedAt = LocalDateTime.now(),
                 )
             }
 
@@ -113,7 +119,7 @@ class JwtProviderTest :
 
                     // then
                     verify(exactly = 0) {
-                        userRepository.findByIdOrNull(userId.toLong())
+                        userRepository.findUserById(userId.toLong())
                     }
                     actual?.shouldBeInstanceOf<CoreApiException>()
                     (actual as CoreApiException).errorType shouldBe ErrorType.INVALID_TOKEN_ERROR

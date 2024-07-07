@@ -2,6 +2,7 @@ package com.myongjiway.storage.db.core.user
 
 import com.myongjiway.storage.db.core.common.BaseEntity
 import com.myongjiway.user.ProviderType
+import com.myongjiway.user.Role
 import com.myongjiway.user.User
 import jakarta.persistence.Entity
 import jakarta.persistence.Table
@@ -13,6 +14,7 @@ class UserEntity(
     private var name: String,
     val providerId: String,
     val providerType: ProviderType,
+    val role: Role,
 ) : BaseEntity() {
     fun toUser() = User(
         id = id!!,
@@ -20,6 +22,7 @@ class UserEntity(
         name = name,
         providerId = providerId,
         providerType = providerType,
+        role = role,
         createdAt = createdAt!!,
         updatedAt = updatedAt!!,
     )

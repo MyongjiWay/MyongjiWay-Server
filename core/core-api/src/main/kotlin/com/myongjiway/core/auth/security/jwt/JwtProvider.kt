@@ -8,6 +8,7 @@ import com.myongjiway.core.auth.security.config.JwtProperty
 import com.myongjiway.token.Token
 import com.myongjiway.token.TokenType
 import com.myongjiway.token.TokenType.*
+import com.myongjiway.user.Role
 import com.myongjiway.user.UserRepository
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
@@ -90,7 +91,7 @@ class JwtProvider(
             throw CoreApiException(ErrorType.INVALID_TOKEN_ERROR)
         }
         val user = userRepository.findUserById(userId)
-        return UsernamePasswordAuthenticationToken(user, "", listOf(GrantedAuthority { "ROLE_USER" }))
+        return UsernamePasswordAuthenticationToken(user, "", listOf(GrantedAuthority { Role.USER.value }))
     }
 
     private fun getExpirationAndSecret(tokenType: TokenType) = when (tokenType) {

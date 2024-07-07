@@ -1,6 +1,7 @@
 package com.myongjiway.storage.db.core.user
 
 import com.myongjiway.user.ProviderType
+import com.myongjiway.user.Role
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
@@ -24,15 +25,18 @@ class UserCoreRepositoryTest :
                     // given
                     val userEntity = UserEntityProxy(
                         id = 1000L,
+                        createdAt = mockk(),
+                        updatedAt = mockk(),
                         profileImg = "profileImg",
                         name = "test",
                         providerId = "providerId",
                         providerType = ProviderType.KAKAO,
+                        role = Role.USER,
                     )
                     every { userJpaRepository.findById(1000L) } returns Optional.of(userEntity)
 
                     // when
-                    val actual = sut.findUserById(1000)
+                    val actual = sut.findUserById(1000L)
 
                     // then
                     actual?.id shouldBe 1000L

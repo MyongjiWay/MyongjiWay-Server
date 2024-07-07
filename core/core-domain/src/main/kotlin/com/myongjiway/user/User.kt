@@ -8,6 +8,7 @@ data class User(
     val name: String,
     val providerId: String,
     val providerType: ProviderType,
+    val role: Role,
     val createdAt: LocalDateTime?,
     val updatedAt: LocalDateTime?,
 )

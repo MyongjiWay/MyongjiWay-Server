@@ -9,6 +9,7 @@ import com.myongjiway.token.AccessToken
 import com.myongjiway.token.RefreshToken
 import com.myongjiway.token.TokenType
 import com.myongjiway.user.ProviderType
+import com.myongjiway.user.Role
 import com.myongjiway.user.User
 import com.myongjiway.user.UserRepository
 import io.jsonwebtoken.Jwts.*
@@ -47,6 +48,7 @@ class JwtProviderTest :
                     name = "test",
                     providerId = "providerId",
                     providerType = ProviderType.KAKAO,
+                    role = Role.USER,
                     createdAt = LocalDateTime.now(),
                     updatedAt = LocalDateTime.now(),
                 )

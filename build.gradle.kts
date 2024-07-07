@@ -84,21 +84,10 @@ subprojects {
         }
     }
 
-    tasks.register<Test>("restDocsTest") {
-        group = "verification"
-        useJUnitPlatform {
-            includeTags("restdocs")
-        }
-    }
-
     tasks.register<Test>("developTest") {
         group = "verification"
         useJUnitPlatform {
             includeTags("develop")
         }
-    }
-
-    tasks.getByName("asciidoctor") {
-        dependsOn("restDocsTest")
     }
 }

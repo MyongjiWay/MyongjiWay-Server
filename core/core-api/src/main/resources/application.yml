@@ -17,6 +17,14 @@ server:
       max: 600
       min-spare: 100
 
+jwt:
+  access-token:
+    secret: nTwXjX7eIKpmJrbZWMhb1ViUKqcvZ1ZsZCXGSYMLe8hufqoGuVFgfERefp6uGRdyQcTC73fySsVvtqTlyUSVPA==
+    expiration: 3600000
+  refresh-token:
+    secret: nTwXjX7eIKpmJrbZWMhb1ViUKqcvZ1ZsZCXGSYMLe8hufqoGuVFgfERefp6uGRdyQcTC73fySsVvtqTlyUSVPA==
+    expiration: 1209600000
+
 ---
 spring.config.activate.on-profile: local
 
@@ -35,4 +43,5 @@ spring.config.activate.on-profile: staging
 
 ---
 spring.config.activate.on-profile: live
+
 

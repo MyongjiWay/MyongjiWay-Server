@@ -49,11 +49,10 @@ internal class SecurityConfig(
                 authorizeRequests
                     .requestMatchers("/auth/**").permitAll()
                     .requestMatchers("/actuator/**").permitAll()
-                    .requestMatchers("/v3/api-docs/**").permitAll()
-                    .requestMatchers("/webjars/**").permitAll()
                     .requestMatchers("/favicon.ico").permitAll()
                     .requestMatchers("/error").permitAll()
                     .requestMatchers("/").permitAll()
+                    .requestMatchers("/docs/**").hasRole("ADMIN")
                     .anyRequest().authenticated()
             }.with(JwtSecurityConfig(jwtProvider)) {}
 

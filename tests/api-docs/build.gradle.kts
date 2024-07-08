@@ -5,3 +5,11 @@ dependencies {
     api("org.springframework.restdocs:spring-restdocs-restassured")
     api("io.rest-assured:spring-mock-mvc")
 }
+
+tasks.register<Test>("restDocsTest") {
+    group = "verification"
+    useJUnitPlatform {
+        includeTags("restdocs")
+    }
+    outputs.dir(file("build/generated-snippets"))
+}

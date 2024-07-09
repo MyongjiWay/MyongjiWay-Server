@@ -4,6 +4,7 @@ dependencies {
     implementation(project(":support:logging"))
     implementation(project(":storage:db-core"))
     implementation(project(":clients:client-example"))
+    implementation(project(":clients:client-kakao"))
 
     testImplementation(project(":tests"))
 

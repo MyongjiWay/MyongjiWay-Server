@@ -53,6 +53,40 @@ class UserCoreRepositoryTest :
                     // then
                     actual.shouldBeInstanceOf<Exception>()
                 }
+
+                scenario("Provider ID로 유저를 조회한다.") {
+                    // given
+                    val providerId = "12345678"
+                    val userEntity = UserEntityProxy(
+                        id = 1000L,
+                        createdAt = mockk(),
+                        updatedAt = mockk(),
+                        profileImg = "profileImg",
+                        name = "test",
+                        providerId = providerId,
+                        providerType = ProviderType.KAKAO,
+                        role = Role.USER,
+                    )
+                    every { userJpaRepository.findByProviderId(any()) } returns userEntity
+
+                    // when
+                    val actual = sut.findUserByProviderId(providerId)
+
+                    // then
+                    actual?.providerId shouldBe providerId
+                }
+
+                scenario("Provider ID 조회시 유저가 없으면 null을 반환한다") {
+                    // given
+                    val providerId = "12345678"
+                    every { userJpaRepository.findByProviderId(any()) } returns null
+
+                    // when
+                    val actual = sut.findUserByProviderId(providerId)
+
+                    // then
+                    actual shouldBe null
+                }
             }
         },
     )

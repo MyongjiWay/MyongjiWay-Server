@@ -12,4 +12,9 @@ class UserCoreRepository(
         val user = userJpaRepository.findById(id).orElseThrow()
         return user.toUser()
     }
+
+    override fun findUserByProviderId(providerId: String): User? {
+        val user = userJpaRepository.findByProviderId(providerId)
+        return user?.toUser()
+    }
 }

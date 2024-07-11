@@ -5,7 +5,7 @@ dependencies {
     implementation(project(":storage:db-core"))
     implementation(project(":clients:client-kakao"))
 
-    testImplementation(project(":tests"))
+    testImplementation(project(":tests:api-docs"))
 
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-security")

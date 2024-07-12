@@ -41,7 +41,6 @@ class UserCoreRepositoryTest :
                     // then
                     actual?.id shouldBe 1000L
                 }
-
                 scenario("유저 ID 조회시 유저가 없으면 exception을 반환한다") {
                     // given
                     every { userJpaRepository.findById(1000L) } returns Optional.empty()
@@ -53,7 +52,6 @@ class UserCoreRepositoryTest :
                     // then
                     actual.shouldBeInstanceOf<Exception>()
                 }
-
                 scenario("Provider ID로 유저를 조회한다.") {
                     // given
                     val providerId = "providerId"
@@ -65,7 +63,6 @@ class UserCoreRepositoryTest :
                     // then
                     actual?.providerId shouldBe providerId
                 }
-
                 scenario("Provider ID 조회시 유저가 없으면 null을 반환한다") {
                     // given
                     val providerId = "12345678"
@@ -94,6 +91,38 @@ class UserCoreRepositoryTest :
 
                     // then
                     actual shouldBe 1000L
+                }
+            }
+
+            feature("유저 수정") {
+                scenario("유저를 수정한다") {
+                    // given
+                    val providerId = "providerId"
+                    val profileImg = "newImg.url"
+                    val name = "newTest"
+                    val role = Role.ADMIN
+                    every { userJpaRepository.findByProviderId(providerId) } returns userEntity
+
+                    // when
+                    val actual = sut.modify(providerId, profileImg, name, role)
+
+                    // then
+                    actual shouldBe 1000L
+                }
+                scenario("유저가 존재하지 않는다면 exception을 반환한다") {
+                    // given
+                    val providerId = "providerId"
+                    val profileImg = "newImg.url"
+                    val name = "newTest"
+                    val role = Role.ADMIN
+                    every { userJpaRepository.findByProviderId(providerId) } returns null
+
+                    // when
+                    val actual = kotlin.runCatching { sut.modify(providerId, profileImg, name, role) }
+                        .exceptionOrNull()
+
+                    // then
+                    actual.shouldBeInstanceOf<Exception>()
                 }
             }
         },

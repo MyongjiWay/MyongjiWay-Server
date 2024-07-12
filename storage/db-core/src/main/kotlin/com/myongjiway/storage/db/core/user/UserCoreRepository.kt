@@ -4,6 +4,7 @@ import com.myongjiway.user.ProviderType
 import com.myongjiway.user.Role
 import com.myongjiway.user.User
 import com.myongjiway.user.UserRepository
+import jakarta.transaction.Transactional
 import org.springframework.stereotype.Repository
 
 @Repository
@@ -20,22 +21,28 @@ class UserCoreRepository(
         return user?.toUser()
     }
 
+    @Transactional
     override fun append(
         providerId: String,
         profileImg: String,
         name: String,
         providerType: ProviderType,
         role: Role,
-    ): Long {
-        val savedUser = userJpaRepository.save(
-            UserEntity(
-                providerId = providerId,
-                profileImg = profileImg,
-                name = name,
-                providerType = providerType,
-                role = role,
-            ),
-        )
-        return savedUser.id!!
+    ): Long = userJpaRepository.save(
+        UserEntity(
+            providerId = providerId,
+            profileImg = profileImg,
+            name = name,
+            providerType = providerType,
+            role = role,
+        ),
+    ).id!!
+
+    @Transactional
+    override fun modify(providerId: String, profileImg: String, name: String, role: Role): Long {
+        val user = userJpaRepository.findByProviderId(providerId)
+        user?.update(profileImg, name, role)
+
+        return user?.id!!
     }
 }

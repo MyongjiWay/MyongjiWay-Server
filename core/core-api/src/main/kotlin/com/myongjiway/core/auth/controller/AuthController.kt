@@ -1,7 +1,7 @@
 package com.myongjiway.core.auth.controller
 
-import com.myongjiway.auth.AuthService
 import com.myongjiway.core.auth.controller.v1.request.KakaoLoginRequest
+import com.myongjiway.core.auth.security.jwt.AuthService
 import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController

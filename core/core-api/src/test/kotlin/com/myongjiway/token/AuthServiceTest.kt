@@ -1,9 +1,11 @@
+@file:Suppress("ktlint:standard:no-wildcard-imports")
+
 package com.myongjiway.token
 
 import com.myongjiway.core.auth.security.config.JwtProperty
-import com.myongjiway.core.auth.security.jwt.AuthService
-import com.myongjiway.core.auth.security.jwt.JwtProvider
-import com.myongjiway.core.auth.security.jwt.KakaoLoginData
+import com.myongjiway.core.auth.security.domain.AuthService
+import com.myongjiway.core.auth.security.domain.JwtProvider
+import com.myongjiway.core.auth.security.domain.KakaoLoginData
 import com.myongjiway.token.TokenType.*
 import com.myongjiway.user.ProviderType
 import com.myongjiway.user.Role
@@ -12,6 +14,7 @@ import com.myongjiway.user.UserRepository
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.Jwts.SIG.HS512
 import io.jsonwebtoken.security.Keys
+import io.kotest.assertions.any
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldNotBe
 import io.mockk.every
@@ -33,7 +36,7 @@ class AuthServiceTest :
             )
 
             val user = User(
-                id = 1,
+                id = 1000L,
                 profileImg = "test",
                 name = "test",
                 providerId = "1234",
@@ -47,7 +50,7 @@ class AuthServiceTest :
                 userRepository = mockk()
                 jwtProvider = mockk()
                 jwtProperty = mockk()
-                sut = AuthService(jwtProvider)
+                sut = AuthService(jwtProvider, userRepository)
 
                 every { jwtProperty.accessToken.secret } returns "lnp1ISIafo9E+U+xZ4xr0kaRGD5uNVCT1tiJ8gXmqWvp32L7JoXC9EjAy0z2F6NVSwrKLxbCkpzT+DZJazy3Pg=="
                 every { jwtProperty.accessToken.expiration } returns 1000
@@ -89,6 +92,7 @@ class AuthServiceTest :
                 scenario("입력 받은 providerId가 DB에 존재하지 않으면 유저를 생성하고 토큰을 반환한다.") {
                     // given
                     every { userRepository.findUserByProviderId(any()) } returns null
+                    every { userRepository.append(any(), any(), any(), any(), any()) } returns 1000L
 
                     // when
                     val actual = sut.kakaoLogin(kakaoLoginData)

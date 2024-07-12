@@ -1,6 +1,6 @@
 @file:Suppress("ktlint:standard:no-wildcard-imports")
 
-package com.myongjiway.core.auth.security.jwt
+package com.myongjiway.core.auth.security.domain
 
 import com.myongjiway.core.api.support.error.CoreApiException
 import com.myongjiway.core.api.support.error.ErrorType

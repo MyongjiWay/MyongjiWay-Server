@@ -14,6 +14,16 @@ class UserCoreRepositoryTest :
         {
             lateinit var userJpaRepository: UserJpaRepository
             lateinit var sut: UserCoreRepository
+            val userEntity = UserEntityProxy(
+                id = 1000L,
+                createdAt = mockk(),
+                updatedAt = mockk(),
+                profileImg = "img.url",
+                name = "test",
+                providerId = "providerId",
+                providerType = ProviderType.KAKAO,
+                role = Role.USER,
+            )
 
             beforeTest {
                 userJpaRepository = mockk()
@@ -23,16 +33,6 @@ class UserCoreRepositoryTest :
             feature("유저 조회") {
                 scenario("유저 ID로 유저를 조회한다") {
                     // given
-                    val userEntity = UserEntityProxy(
-                        id = 1000L,
-                        createdAt = mockk(),
-                        updatedAt = mockk(),
-                        profileImg = "profileImg",
-                        name = "test",
-                        providerId = "providerId",
-                        providerType = ProviderType.KAKAO,
-                        role = Role.USER,
-                    )
                     every { userJpaRepository.findById(1000L) } returns Optional.of(userEntity)
 
                     // when
@@ -56,17 +56,7 @@ class UserCoreRepositoryTest :
 
                 scenario("Provider ID로 유저를 조회한다.") {
                     // given
-                    val providerId = "12345678"
-                    val userEntity = UserEntityProxy(
-                        id = 1000L,
-                        createdAt = mockk(),
-                        updatedAt = mockk(),
-                        profileImg = "profileImg",
-                        name = "test",
-                        providerId = providerId,
-                        providerType = ProviderType.KAKAO,
-                        role = Role.USER,
-                    )
+                    val providerId = "providerId"
                     every { userJpaRepository.findByProviderId(any()) } returns userEntity
 
                     // when
@@ -86,6 +76,24 @@ class UserCoreRepositoryTest :
 
                     // then
                     actual shouldBe null
+                }
+            }
+
+            feature("유저 추가") {
+                scenario("유저를 추가한다") {
+                    // given
+                    val providerId = "providerId"
+                    val profileImg = "img.url"
+                    val name = "test"
+                    val providerType = ProviderType.KAKAO
+                    val role = Role.USER
+                    every { userJpaRepository.save(any()) } returns userEntity
+
+                    // when
+                    val actual = sut.append(providerId, profileImg, name, providerType, role)
+
+                    // then
+                    actual shouldBe 1000L
                 }
             }
         },

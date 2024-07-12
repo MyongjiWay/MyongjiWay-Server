@@ -26,7 +26,7 @@ class UserCoreRepository(
         name: String,
         providerType: ProviderType,
         role: Role,
-    ): User {
+    ): Long {
         val savedUser = userJpaRepository.save(
             UserEntity(
                 providerId = providerId,
@@ -36,6 +36,6 @@ class UserCoreRepository(
                 role = role,
             ),
         )
-        return savedUser.toUser()
+        return savedUser.id!!
     }
 }

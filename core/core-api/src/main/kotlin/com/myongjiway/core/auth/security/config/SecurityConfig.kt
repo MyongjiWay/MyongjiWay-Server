@@ -1,8 +1,8 @@
 package com.myongjiway.core.auth.security.config
 
+import com.myongjiway.core.auth.security.domain.JwtProvider
 import com.myongjiway.core.auth.security.jwt.JwtAccessDeniedHandler
 import com.myongjiway.core.auth.security.jwt.JwtAuthenticationEntryPoint
-import com.myongjiway.core.auth.security.jwt.JwtProvider
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity

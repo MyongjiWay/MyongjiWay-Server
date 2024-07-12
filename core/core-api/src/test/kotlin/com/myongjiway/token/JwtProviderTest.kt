@@ -5,7 +5,7 @@ package com.myongjiway.token
 import com.myongjiway.core.api.support.error.CoreApiException
 import com.myongjiway.core.api.support.error.ErrorType
 import com.myongjiway.core.auth.security.config.JwtProperty
-import com.myongjiway.core.auth.security.jwt.JwtProvider
+import com.myongjiway.core.auth.security.domain.JwtProvider
 import com.myongjiway.user.ProviderType
 import com.myongjiway.user.Role
 import com.myongjiway.user.User

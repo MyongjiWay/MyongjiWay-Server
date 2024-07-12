@@ -1,6 +1,6 @@
 package com.myongjiway.core.auth.controller.v1.request
 
-import com.myongjiway.core.auth.security.jwt.KakaoLoginData
+import com.myongjiway.core.auth.security.domain.KakaoLoginData
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 

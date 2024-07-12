@@ -1,4 +1,4 @@
-package com.myongjiway.core.auth.security.jwt
+package com.myongjiway.core.auth.security.domain
 
 data class KakaoLoginData(
     val providerId: String,

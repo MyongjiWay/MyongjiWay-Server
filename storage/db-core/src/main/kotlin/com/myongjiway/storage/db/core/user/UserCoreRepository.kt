@@ -45,4 +45,19 @@ class UserCoreRepository(
 
         return user?.id!!
     }
+
+    @Transactional
+    override fun upsert(
+        providerId: String,
+        profileImg: String,
+        name: String,
+        providerType: ProviderType,
+        role: Role,
+    ): Long {
+        val user = userJpaRepository.findByProviderId(providerId)
+            ?: return append(providerId, profileImg, name, providerType, role)
+
+        user.update(profileImg, name, role)
+        return user.id!!
+    }
 }

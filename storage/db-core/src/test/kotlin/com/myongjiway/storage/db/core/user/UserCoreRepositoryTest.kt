@@ -125,5 +125,39 @@ class UserCoreRepositoryTest :
                     actual.shouldBeInstanceOf<Exception>()
                 }
             }
+
+            feature("유저 추가 및 수정") {
+                scenario("유저가 존재하지 않으면 추가한다") {
+                    // given
+                    val providerId = "providerId"
+                    val profileImg = "img.url"
+                    val name = "test"
+                    val providerType = ProviderType.KAKAO
+                    val role = Role.USER
+                    every { userJpaRepository.findByProviderId(providerId) } returns null
+                    every { userJpaRepository.save(any()) } returns userEntity
+
+                    // when
+                    val actual = sut.upsert(providerId, profileImg, name, providerType, role)
+
+                    // then
+                    actual shouldBe 1000L
+                }
+                scenario("유저가 존재하면 수정한다") {
+                    // given
+                    val providerId = "providerId"
+                    val profileImg = "newImg.url"
+                    val name = "newTest"
+                    val providerType = ProviderType.KAKAO
+                    val role = Role.USER
+                    every { userJpaRepository.findByProviderId(providerId) } returns userEntity
+
+                    // when
+                    val actual = sut.upsert(providerId, profileImg, name, providerType, role)
+
+                    // then
+                    actual shouldBe 1000L
+                }
+            }
         },
     )

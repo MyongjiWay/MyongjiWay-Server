@@ -22,6 +22,14 @@ class AuthService(
                 role = Role.USER,
             )
         } else {
+            if (user.profileImg != toKakaoLoginData.profileImg || user.name != toKakaoLoginData.username) {
+                userRepository.modify(
+                    providerId = toKakaoLoginData.providerId,
+                    profileImg = toKakaoLoginData.profileImg,
+                    name = toKakaoLoginData.username,
+                    role = Role.USER,
+                )
+            }
             user.id!!
         }
 

@@ -2,6 +2,7 @@ package com.myongjiway.core.auth.security.domain
 
 import com.myongjiway.user.ProviderType
 import com.myongjiway.user.Role
+import com.myongjiway.user.UserFinder
 import com.myongjiway.user.UserRepository
 import org.springframework.stereotype.Service
 
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service
 class AuthService(
     private val jwtProvider: JwtProvider,
     private val userRepository: UserRepository,
+    private val userFinder: UserFinder,
 ) {
     fun kakaoLogin(toKakaoLoginData: KakaoLoginData): TokenResult {
         val user = userRepository.findUserByProviderId(toKakaoLoginData.providerId)

@@ -7,7 +7,7 @@ include(
     "tests:api-docs",
     "support:logging",
     "support:monitoring",
-    "clients:client-example",
+    "clients:client-kakao",
 )
 
 pluginManagement {

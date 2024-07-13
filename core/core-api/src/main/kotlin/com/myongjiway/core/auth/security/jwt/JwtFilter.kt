@@ -1,5 +1,6 @@
 package com.myongjiway.core.auth.security.jwt
 
+import com.myongjiway.core.auth.security.domain.JwtProvider
 import jakarta.servlet.FilterChain
 import jakarta.servlet.ServletRequest
 import jakarta.servlet.ServletResponse

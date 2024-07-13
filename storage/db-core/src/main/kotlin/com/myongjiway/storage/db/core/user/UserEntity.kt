@@ -14,7 +14,7 @@ class UserEntity(
     private var name: String,
     val providerId: String,
     val providerType: ProviderType,
-    val role: Role,
+    private var role: Role,
 ) : BaseEntity() {
     fun toUser() = User(
         id = id!!,
@@ -26,4 +26,10 @@ class UserEntity(
         createdAt = createdAt!!,
         updatedAt = updatedAt!!,
     )
+
+    fun update(profileImg: String, name: String, role: Role) {
+        this.profileImg = profileImg
+        this.name = name
+        this.role = role
+    }
 }

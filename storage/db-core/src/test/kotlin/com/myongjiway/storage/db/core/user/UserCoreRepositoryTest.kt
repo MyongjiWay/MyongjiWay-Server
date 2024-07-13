@@ -14,6 +14,16 @@ class UserCoreRepositoryTest :
         {
             lateinit var userJpaRepository: UserJpaRepository
             lateinit var sut: UserCoreRepository
+            val userEntity = UserEntityProxy(
+                id = 1000L,
+                createdAt = mockk(),
+                updatedAt = mockk(),
+                profileImg = "img.url",
+                name = "test",
+                providerId = "providerId",
+                providerType = ProviderType.KAKAO,
+                role = Role.USER,
+            )
 
             beforeTest {
                 userJpaRepository = mockk()
@@ -23,16 +33,6 @@ class UserCoreRepositoryTest :
             feature("유저 조회") {
                 scenario("유저 ID로 유저를 조회한다") {
                     // given
-                    val userEntity = UserEntityProxy(
-                        id = 1000L,
-                        createdAt = mockk(),
-                        updatedAt = mockk(),
-                        profileImg = "profileImg",
-                        name = "test",
-                        providerId = "providerId",
-                        providerType = ProviderType.KAKAO,
-                        role = Role.USER,
-                    )
                     every { userJpaRepository.findById(1000L) } returns Optional.of(userEntity)
 
                     // when
@@ -41,7 +41,6 @@ class UserCoreRepositoryTest :
                     // then
                     actual?.id shouldBe 1000L
                 }
-
                 scenario("유저 ID 조회시 유저가 없으면 exception을 반환한다") {
                     // given
                     every { userJpaRepository.findById(1000L) } returns Optional.empty()
@@ -52,6 +51,112 @@ class UserCoreRepositoryTest :
 
                     // then
                     actual.shouldBeInstanceOf<Exception>()
+                }
+                scenario("Provider ID로 유저를 조회한다.") {
+                    // given
+                    val providerId = "providerId"
+                    every { userJpaRepository.findByProviderId(any()) } returns userEntity
+
+                    // when
+                    val actual = sut.findUserByProviderId(providerId)
+
+                    // then
+                    actual?.providerId shouldBe providerId
+                }
+                scenario("Provider ID 조회시 유저가 없으면 null을 반환한다") {
+                    // given
+                    val providerId = "12345678"
+                    every { userJpaRepository.findByProviderId(any()) } returns null
+
+                    // when
+                    val actual = sut.findUserByProviderId(providerId)
+
+                    // then
+                    actual shouldBe null
+                }
+            }
+
+            feature("유저 추가") {
+                scenario("유저를 추가한다") {
+                    // given
+                    val providerId = "providerId"
+                    val profileImg = "img.url"
+                    val name = "test"
+                    val providerType = ProviderType.KAKAO
+                    val role = Role.USER
+                    every { userJpaRepository.save(any()) } returns userEntity
+
+                    // when
+                    val actual = sut.append(providerId, profileImg, name, providerType, role)
+
+                    // then
+                    actual shouldBe 1000L
+                }
+            }
+
+            feature("유저 수정") {
+                scenario("유저를 수정한다") {
+                    // given
+                    val providerId = "providerId"
+                    val profileImg = "newImg.url"
+                    val name = "newTest"
+                    val role = Role.ADMIN
+                    every { userJpaRepository.findByProviderId(providerId) } returns userEntity
+
+                    // when
+                    val actual = sut.modify(providerId, profileImg, name, role)
+
+                    // then
+                    actual shouldBe 1000L
+                }
+                scenario("유저가 존재하지 않는다면 exception을 반환한다") {
+                    // given
+                    val providerId = "providerId"
+                    val profileImg = "newImg.url"
+                    val name = "newTest"
+                    val role = Role.ADMIN
+                    every { userJpaRepository.findByProviderId(providerId) } returns null
+
+                    // when
+                    val actual = kotlin.runCatching { sut.modify(providerId, profileImg, name, role) }
+                        .exceptionOrNull()
+
+                    // then
+                    actual.shouldBeInstanceOf<Exception>()
+                }
+            }
+
+            feature("유저 추가 및 수정") {
+                scenario("유저가 존재하지 않으면 추가한다") {
+                    // given
+                    val providerId = "providerId"
+                    val profileImg = "img.url"
+                    val name = "test"
+                    val providerType = ProviderType.KAKAO
+                    val role = Role.USER
+                    every { userJpaRepository.findByProviderId(providerId) } returns null
+                    every { userJpaRepository.save(any()) } returns userEntity
+
+                    // when
+                    val actual = sut.upsert(providerId, profileImg, name, providerType, role)
+
+                    // then
+                    actual shouldBe 1000L
+                }
+                scenario("유저가 존재하면 수정한다") {
+                    // given
+                    val providerId = "providerId"
+                    val profileImg = "newImg.url"
+                    val name = "newTest"
+                    val providerType = ProviderType.KAKAO
+                    val role = Role.USER
+                    every { userJpaRepository.findByProviderId(providerId) } returns userEntity
+
+                    // when
+                    val actual = sut.upsert(providerId, profileImg, name, providerType, role)
+
+                    // then
+                    actual shouldBe 1000L
                 }
             }
         },

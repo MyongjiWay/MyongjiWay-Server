@@ -1,7 +1,7 @@
 package com.myongjiway.token
 
 import com.myongjiway.core.auth.security.config.JwtProperty
-import com.myongjiway.core.auth.security.jwt.JwtProvider
+import com.myongjiway.core.auth.security.domain.JwtProvider
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf

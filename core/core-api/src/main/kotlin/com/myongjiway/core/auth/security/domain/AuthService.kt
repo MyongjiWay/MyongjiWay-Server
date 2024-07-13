@@ -2,30 +2,32 @@ package com.myongjiway.core.auth.security.domain
 
 import com.myongjiway.user.ProviderType
 import com.myongjiway.user.Role
+import com.myongjiway.user.UserAppender
 import com.myongjiway.user.UserFinder
-import com.myongjiway.user.UserRepository
+import com.myongjiway.user.UserUpdater
 import org.springframework.stereotype.Service
 
 @Service
 class AuthService(
     private val jwtProvider: JwtProvider,
-    private val userRepository: UserRepository,
     private val userFinder: UserFinder,
+    private val userUpdater: UserUpdater,
+    private val userAppender: UserAppender,
 ) {
     fun kakaoLogin(toKakaoLoginData: KakaoLoginData): TokenResult {
-        val user = userRepository.findUserByProviderId(toKakaoLoginData.providerId)
+        val user = userFinder.find(toKakaoLoginData.providerId)
 
         val userId: Long = if (user == null) {
-            userRepository.append(
-                providerId = toKakaoLoginData.providerId,
-                profileImg = toKakaoLoginData.profileImg,
-                name = toKakaoLoginData.username,
-                providerType = ProviderType.KAKAO,
-                role = Role.USER,
+            userAppender.append(
+                toKakaoLoginData.providerId,
+                toKakaoLoginData.profileImg,
+                toKakaoLoginData.username,
+                ProviderType.KAKAO,
+                Role.USER,
             )
         } else {
             if (user.profileImg != toKakaoLoginData.profileImg || user.name != toKakaoLoginData.username) {
-                userRepository.modify(
+                userUpdater.modify(
                     providerId = toKakaoLoginData.providerId,
                     profileImg = toKakaoLoginData.profileImg,
                     name = toKakaoLoginData.username,

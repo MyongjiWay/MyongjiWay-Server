@@ -1,13 +1,15 @@
 package com.myongjiway.client.kakao
 
+import com.myongjiway.client.kakao.model.KakaoUnlinkResult
 import org.springframework.stereotype.Component
 
 @Component
 class KakaoClient internal constructor(
     private val kakaoApi: KakaoApi,
+    private val restClientConfig: RestClientConfig,
 ) {
-    fun unlink(providerId: String): Long {
-        val response = kakaoApi.unlink("admin_key", KakaoUnlinkRequest("user_id", providerId.toLong()))
-        return response.id
+    fun unlink(providerId: String): KakaoUnlinkResult {
+        val response = kakaoApi.unlink(restClientConfig.adminKey, KakaoUnlinkRequest("user_id", providerId.toLong()))
+        return KakaoUnlinkResult(response.id)
     }
 }

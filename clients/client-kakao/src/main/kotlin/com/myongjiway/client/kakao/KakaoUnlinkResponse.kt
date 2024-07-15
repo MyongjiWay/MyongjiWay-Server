@@ -1,5 +1,5 @@
 package com.myongjiway.client.kakao
 
-data class KakaoUnlinkResponse(
+internal data class KakaoUnlinkResponse(
     val id: Long,
 )

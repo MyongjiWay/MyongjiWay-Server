@@ -8,7 +8,7 @@ import org.springframework.web.service.annotation.PostExchange
 
 @Component
 @HttpExchange
-interface KakaoApi {
+internal interface KakaoApi {
 
     @PostExchange("/v1/user/unlink")
     fun unlink(

@@ -1,4 +1,6 @@
+import org.asciidoctor.gradle.jvm.AsciidoctorTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
     kotlin("jvm")
@@ -42,8 +44,8 @@ subprojects {
         implementation("org.jetbrains.kotlin:kotlin-reflect")
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
         implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-        testImplementation("io.kotest:kotest-runner-junit5-jvm:5.9.1")
-        implementation("io.kotest.extensions:kotest-extensions-spring:1.3.0")
+        testImplementation("io.kotest:kotest-runner-junit5-jvm")
+        implementation("io.kotest.extensions:kotest-extensions-spring")
         testImplementation("org.springframework.boot:spring-boot-starter-test")
         testImplementation("com.ninja-squad:springmockk:${property("springMockkVersion")}")
         annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
@@ -91,5 +93,29 @@ subprojects {
         useJUnitPlatform {
             includeTags("develop")
         }
+    }
+
+    tasks.register<Test>("restDocsTest") {
+        group = "verification"
+        useJUnitPlatform {
+            includeTags("restdocs")
+        }
+    }
+
+    tasks.named<AsciidoctorTask>("asciidoctor") {
+        dependsOn("restDocsTest")
+    }
+
+    tasks.register<Copy>("copyApiDocument") {
+        dependsOn("asciidoctor")
+        doFirst {
+            delete(file("src/main/resources/static/docs"))
+        }
+        from(tasks.named<AsciidoctorTask>("asciidoctor").get().outputDir)
+        into(file("src/main/resources/static/docs"))
+    }
+
+    tasks.named<BootJar>("bootJar") {
+        dependsOn("copyApiDocument")
     }
 }

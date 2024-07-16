@@ -20,14 +20,12 @@ import java.security.cert.CertificateFactory
 object AwsIotUtil {
     class KeyStorePasswordPair(val keyStore: KeyStore, val keyPassword: String)
 
-    fun getKeyStorePasswordPair(certificateFile: String, privateKeyFile: String): KeyStorePasswordPair? {
-        return getKeyStorePasswordPair(certificateFile, privateKeyFile, null)
-    }
+    fun getKeyStorePasswordPair(certificateFile: String, privateKeyFile: String): KeyStorePasswordPair? = getKeyStorePasswordPair(certificateFile, privateKeyFile, null)
 
     fun getKeyStorePasswordPair(
-            certificateFile: String,
-            privateKeyFile: String,
-            keyAlgorithm: String?
+        certificateFile: String,
+        privateKeyFile: String,
+        keyAlgorithm: String?,
     ): KeyStorePasswordPair? {
         if (certificateFile.isEmpty() || privateKeyFile.isEmpty()) {
             println("Certificate or private key file missing")
@@ -41,31 +39,29 @@ object AwsIotUtil {
         return if (certChain == null || privateKey == null) null else getKeyStorePasswordPair(certChain, privateKey)
     }
 
-    fun getKeyStorePasswordPair(certificates: List<Certificate>, privateKey: PrivateKey): KeyStorePasswordPair? {
-        return try {
-            val keyStore = KeyStore.getInstance(KeyStore.getDefaultType())
-            keyStore.load(null)
+    fun getKeyStorePasswordPair(certificates: List<Certificate>, privateKey: PrivateKey): KeyStorePasswordPair? = try {
+        val keyStore = KeyStore.getInstance(KeyStore.getDefaultType())
+        keyStore.load(null)
 
-            // randomly generated key password for the key in the KeyStore
-            val keyPassword = BigInteger(128, SecureRandom()).toString(32)
+        // randomly generated key password for the key in the KeyStore
+        val keyPassword = BigInteger(128, SecureRandom()).toString(32)
 
-            val certChain = certificates.toTypedArray()
-            keyStore.setKeyEntry("alias", privateKey, keyPassword.toCharArray(), certChain)
+        val certChain = certificates.toTypedArray()
+        keyStore.setKeyEntry("alias", privateKey, keyPassword.toCharArray(), certChain)
 
-            KeyStorePasswordPair(keyStore, keyPassword)
-        } catch (e: KeyStoreException) {
-            println("Failed to create key store")
-            null
-        } catch (e: NoSuchAlgorithmException) {
-            println("Failed to create key store")
-            null
-        } catch (e: CertificateException) {
-            println("Failed to create key store")
-            null
-        } catch (e: IOException) {
-            println("Failed to create key store")
-            null
-        }
+        KeyStorePasswordPair(keyStore, keyPassword)
+    } catch (e: KeyStoreException) {
+        println("Failed to create key store")
+        null
+    } catch (e: NoSuchAlgorithmException) {
+        println("Failed to create key store")
+        null
+    } catch (e: CertificateException) {
+        println("Failed to create key store")
+        null
+    } catch (e: IOException) {
+        println("Failed to create key store")
+        null
     }
 
     private fun loadCertificatesFromFile(filename: String): List<Certificate>? {

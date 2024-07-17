@@ -1,10 +1,14 @@
 package com.myongjiway.client.kakao
 
-import com.fasterxml.jackson.annotation.JsonProperty
+import org.springframework.util.LinkedMultiValueMap
+import org.springframework.util.MultiValueMap
 
 internal data class KakaoUnlinkRequest(
-    @JsonProperty("target_id_type")
     val targetIdType: String,
-    @JsonProperty("target_id")
     val targetId: Long,
-)
+) {
+    fun toBody(): MultiValueMap<String, Any> = LinkedMultiValueMap<String, Any>().apply {
+        add("target_id_type", targetIdType)
+        add("target_id", targetId)
+    }
+}

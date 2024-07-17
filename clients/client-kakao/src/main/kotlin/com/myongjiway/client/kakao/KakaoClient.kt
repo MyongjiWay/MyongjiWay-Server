@@ -9,7 +9,10 @@ class KakaoClient internal constructor(
     private val restClientConfig: RestClientConfig,
 ) {
     fun unlink(providerId: String): KakaoUnlinkResult {
-        val response = kakaoApi.unlink(restClientConfig.adminKey, KakaoUnlinkRequest("user_id", providerId.toLong()))
+        val response = kakaoApi.unlink(
+            "KakaoAK " + restClientConfig.adminKey,
+            KakaoUnlinkRequest("user_id", providerId.toLong()).toBody(),
+        )
         return KakaoUnlinkResult(response.id)
     }
 }

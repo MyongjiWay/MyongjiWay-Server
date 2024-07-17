@@ -44,12 +44,12 @@ import java.security.spec.RSAPrivateCrtKeySpec
  */
 object PrivateKeyReader {
     // Private key file using PKCS #1 encoding
-    val P1_BEGIN_MARKER: String = "-----BEGIN RSA PRIVATE KEY" //$NON-NLS-1$
-    val P1_END_MARKER: String = "-----END RSA PRIVATE KEY" //$NON-NLS-1$
+    val P1_BEGIN_MARKER: String = "-----BEGIN RSA PRIVATE KEY" // $NON-NLS-1$
+    val P1_END_MARKER: String = "-----END RSA PRIVATE KEY" // $NON-NLS-1$
 
     // Private key file using PKCS #8 encoding
-    val P8_BEGIN_MARKER: String = "-----BEGIN PRIVATE KEY" //$NON-NLS-1$
-    val P8_END_MARKER: String = "-----END PRIVATE KEY" //$NON-NLS-1$
+    val P8_BEGIN_MARKER: String = "-----BEGIN PRIVATE KEY" // $NON-NLS-1$
+    val P8_END_MARKER: String = "-----END PRIVATE KEY" // $NON-NLS-1$
 
     /**
      * Get a RSA Private Key from InputStream.
@@ -165,7 +165,7 @@ object PrivateKeyReader {
      * coefficient       INTEGER,  -- (inverse of q) mod p
      * otherPrimeInfos   OtherPrimeInfos OPTIONAL
      * }
-    </pre> *
+     </pre> *
      *
      * @param keyBytes
      * PKCS#1 encoded key
@@ -178,8 +178,7 @@ object PrivateKeyReader {
         var parser = DerParser(keyBytes)
 
         val sequence = parser.read()
-        if (sequence.type != DerParser.SEQUENCE) throw IOException("Invalid DER: not a sequence") //$NON-NLS-1$
-
+        if (sequence.type != DerParser.SEQUENCE) throw IOException("Invalid DER: not a sequence") // $NON-NLS-1$
 
         // Parse inside the sequence
         parser = sequence.parser
@@ -195,8 +194,14 @@ object PrivateKeyReader {
         val crtCoef = parser.read().integer
 
         val keySpec = RSAPrivateCrtKeySpec(
-                modulus, publicExp, privateExp, prime1, prime2, exp1,
-                exp2, crtCoef,
+            modulus,
+            publicExp,
+            privateExp,
+            prime1,
+            prime2,
+            exp1,
+            exp2,
+            crtCoef,
         )
 
         return keySpec
@@ -220,13 +225,15 @@ object PrivateKeyReader {
  *
  * @author zhang
  */
-internal class DerParser
-/**
- * Create a new DER decoder from an input stream.
- *
- * @param in
- * The DER encoded stream
- */(protected var `in`: InputStream) {
+internal class DerParser(
+    /**
+     * Create a new DER decoder from an input stream.
+     *
+     * @param in
+     * The DER encoded stream
+     */
+    protected var `in`: InputStream,
+) {
     /**
      * Create a new DER decoder from a byte array.
      *
@@ -250,15 +257,13 @@ internal class DerParser
     fun read(): Asn1Object {
         val tag = `in`.read()
 
-        if (tag == -1) throw IOException("Invalid DER: stream too short, missing tag") //$NON-NLS-1$
-
+        if (tag == -1) throw IOException("Invalid DER: stream too short, missing tag") // $NON-NLS-1$
 
         val length = length
 
         val value = ByteArray(length)
         val n = `in`.read(value)
-        if (n < length) throw IOException("Invalid DER: stream too short, missing value") //$NON-NLS-1$
-
+        if (n < length) throw IOException("Invalid DER: stream too short, missing value") // $NON-NLS-1$
 
         val o = Asn1Object(tag, length, value)
 
@@ -289,8 +294,7 @@ internal class DerParser
          */
         get() {
             val i = `in`.read()
-            if (i == -1) throw IOException("Invalid DER: length missing") //$NON-NLS-1$
-
+            if (i == -1) throw IOException("Invalid DER: length missing") // $NON-NLS-1$
 
             // A single byte short length
             if ((i and 0x7F.inv()) == 0) return i
@@ -298,16 +302,16 @@ internal class DerParser
             val num = i and 0x7F
 
             // We can't handle length longer than 4 bytes
-            if (i >= 0xFF || num > 4) throw IOException(
-                    "Invalid DER: length field too big (" //$NON-NLS-1$
-                            + i + ")",
-            ) //$NON-NLS-1$
-
+            if (i >= 0xFF || num > 4) {
+                throw IOException(
+                    "Invalid DER: length field too big (" + // $NON-NLS-1$
+                        i + ")",
+                ) // $NON-NLS-1$
+            }
 
             val bytes = ByteArray(num)
             val n = `in`.read(bytes)
-            if (n < num) throw IOException("Invalid DER: length too short") //$NON-NLS-1$
-
+            if (n < num) throw IOException("Invalid DER: length too short") // $NON-NLS-1$
 
             return BigInteger(1, bytes).toInt()
         }
@@ -378,7 +382,7 @@ internal class Asn1Object(protected val tag: Int, val length: Int, val value: By
      * -------------------------------------------------
      * |  Class    | CF  |     +      Type             |
      * -------------------------------------------------
-    </pre> *
+     </pre> *
      *
      *
      *  * Class: Universal, Application, Context or Private
@@ -411,8 +415,7 @@ internal class Asn1Object(protected val tag: Int, val length: Int, val value: By
          * IOException resulted from invalid file IO
          */
         get() {
-            if (!isConstructed) throw IOException("Invalid DER: can't parse primitive entity") //$NON-NLS-1$
-
+            if (!isConstructed) throw IOException("Invalid DER: can't parse primitive entity") // $NON-NLS-1$
 
             return DerParser(value)
         }
@@ -427,8 +430,7 @@ internal class Asn1Object(protected val tag: Int, val length: Int, val value: By
          * IOException resulted from invalid file IO
          */
         get() {
-            if (type != DerParser.INTEGER) throw IOException("Invalid DER: object is not integer") //$NON-NLS-1$
-
+            if (type != DerParser.INTEGER) throw IOException("Invalid DER: object is not integer") // $NON-NLS-1$
 
             return BigInteger(value)
         }
@@ -446,14 +448,12 @@ internal class Asn1Object(protected val tag: Int, val length: Int, val value: By
             val encoding: String
 
             when (type) {
-                DerParser.NUMERIC_STRING, DerParser.PRINTABLE_STRING, DerParser.VIDEOTEX_STRING, DerParser.IA5_STRING, DerParser.GRAPHIC_STRING, DerParser.ISO646_STRING, DerParser.GENERAL_STRING -> encoding = "ISO-8859-1" //$NON-NLS-1$
-                DerParser.BMP_STRING -> encoding = "UTF-16BE" //$NON-NLS-1$
-                DerParser.UTF8_STRING -> encoding = "UTF-8" //$NON-NLS-1$
-                DerParser.UNIVERSAL_STRING -> throw IOException("Invalid DER: can't handle UCS-4 string") //$NON-NLS-1$
+                DerParser.NUMERIC_STRING, DerParser.PRINTABLE_STRING, DerParser.VIDEOTEX_STRING, DerParser.IA5_STRING, DerParser.GRAPHIC_STRING, DerParser.ISO646_STRING, DerParser.GENERAL_STRING -> encoding = "ISO-8859-1" // $NON-NLS-1$
+                DerParser.BMP_STRING -> encoding = "UTF-16BE" // $NON-NLS-1$
+                DerParser.UTF8_STRING -> encoding = "UTF-8" // $NON-NLS-1$
+                DerParser.UNIVERSAL_STRING -> throw IOException("Invalid DER: can't handle UCS-4 string") // $NON-NLS-1$
 
-
-                else -> throw IOException("Invalid DER: object is not a string") //$NON-NLS-1$
-
+                else -> throw IOException("Invalid DER: object is not a string") // $NON-NLS-1$
             }
             return String(value, charset(encoding))
         }

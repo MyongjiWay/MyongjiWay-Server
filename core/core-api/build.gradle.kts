@@ -26,9 +26,3 @@ tasks.getByName("bootJar") {
 tasks.getByName("jar") {
     enabled = false
 }
-
-tasks.named<org.asciidoctor.gradle.jvm.AsciidoctorTask>("asciidoctor") {
-    dependsOn("restDocsTest")
-    inputs.dir(file("build/generated-snippets"))
-    attributes(mapOf("snippets" to file("build/generated-snippets")))
-}

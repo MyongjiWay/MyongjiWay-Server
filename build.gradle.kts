@@ -1,4 +1,6 @@
+import org.asciidoctor.gradle.jvm.AsciidoctorTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
     kotlin("jvm")
@@ -91,5 +93,29 @@ subprojects {
         useJUnitPlatform {
             includeTags("develop")
         }
+    }
+
+    tasks.register<Test>("restDocsTest") {
+        group = "verification"
+        useJUnitPlatform {
+            includeTags("restdocs")
+        }
+    }
+
+    tasks.named<AsciidoctorTask>("asciidoctor") {
+        dependsOn("restDocsTest")
+    }
+
+    tasks.register<Copy>("copyApiDocument") {
+        dependsOn("asciidoctor")
+        doFirst {
+            delete(file("src/main/resources/static/docs"))
+        }
+        from(tasks.named<AsciidoctorTask>("asciidoctor").get().outputDir)
+        into(file("src/main/resources/static/docs"))
+    }
+
+    tasks.named<BootJar>("bootJar") {
+        dependsOn("copyApiDocument")
     }
 }

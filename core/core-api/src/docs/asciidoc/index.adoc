@@ -1,4 +1,4 @@
-= API Documentation
+= API Docs
 :doctype: book
 :icons: font
 :source-highlighter: highlightjs
@@ -6,91 +6,51 @@
 :toclevels: 3
 :sectlinks:
 :snippets: build/generated-snippets
-:stylesheet: custom.css
-:stylesdir: ./styles
 
-== Overview
+== Introduce
 
-This document provides comprehensive information about the API endpoints and how to interact with them. It includes descriptions, usage examples, error handling, and security considerations.
+This is the Core API documentation.
 
-== ExampleGet API
+== Example API
 
 === Example GET API
 
-==== Overview
-The Example GET API retrieves a list of examples from the server.
-
 ==== Curl Request
+
 include::{snippets}/exampleGet/curl-request.adoc[]
 
-==== Path Parameters
-include::{snippets}/exampleGet/path-parameters.adoc[]
+// ==== Path Parameters
+//
+// include::{snippets}/exampleGet/path-parameters.adoc[]
+//
+// ==== Query Parameters
+//
+// include::{snippets}/exampleGet/query-parameters.adoc[]
 
-==== Query Parameters
-include::{snippets}/exampleGet/query-parameters.adoc[]
+==== Http Response
 
-==== HTTP Response
 include::{snippets}/exampleGet/http-response.adoc[]
 
 ==== Response Fields
+
 include::{snippets}/exampleGet/response-fields.adoc[]
 
----
+'''
 
 === Example POST API
 
-==== Overview
-The Example POST API creates a new example resource on the server.
-
 ==== Curl Request
+
 include::{snippets}/examplePost/curl-request.adoc[]
 
 ==== Request Fields
+
 include::{snippets}/examplePost/request-fields.adoc[]
 
-==== HTTP Response
+==== Http Response
+
 include::{snippets}/examplePost/http-response.adoc[]
 
 ==== Response Fields
+
 include::{snippets}/examplePost/response-fields.adoc[]
-
-== Error Handling
-
-=== Common Errors
-The following table lists common error codes and messages returned by the API.
-
-|===
-| Code | Message | Description
-| 400  | Bad Request | The request could not be understood or was missing required parameters.
-| 401  | Unauthorized | Authentication failed or user does not have permissions for the desired action.
-| 404  | Not Found | The requested resource could not be found.
-| 500  | Internal Server Error | An error occurred on the server.
-|===
-
-=== Error Response Example
-[source,json]
-----
-{
-  "error": "Bad Request",
-  "message": "The request could not be understood or was missing required parameters.",
-  "status": 400
-}
-----
-
-== Security Considerations
-
-This section outlines the security measures and best practices for using the API.
-
-=== Authentication
-All API requests must include a valid JWT token in the `Authorization` header.
-
-[source,http]
-----
-Authorization: Bearer {token}
-----
-
-=== Data Protection
-- Always use HTTPS to encrypt data transmitted between the client and server.
-- Store passwords securely using strong hashing algorithms with salts.
-- Implement input validation and sanitization to prevent SQL injection attacks.
-

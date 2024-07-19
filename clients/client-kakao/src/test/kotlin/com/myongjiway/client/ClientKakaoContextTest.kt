@@ -9,4 +9,4 @@ import org.springframework.test.context.TestConstructor
 @Tag("context")
 @SpringBootTest
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-abstract class ClientExampleContextTest
+abstract class ClientKakaoContextTest

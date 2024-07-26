@@ -34,22 +34,30 @@ jobs:
       - name: Create configuration files
         run: |
           mkdir -p core/core-api/src/main/resources
+          touch core/core-api/src/main/resources/application.yml
           echo "${{ secrets.CORE_API_YML }}" > core/core-api/src/main/resources/application.yml
           
           mkdir -p storage/db-core/src/main/resources
+          touch storage/db-core/src/main/resources/db-core.yml
           echo "${{ secrets.DB_CORE_YML }}" > storage/db-core/src/main/resources/db-core.yml
           
           mkdir -p clients/client-kakao/src/main/resources
+          touch clients/client-kakao/src/main/resources/client-kakao.yml
           echo "${{ secrets.CLIENT_KAKAO_YML }}" > clients/client-kakao/src/main/resources/client-kakao.yml
           
           mkdir -p clients/client-kakao/src/test/resources
+          touch clients/client-kakao/src/test/resources/application.yml
           echo "${{ secrets.CLIENT_KAKAO_TEST_YML }}" > clients/client-kakao/src/test/resources/application.yml
           
           mkdir -p clients/client-mqtt/src/main/resources
+          touch clients/client-mqtt/src/main/resources/client-mqtt.yml
           echo "${{ secrets.CLIENT_MQTT_YML }}" > clients/client-mqtt/src/main/resources/client-mqtt.yml
           
           mkdir -p certs
+          touch certs/8c47424d12c1196399546f5c31133b1aa5b252d1c44ee8f11a723626b4a55f98-private.pem.key
           echo "${{ secrets.CERT_KEY }}" > certs/8c47424d12c1196399546f5c31133b1aa5b252d1c44ee8f11a723626b4a55f98-private.pem.key
+          
+          touch certs/8c47424d12c1196399546f5c31133b1aa5b252d1c44ee8f11a723626b4a55f98-certificate.pem.crt
           echo "${{ secrets.CERT_CERT }}" > certs/8c47424d12c1196399546f5c31133b1aa5b252d1c44ee8f11a723626b4a55f98-certificate.pem.crt
 
       - name: Lint

@@ -1,30 +1,63 @@
 name: CI
 
 on:
-  push:
-    branches: [ "main" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "develop" ]
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
+
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
           java-version: '21'
           distribution: 'adopt'
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Create configuration files
+        run: |
+          mkdir -p core/core-api/src/main/resources
+          echo "${{ secrets.CORE_API_YML }}" > core/core-api/src/main/resources/application.yml
+          
+          mkdir -p storage/db-core/src/main/resources
+          echo "${{ secrets.DB_CORE_YML }}" > storage/db-core/src/main/resources/db-core.yml
+          
+          mkdir -p clients/client-kakao/src/main/resources
+          echo "${{ secrets.CLIENT_KAKAO_YML }}" > clients/client-kakao/src/main/resources/client-kakao.yml
+          
+          mkdir -p clients/client-kakao/src/test/resources
+          echo "${{ secrets.CLIENT_KAKAO_TEST_YML }}" > clients/client-kakao/src/test/resources/application.yml
+          
+          mkdir -p clients/client-mqtt/src/main/resources
+          echo "${{ secrets.CLIENT_MQTT_YML }}" > clients/client-mqtt/src/main/resources/client-mqtt.yml
+          
+          mkdir -p certs
+          echo "${{ secrets.CERT_KEY }}" > certs/8c47424d12c1196399546f5c31133b1aa5b252d1c44ee8f11a723626b4a55f98-private.pem.key
+          echo "${{ secrets.CERT_CERT }}" > certs/8c47424d12c1196399546f5c31133b1aa5b252d1c44ee8f11a723626b4a55f98-certificate.pem.crt
+
       - name: Lint
-        uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
+        uses: gradle/gradle-build-action@v2
         with:
           arguments: ktlintCheck
+
       - name: Test
-        uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
+        uses: gradle/gradle-build-action@v2
         with:
           arguments: test

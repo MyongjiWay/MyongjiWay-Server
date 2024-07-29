@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 class MqttClientConfig(
-    private val busLocationService: BusLocationService,
+    private val busLocationService: BusLocationService
 ) {
 
     @Value("\${aws.iot.endpoint}")
@@ -42,7 +42,7 @@ class MqttClientConfig(
     fun iotTopicListener(client: AWSIotMqttClient): List<AWSIotTopic> {
         val topics = listOf(
             MqttTopic("864636062186602/data", AWSIotQos.QOS0),
-            MqttTopic("test/data", AWSIotQos.QOS0),
+            MqttTopic("test/data", AWSIotQos.QOS0)
 
         )
         return topics.map { createTopicListener(client, it) }
@@ -71,7 +71,7 @@ class MqttClientConfig(
             busId = topic,
             latitude = latitude,
             longitude = longitude,
-            timestamp = System.currentTimeMillis(),
+            timestamp = System.currentTimeMillis()
         )
     }
 }

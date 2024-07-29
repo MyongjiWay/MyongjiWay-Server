@@ -1,6 +1,0 @@
-aws:
-  iot:
-    endpoint: ${AWS_IOT_ENDPOINT}
-    clientId: ${AWS_IOT_CLIENTID}
-    certificateFile: ${AWS_IOT_CERTIFICATE}
-    privateKeyFile: ${AWS_IOT_PRIVATE_KEY}

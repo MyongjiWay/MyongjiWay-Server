@@ -55,8 +55,19 @@ jobs:
 #        with:
 #          arguments: test
 
+      - name: Print working directory
+        run: pwd
+
+      - name: List all files in the repository
+        run: ls -R
+
       - name: Build with Gradle
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v3
+        with:
+          arguments: build
+
+      - name: List build directory
+        run: ls -R core/core-api/build/libs/
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v2

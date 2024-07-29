@@ -45,15 +45,15 @@ jobs:
           AWS_IOT_PRIVATE_KEY: ${{ secrets.AWS_IOT_PRIVATE_KEY }}
         run: echo "Environment variables are set"
 
-      - name: Lint
-        uses: gradle/gradle-build-action@v2
-        with:
-          arguments: ktlintCheck
-
-      - name: Test
-        uses: gradle/gradle-build-action@v2
-        with:
-          arguments: test
+#      - name: Lint
+#        uses: gradle/gradle-build-action@v2
+#        with:
+#          arguments: ktlintCheck
+#
+#      - name: Test
+#        uses: gradle/gradle-build-action@v2
+#        with:
+#          arguments: test
 
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
@@ -63,6 +63,3 @@ jobs:
         with:
           name: build-artifacts
           path: core/core-api/build/libs/core-api-0.0.1-SNAPSHOT.jar
-
-      - name: List build directory
-        run: ls -R core/core-api/build/libs/

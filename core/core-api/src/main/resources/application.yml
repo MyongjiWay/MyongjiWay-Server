@@ -1,0 +1,46 @@
+spring.application.name: core-api
+spring.profiles.active: local
+
+spring:
+  config:
+    import:
+      - monitoring.yml
+      - logging.yml
+      - db-core.yml
+      - client-kakao.yml
+      - client-mqtt.yml
+  web.resources.add-mappings: false
+
+server:
+  tomcat:
+    max-connections: 20000
+    threads:
+      max: 600
+      min-spare: 100
+
+jwt:
+  access-token:
+    secret: ${JWT_ACCESS_TOKEN_SECRET}
+    expiration: 3600000
+  refresh-token:
+    secret: ${JWT_REFRESH_TOKEN_SECRET}
+    expiration: 1209600000
+
+---
+spring.config.activate.on-profile: local
+
+
+---
+spring.config.activate.on-profile: local-dev
+
+
+---
+spring.config.activate.on-profile: dev
+
+
+---
+spring.config.activate.on-profile: staging
+
+
+---
+spring.config.activate.on-profile: live

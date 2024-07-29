@@ -10,5 +10,3 @@ build/
 *.iml
 *.ipr
 out/
-**/resources/*.yml
-/certs/

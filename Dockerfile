@@ -1,4 +1,4 @@
-FROM openjdk:21-jre-slim
+FROM openjdk:21-jdk-slim
 
 ARG JAR_FILE=core/core-api/build/libs/*.jar
 COPY ${JAR_FILE} app.jar

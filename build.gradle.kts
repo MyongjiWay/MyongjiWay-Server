@@ -56,8 +56,9 @@ subprojects {
         enabled = false
     }
 
-    tasks.getByName("jar") {
+    tasks.named<Jar>("jar") {
         enabled = true
+        archiveFileName.set("myongjiway.jar")
     }
 
     java.sourceCompatibility = JavaVersion.valueOf("VERSION_${property("javaVersion")}")

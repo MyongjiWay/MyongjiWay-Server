@@ -1,7 +1,9 @@
-FROM openjdk:21-jdk-slim
+FROM openjdk:21-jre-slim
 
 WORKDIR /app
 
-COPY build/libs/myongjiway-0.0.1-SNAPSHOT.jar /app/myongjiway-0.0.1-SNAPSHOT.jar
+COPY build/libs/myongjiway.jar /app/myongjiway.jar
 
-ENTRYPOINT ["java", "-jar", "/app/myongjiway-0.0.1-SNAPSHOT.jar"]
+EXPOSE 80
+
+ENTRYPOINT ["java", "-jar", "/app/myongjiway.jar"]

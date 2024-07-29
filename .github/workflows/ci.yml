@@ -55,11 +55,10 @@ jobs:
         with:
           arguments: test
 
-      - name: Gradlew 권한 설정
-        run: chmod +x ./gradlew
-
-      - name: Build Application
-        run: ./gradlew build
+      - name: Build
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: build
 
       - name: List build directory
         run: ls -al build/libs

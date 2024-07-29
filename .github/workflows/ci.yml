@@ -58,5 +58,11 @@ jobs:
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
 
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-artifacts
+          path: core/core-api/build/libs/core-api-0.0.1-SNAPSHOT.jar
+
       - name: List build directory
         run: ls -R core/core-api/build/libs/

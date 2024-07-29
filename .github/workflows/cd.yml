@@ -32,7 +32,7 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/dev:latest
 
-      - name: Add SSH key
+      - name: Add SSH
         uses: webfactory/ssh-agent@v0.5.3
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}

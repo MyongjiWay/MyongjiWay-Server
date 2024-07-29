@@ -60,3 +60,5 @@ jobs:
         with:
           arguments: build
 
+      - name: List build directory
+        run: ls -al build/libs

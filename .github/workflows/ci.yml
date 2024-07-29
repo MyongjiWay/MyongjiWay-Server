@@ -55,10 +55,5 @@ jobs:
         with:
           arguments: test
 
-      - name: Build
-        uses: gradle/gradle-build-action@v2
-        with:
-          arguments: build
-
-      - name: List build directory
-        run: ls -al build/libs
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@v3

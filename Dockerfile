@@ -1,9 +1,8 @@
 FROM openjdk:21-jre-slim
 
-WORKDIR /app
+ARG JAR_FILE=core/core-api/build/libs/*.jar
+COPY ${JAR_FILE} app.jar
 
-COPY build/libs/myongjiway.jar /app/myongjiway.jar
+EXPOSE 8080
 
-EXPOSE 80
-
-ENTRYPOINT ["java", "-jar", "/app/myongjiway.jar"]
+ENTRYPOINT ["java", "-jar", "/app.jar"]

@@ -2,7 +2,7 @@ name: CD
 
 on:
   pull_request:
-    branches: ["main"]
+    branches: ["develop"]
   workflow_dispatch:
 
 permissions:
@@ -67,3 +67,17 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/dev:latest
+
+      - name: Add SSH key
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Deploy to server
+        run: |
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+            docker pull ${{ secrets.DOCKER_USERNAME }}/dev:latest
+            docker stop app || true
+            docker rm app || true
+            docker run -d --name app -p 80:80 ${{ secrets.DOCKER_USERNAME }}/dev:latest
+          EOF

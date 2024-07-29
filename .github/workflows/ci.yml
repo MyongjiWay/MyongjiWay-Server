@@ -55,9 +55,3 @@ jobs:
 #        with:
 #          arguments: test
 
-      - name: Build with Gradle
-        uses: gradle/gradle-build-action@v3
-        with:
-          arguments: build
-
-

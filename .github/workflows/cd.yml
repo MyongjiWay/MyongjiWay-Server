@@ -2,7 +2,7 @@ name: CD
 
 on:
   pull_request:
-    branches: ["develop"]
+    branches: ["main"]
   workflow_dispatch:
 
 permissions:
@@ -50,11 +50,6 @@ jobs:
         uses: gradle/gradle-build-action@v3
         with:
           arguments: build
-
-      - name: List build directory
-        run: |
-          echo "Checking core/core-api/build/libs/ directory"
-          ls -R core/core-api/build/libs/
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2

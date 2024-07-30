@@ -32,20 +32,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: Set environment variables
-        env:
-          KAKAO_ADMIN_KEY: ${{ secrets.KAKAO_ADMIN_KEY }}
-          JWT_ACCESS_TOKEN_SECRET: ${{ secrets.JWT_ACCESS_TOKEN_SECRET }}
-          JWT_REFRESH_TOKEN_SECRET: ${{ secrets.JWT_REFRESH_TOKEN_SECRET }}
-          STORAGE_DATABASE_CORE_DB_URL: ${{ secrets.STORAGE_DATABASE_CORE_DB_URL }}
-          STORAGE_DATABASE_CORE_DB_USERNAME: ${{ secrets.STORAGE_DATABASE_CORE_DB_USERNAME }}
-          STORAGE_DATABASE_CORE_DB_PASSWORD: ${{ secrets.STORAGE_DATABASE_CORE_DB_PASSWORD }}
-          AWS_IOT_ENDPOINT: ${{ secrets.AWS_IOT_ENDPOINT }}
-          AWS_IOT_CLIENTID: ${{ secrets.AWS_IOT_CLIENTID }}
-          AWS_IOT_CERTIFICATE: ${{ secrets.AWS_IOT_CERTIFICATE }}
-          AWS_IOT_PRIVATE_KEY: ${{ secrets.AWS_IOT_PRIVATE_KEY }}
-        run: echo "Environment variables are set"
-
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v3
         with:
@@ -82,5 +68,18 @@ jobs:
             docker pull ${{ secrets.DOCKER_USERNAME }}/dev:latest
             docker stop app || true
             docker rm app || true
-            docker run -d --name app -p 80:80 ${{ secrets.DOCKER_USERNAME }}/dev:latest
+            docker run -d --name app -p 80:80 \
+              -e KAKAO_ADMIN_KEY=${{ secrets.KAKAO_ADMIN_KEY }} \
+              -e JWT_ACCESS_TOKEN_SECRET=${{ secrets.JWT_ACCESS_TOKEN_SECRET }} \
+              -e JWT_REFRESH_TOKEN_SECRET=${{ secrets.JWT_REFRESH_TOKEN_SECRET }} \
+              -e STORAGE_DATABASE_CORE_DB_URL=${{ secrets.STORAGE_DATABASE_CORE_DB_URL }} \
+              -e STORAGE_DATABASE_CORE_DB_USERNAME=${{ secrets.STORAGE_DATABASE_CORE_DB_USERNAME }} \
+              -e STORAGE_DATABASE_CORE_DB_PASSWORD=${{ secrets.STORAGE_DATABASE_CORE_DB_PASSWORD }} \
+              -e AWS_IOT_ENDPOINT=${{ secrets.AWS_IOT_ENDPOINT }} \
+              -e AWS_IOT_CLIENTID=${{ secrets.AWS_IOT_CLIENTID }} \
+              -e AWS_IOT_CERTIFICATE=${{ secrets.AWS_IOT_CERTIFICATE }} \
+              -e AWS_IOT_PRIVATE_KEY=${{ secrets.AWS_IOT_PRIVATE_KEY }} \
+              ${{ secrets.DOCKER_USERNAME }}/dev:latest
+            docker ps -a
+            docker logs app
           EOF

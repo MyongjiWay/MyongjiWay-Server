@@ -1,38 +1,56 @@
 name: CD
 
 on:
-  workflow_dispatch:
   pull_request:
-    types: [closed]
-    branches: [develop]
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   deploy:
-    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'adopt'
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@v3
+        with:
+          arguments: build
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+        uses: docker/setup-buildx-action@v2
 
       - name: Login to DockerHub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: .
           file: ./Dockerfile
-          push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/dev:latest
-
-      - name: Add SSH
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/dev:latest
 
@@ -41,13 +59,27 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
+      - name: Add known_hosts
+        run: echo "${{ secrets.SSH_KNOWN_HOSTS }}" >> ~/.ssh/known_hosts
+
       - name: Deploy to server
         run: |
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
             docker pull ${{ secrets.DOCKER_USERNAME }}/dev:latest
             docker stop app || true
             docker rm app || true
-            docker run -d --name app -p 80:80 ${{ secrets.DOCKER_USERNAME }}/dev:latest
-            docker image prune -f
+            docker run -d --name app -p 80:80 \
+              -e KAKAO_ADMIN_KEY=${{ secrets.KAKAO_ADMIN_KEY }} \
+              -e JWT_ACCESS_TOKEN_SECRET=${{ secrets.JWT_ACCESS_TOKEN_SECRET }} \
+              -e JWT_REFRESH_TOKEN_SECRET=${{ secrets.JWT_REFRESH_TOKEN_SECRET }} \
+              -e STORAGE_DATABASE_CORE_DB_URL=${{ secrets.STORAGE_DATABASE_CORE_DB_URL }} \
+              -e STORAGE_DATABASE_CORE_DB_USERNAME=${{ secrets.STORAGE_DATABASE_CORE_DB_USERNAME }} \
+              -e STORAGE_DATABASE_CORE_DB_PASSWORD=${{ secrets.STORAGE_DATABASE_CORE_DB_PASSWORD }} \
+              -e AWS_IOT_ENDPOINT=${{ secrets.AWS_IOT_ENDPOINT }} \
+              -e AWS_IOT_CLIENTID=${{ secrets.AWS_IOT_CLIENTID }} \
+              -e AWS_IOT_CERTIFICATE=${{ secrets.AWS_IOT_CERTIFICATE }} \
+              -e AWS_IOT_PRIVATE_KEY=${{ secrets.AWS_IOT_PRIVATE_KEY }} \
+              ${{ secrets.DOCKER_USERNAME }}/dev:latest
+            docker ps -a
+            docker logs app
           EOF
-

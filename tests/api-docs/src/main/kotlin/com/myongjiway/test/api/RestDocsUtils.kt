@@ -5,14 +5,10 @@ import org.springframework.restdocs.operation.preprocess.OperationResponsePrepro
 import org.springframework.restdocs.operation.preprocess.Preprocessors
 
 object RestDocsUtils {
-    fun requestPreprocessor(): OperationRequestPreprocessor {
-        return Preprocessors.preprocessRequest(
-            Preprocessors.modifyUris().scheme("http").host("dev.dodn.io").removePort(),
-            Preprocessors.prettyPrint(),
-        )
-    }
+    fun requestPreprocessor(): OperationRequestPreprocessor = Preprocessors.preprocessRequest(
+        Preprocessors.modifyUris().scheme("https").host("api.myongjiway.store").removePort(),
+        Preprocessors.prettyPrint(),
+    )
 
-    fun responsePreprocessor(): OperationResponsePreprocessor {
-        return Preprocessors.preprocessResponse(Preprocessors.prettyPrint())
-    }
+    fun responsePreprocessor(): OperationResponsePreprocessor = Preprocessors.preprocessResponse(Preprocessors.prettyPrint())
 }

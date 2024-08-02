@@ -1,0 +1,32 @@
+= API Docs
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 3
+:sectlinks:
+:snippets: build/generated-snippets
+
+== Introduce
+
+This is the Auth API documentation.
+
+== Auth API
+
+=== 카카오 로그인 API
+
+==== Curl Request
+
+include::{snippets}/kakaoLoginPost/curl-request.adoc[]
+
+==== Request Fields
+
+include::{snippets}/kakaoLoginPost/request-fields.adoc[]
+
+==== Http Response
+
+include::{snippets}/kakaoLoginPost/http-response.adoc[]
+
+==== Response Fields
+
+include::{snippets}/kakaoLoginPost/response-fields.adoc[]

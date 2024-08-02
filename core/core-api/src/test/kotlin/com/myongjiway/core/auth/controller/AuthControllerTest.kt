@@ -1,74 +1,62 @@
 package com.myongjiway.core.auth.controller
 
-import com.example.util.com.myongjiway.MockMvcExtensions.andReturnAs
-import com.example.util.com.myongjiway.MockMvcExtensions.expectStatus
-import com.example.util.com.myongjiway.MockMvcExtensions.post
-import com.myongjiway.core.api.controller.ApiControllerAdvice
-import com.myongjiway.core.api.support.response.ApiResponse
+import com.myongjiway.core.auth.controller.v1.request.KakaoLoginRequest
 import com.myongjiway.core.auth.security.domain.AuthService
-import com.myongjiway.core.auth.security.domain.KakaoLoginData
 import com.myongjiway.core.auth.security.domain.TokenResult
-import io.kotest.core.spec.style.FeatureSpec
-import io.kotest.matchers.shouldBe
+import com.myongjiway.test.api.RestDocsTest
+import com.myongjiway.test.api.RestDocsUtils.requestPreprocessor
+import com.myongjiway.test.api.RestDocsUtils.responsePreprocessor
 import io.mockk.every
 import io.mockk.mockk
-import org.springframework.http.HttpHeaders
+import io.restassured.http.ContentType
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
-import org.springframework.http.MediaType
-import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.setup.MockMvcBuilders
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
+import org.springframework.restdocs.payload.JsonFieldType
+import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
+import org.springframework.restdocs.payload.PayloadDocumentation.requestFields
+import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 
-class AuthControllerTest :
-    FeatureSpec(
-        {
-            lateinit var mockMvc: MockMvc
-            lateinit var authService: AuthService
-            lateinit var sut: AuthController
+class AuthControllerTest : RestDocsTest() {
 
-            beforeTest {
-                authService = mockk(relaxed = true)
-                sut = AuthController(authService)
-                mockMvc = MockMvcBuilders.standaloneSetup(sut)
-                    .setControllerAdvice(ApiControllerAdvice())
-                    .build()
-            }
+    private lateinit var authService: AuthService
+    private lateinit var controller: AuthController
 
-            feature("카카오 로그인") {
-                scenario("카카오 로그인에 성공한다") {
-                    // given
-                    every { authService.kakaoLogin(any()) }.returns(
-                        TokenResult(
-                            accessToken = "accesstoken",
-                            refreshToken = "refreshtoken",
-                        ),
-                    )
+    @BeforeEach
+    fun setUp() {
+        authService = mockk()
+        controller = AuthController(authService)
+        mockMvc = mockController(controller)
+    }
 
-                    // when
-                    val actual = mockMvc.post(
-                        "/auth/kakao-login",
-                        KakaoLoginData(
-                            providerId = "123123123",
-                            username = "test",
-                            profileImg = "test.img",
-                        ),
-                        HttpHeaders(),
-                        contentType = MediaType.APPLICATION_JSON,
-                    ).expectStatus(HttpStatus.OK)
-                        .andDo { result ->
-                            println("Response: ${result.response.contentAsString}")
-                        }
-                        .andReturnAs<ApiResponse<TokenResult>>()
+    @Test
+    fun kakaoLoginPost() {
+        every { authService.kakaoLogin(any()) } returns TokenResult("ACCESS_TOKEN", "REFRESH_TOKEN")
 
-                    // then
-                    val expect = ApiResponse.success(
-                        TokenResult(
-                            "accesstoken",
-                            "refreshtoken",
-                        ),
-                    )
-
-                    actual shouldBe expect
-                }
-            }
-        },
-    )
+        given()
+            .contentType(ContentType.JSON)
+            .body(KakaoLoginRequest("123123123", "박세진", "https://profile.com"))
+            .post("/auth/kakao-login")
+            .then()
+            .status(HttpStatus.OK)
+            .apply(
+                document(
+                    "kakaoLoginPost",
+                    requestPreprocessor(),
+                    responsePreprocessor(),
+                    requestFields(
+                        fieldWithPath("providerId").type(JsonFieldType.STRING).description("123123123"),
+                        fieldWithPath("username").type(JsonFieldType.STRING).description("박세진"),
+                        fieldWithPath("profileImg").type(JsonFieldType.STRING).description("https://profile.com"),
+                    ),
+                    responseFields(
+                        fieldWithPath("result").type(JsonFieldType.STRING).description("ResultType"),
+                        fieldWithPath("data.accessToken").type(JsonFieldType.STRING).description("ACCESS_TOKEN"),
+                        fieldWithPath("data.refreshToken").type(JsonFieldType.STRING).description("REFRESH_TOKEN"),
+                        fieldWithPath("error").type(JsonFieldType.STRING).ignored(),
+                    ),
+                ),
+            )
+    }
+}

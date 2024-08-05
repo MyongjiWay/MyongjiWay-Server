@@ -132,6 +132,7 @@ class NoticeControllerDocsTest : RestDocsTest() {
                         fieldWithPath("id").type(JsonFieldType.NUMBER).description("공지사항 ID"),
                         fieldWithPath("title").type(JsonFieldType.STRING).description("공지사항 제목"),
                         fieldWithPath("content").type(JsonFieldType.STRING).description("공지사항 내용"),
+                        fieldWithPath("read").type(JsonFieldType.BOOLEAN).description("읽음 여부"),
                     ),
                 ),
             )
@@ -159,6 +160,7 @@ class NoticeControllerDocsTest : RestDocsTest() {
                         fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("공지사항 ID"),
                         fieldWithPath("[].title").type(JsonFieldType.STRING).description("공지사항 제목"),
                         fieldWithPath("[].content").type(JsonFieldType.STRING).description("공지사항 내용"),
+                        fieldWithPath("[].read").type(JsonFieldType.BOOLEAN).description("읽음 여부"),
                     ),
                 ),
             )

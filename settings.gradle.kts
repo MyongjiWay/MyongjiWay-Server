@@ -1,13 +1,14 @@
 rootProject.name = "myongjiway"
 
 include(
-    "core:core-enum",
     "core:core-api",
+    "core:core-domain",
     "storage:db-core",
     "tests:api-docs",
     "support:logging",
     "support:monitoring",
-    "clients:client-example",
+    "clients:client-kakao",
+    "clients:client-mqtt",
 )
 
 pluginManagement {

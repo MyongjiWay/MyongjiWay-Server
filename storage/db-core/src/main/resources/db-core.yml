@@ -25,7 +25,7 @@ storage:
   datasource:
     core:
       driver-class-name: org.h2.Driver
-      jdbc-url: jdbc:h2:tcp://localhost/~/test
+      jdbc-url: jdbc:h2:~/test;NON_KEYWORDS=USER
       username: sa
       pool-name: core-db-pool
       data-source-properties:
@@ -46,9 +46,9 @@ storage:
   datasource:
     core:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      jdbc-url: jdbc:mysql://${storage.database.core-db.url}
-      username: ${storage.database.core-db.username}
-      password: ${storage.database.core-db.password}
+      jdbc-url: jdbc:mysql://${STORAGE_DATABASE_CORE_DB_URL}
+      username: ${STORAGE_DATABASE_CORE_DB_USERNAME}
+      password: ${STORAGE_DATABASE_CORE_DB_PASSWORD}
       maximum-pool-size: 5
       connection-timeout: 1100
       keepalive-time: 30000
@@ -75,9 +75,9 @@ storage:
   datasource:
     core:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      jdbc-url: jdbc:mysql://${storage.database.core-db.url}
-      username: ${storage.database.core-db.username}
-      password: ${storage.database.core-db.password}
+      jdbc-url: jdbc:mysql://${STORAGE_DATABASE_CORE_DB_URL}
+      username: ${STORAGE_DATABASE_CORE_DB_USERNAME}
+      password: ${STORAGE_DATABASE_CORE_DB_PASSWORD}
       maximum-pool-size: 5
       connection-timeout: 1100
       keepalive-time: 30000
@@ -104,9 +104,9 @@ storage:
   datasource:
     core:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      jdbc-url: jdbc:mysql://${storage.database.core-db.url}
-      username: ${storage.database.core-db.username}
-      password: ${storage.database.core-db.password}
+      jdbc-url: jdbc:mysql://${STORAGE_DATABASE_CORE_DB_URL}
+      username: ${STORAGE_DATABASE_CORE_DB_USERNAME}
+      password: ${STORAGE_DATABASE_CORE_DB_PASSWORD}
       maximum-pool-size: 5
       connection-timeout: 1100
       keepalive-time: 30000
@@ -133,9 +133,9 @@ storage:
   datasource:
     core:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      jdbc-url: jdbc:mysql://${storage.database.core-db.url}
-      username: ${storage.database.core-db.username}
-      password: ${storage.database.core-db.password}
+      jdbc-url: jdbc:mysql://${STORAGE_DATABASE_CORE_DB_URL}
+      username: ${STORAGE_DATABASE_CORE_DB_USERNAME}
+      password: ${STORAGE_DATABASE_CORE_DB_PASSWORD}
       maximum-pool-size: 25
       connection-timeout: 1100
       keepalive-time: 30000

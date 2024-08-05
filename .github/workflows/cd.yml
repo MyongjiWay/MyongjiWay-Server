@@ -71,7 +71,10 @@ jobs:
             docker pull ${{ secrets.DOCKER_USERNAME }}/dev:latest
             docker stop app || true
             docker rm app || true
-            docker run -d --name app -p 8080:8080 --env-file /home/ubuntu/.env ${{ secrets.DOCKER_USERNAME }}/dev:latest
+            docker run -d --name app -p 8080:8080 \
+              --env-file /home/ubuntu/.env \
+              -v /home/ubuntu/cert:/cert \
+              ${{ secrets.DOCKER_USERNAME }}/dev:latest
             docker ps -a
             docker logs app
           EOF

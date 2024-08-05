@@ -2,15 +2,18 @@ name: CD
 
 on:
   pull_request:
+    types: [closed]
     branches: ["main"]
-  workflow_dispatch:
+
 
 permissions:
   contents: write
 
 jobs:
   deploy:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
+
 
     steps:
       - name: Checkout repository
@@ -68,7 +71,7 @@ jobs:
             docker pull ${{ secrets.DOCKER_USERNAME }}/dev:latest
             docker stop app || true
             docker rm app || true
-            docker run -d --name app -p 80:80 --env-file /home/ubuntu/.env ${{ secrets.DOCKER_USERNAME }}/dev:latest
+            docker run -d --name app -p 8080:8080 --env-file /home/ubuntu/.env ${{ secrets.DOCKER_USERNAME }}/dev:latest
             docker ps -a
             docker logs app
           EOF

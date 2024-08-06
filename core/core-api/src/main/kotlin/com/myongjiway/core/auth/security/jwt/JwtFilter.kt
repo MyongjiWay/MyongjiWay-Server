@@ -24,7 +24,7 @@ class JwtFilter(
         val httpServletRequest = servletRequest as HttpServletRequest
         val jwt = getJwt()
         val requestURI = httpServletRequest.requestURI
-        if (jwt.isNullOrBlank() && jwtProvider.validateAccessTokenFromRequest(servletRequest, jwt)) {
+        if (!jwt.isNullOrBlank() && jwtProvider.validateAccessTokenFromRequest(servletRequest, jwt)) {
             val authentication = jwtProvider.getAuthentication(jwt)
             SecurityContextHolder.getContext().authentication = authentication
             Companion.logger.info("Security Context에 '${authentication.name}' 인증 정보를 저장했습니다. uri: $requestURI")
@@ -36,7 +36,14 @@ class JwtFilter(
 
     private fun getJwt(): String? {
         val request = (RequestContextHolder.currentRequestAttributes() as ServletRequestAttributes).request
-        return request.getHeader("Authorization")
+        val authHeader = request.getHeader("Authorization")
+        return authHeader?.let {
+            if (it.startsWith("Bearer ")) {
+                it.substring(7) // "Bearer " 이후의 문자열 반환
+            } else {
+                null
+            }
+        }
     }
 
     companion object {

@@ -11,4 +11,26 @@ data class User(
     val role: Role,
     val createdAt: LocalDateTime?,
     val updatedAt: LocalDateTime?,
-)
+) {
+    companion object {
+        fun fixture(
+            id: Long? = null,
+            profileImg: String = "profileImg",
+            name: String = "name",
+            providerId: String = "providerId",
+            providerType: ProviderType = ProviderType.KAKAO,
+            role: Role = Role.USER,
+            createdAt: LocalDateTime? = null,
+            updatedAt: LocalDateTime? = null,
+        ): User = User(
+            id = id,
+            profileImg = profileImg,
+            name = name,
+            providerId = providerId,
+            providerType = providerType,
+            role = role,
+            createdAt = createdAt,
+            updatedAt = updatedAt,
+        )
+    }
+}

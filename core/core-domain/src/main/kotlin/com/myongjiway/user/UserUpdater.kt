@@ -17,4 +17,8 @@ class UserUpdater(
         name,
         role,
     )
+
+    fun inactive(providerId: Long) {
+        userRepository.inactive(providerId)
+    }
 }

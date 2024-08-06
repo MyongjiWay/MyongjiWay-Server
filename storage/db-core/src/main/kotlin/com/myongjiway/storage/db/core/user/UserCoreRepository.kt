@@ -60,4 +60,9 @@ class UserCoreRepository(
         user.update(profileImg, name, role)
         return user.id!!
     }
+
+    @Transactional
+    override fun inactive(providerId: Long): Long {
+        TODO("Not yet implemented")
+    }
 }

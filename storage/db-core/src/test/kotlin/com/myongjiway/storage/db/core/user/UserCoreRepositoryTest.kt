@@ -159,5 +159,18 @@ class UserCoreRepositoryTest :
                     actual shouldBe 1000L
                 }
             }
+
+            feature("유저 비활성화") {
+                scenario("유저를 비활성화에 성공한다.") {
+                    // given
+                    val providerId = 1000L
+
+                    // when
+                    val actual = sut.inactive(providerId)
+
+                    // then
+                    actual shouldBe 1000L
+                }
+            }
         },
     )

@@ -39,14 +39,14 @@ class NoticeControllerDocsTest : RestDocsTest() {
     fun createNotice() {
         val noticeRequest = NoticeRequest("New Notice", "Notice Content")
 
-        every { noticeService.createNotice(any(), any()) } just Runs
+        every { noticeService.createNotice(any()) } just Runs
 
         given()
             .contentType(ContentType.JSON)
             .body(noticeRequest)
-            .post("/api/v1/notices")
+            .post("/api/v1/domain/notices")
             .then()
-            .status(HttpStatus.CREATED)
+            .status(HttpStatus.OK)
             .apply(
                 document(
                     "createNotice",
@@ -65,12 +65,12 @@ class NoticeControllerDocsTest : RestDocsTest() {
         val noticeId = 1L
         val noticeRequest = NoticeRequest("Updated Notice", "Updated Content")
 
-        every { noticeService.updateNotice(any(), any(), any()) } just Runs
+        every { noticeService.updateNotice(any(), any()) } just Runs
 
         given()
             .contentType(ContentType.JSON)
             .body(noticeRequest)
-            .put("/api/v1/notices/{noticeId}", noticeId.toString())
+            .put("/api/v1/domain/notices/{noticeId}", noticeId.toString())
             .then()
             .status(HttpStatus.OK)
             .apply(
@@ -93,10 +93,10 @@ class NoticeControllerDocsTest : RestDocsTest() {
     fun deleteNotice() {
         val noticeId = 1L
 
-        every { noticeService.deleteNotice(any(), any()) } just Runs
+        every { noticeService.deleteNotice(any()) } just Runs
 
         given()
-            .delete("/api/v1/notices/{noticeId}", noticeId.toString())
+            .delete("/api/v1/domain/notices/{noticeId}", noticeId.toString())
             .then()
             .status(HttpStatus.OK)
             .apply(
@@ -112,9 +112,9 @@ class NoticeControllerDocsTest : RestDocsTest() {
     @Test
     fun getNotice() {
         val noticeId = 1L
-        val noticeResponse = Notice.fixture(noticeId, "Existing Notice", "Notice Content")
+        val noticeResponse = Notice.fixture(noticeId, "Existing Notice", "Notice Content", read = true)
 
-        every { noticeService.getNotice(any(), any()) } returns noticeResponse
+        every { noticeService.getNotice(any()) } returns noticeResponse
 
         given()
             .get("/api/v1/notices/{noticeId}", noticeId.toString())
@@ -129,10 +129,12 @@ class NoticeControllerDocsTest : RestDocsTest() {
                         parameterWithName("noticeId").description("조회할 공지사항 ID"),
                     ),
                     responseFields(
-                        fieldWithPath("id").type(JsonFieldType.NUMBER).description("공지사항 ID"),
-                        fieldWithPath("title").type(JsonFieldType.STRING).description("공지사항 제목"),
-                        fieldWithPath("content").type(JsonFieldType.STRING).description("공지사항 내용"),
-                        fieldWithPath("read").type(JsonFieldType.BOOLEAN).description("읽음 여부"),
+                        fieldWithPath("result").type(JsonFieldType.STRING).description("응답 결과 상태"),
+                        fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("공지사항 ID"),
+                        fieldWithPath("data.title").type(JsonFieldType.STRING).description("공지사항 제목"),
+                        fieldWithPath("data.content").type(JsonFieldType.STRING).description("공지사항 내용"),
+                        fieldWithPath("data.read").type(JsonFieldType.BOOLEAN).description("읽음 여부"),
+                        fieldWithPath("error").type(JsonFieldType.NULL).description("오류 정보"),
                     ),
                 ),
             )
@@ -141,11 +143,11 @@ class NoticeControllerDocsTest : RestDocsTest() {
     @Test
     fun listNotices() {
         val notices = listOf(
-            Notice.fixture(1, "Notice 1", "Content 1"),
-            Notice.fixture(2, "Notice 2", "Content 2"),
+            Notice.fixture(1, "Notice 1", "Content 1", read = true),
+            Notice.fixture(2, "Notice 2", "Content 2", read = false),
         )
 
-        every { noticeService.getNotices(any()) } returns notices
+        every { noticeService.getNotices() } returns notices
 
         given()
             .get("/api/v1/notices/all")
@@ -157,10 +159,12 @@ class NoticeControllerDocsTest : RestDocsTest() {
                     requestPreprocessor(),
                     responsePreprocessor(),
                     responseFields(
-                        fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("공지사항 ID"),
-                        fieldWithPath("[].title").type(JsonFieldType.STRING).description("공지사항 제목"),
-                        fieldWithPath("[].content").type(JsonFieldType.STRING).description("공지사항 내용"),
-                        fieldWithPath("[].read").type(JsonFieldType.BOOLEAN).description("읽음 여부"),
+                        fieldWithPath("result").type(JsonFieldType.STRING).description("응답 결과 상태"),
+                        fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("공지사항 ID"),
+                        fieldWithPath("data[].title").type(JsonFieldType.STRING).description("공지사항 제목"),
+                        fieldWithPath("data[].content").type(JsonFieldType.STRING).description("공지사항 내용"),
+                        fieldWithPath("data[].read").type(JsonFieldType.BOOLEAN).description("읽음 여부"),
+                        fieldWithPath("error").type(JsonFieldType.NULL).description("오류 정보"),
                     ),
                 ),
             )

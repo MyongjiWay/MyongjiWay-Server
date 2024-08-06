@@ -1,46 +1,34 @@
 package com.myongjiway.notice
 
-import com.myongjiway.error.CoreErrorType
-import com.myongjiway.error.CoreException
-import com.myongjiway.user.Role
-import com.myongjiway.user.User
 import org.springframework.stereotype.Service
 
 @Service
 class NoticeServiceImpl(private val noticeRepository: NoticeRepository, private val userNoticeRepository: UserNoticeRepository) : NoticeService {
-    override fun createNotice(notice: Notice, user: User) {
-        if (user.role != Role.ADMIN) {
-            throw CoreException(CoreErrorType.UNAUTHORIZED)
-        }
-
+    override fun createNotice(notice: Notice) {
         noticeRepository.save(notice.title, notice.content)
     }
 
-    override fun updateNotice(noticeId: Long, notice: Notice, user: User) {
-        if (user.role != Role.ADMIN) {
-            throw CoreException(CoreErrorType.UNAUTHORIZED)
-        }
+    override fun updateNotice(noticeId: Long, notice: Notice) {
         noticeRepository.update(noticeId, notice.title, notice.content)
     }
 
-    override fun deleteNotice(noticeId: Long, user: User) {
-        if (user.role != Role.ADMIN) {
-            throw CoreException(CoreErrorType.UNAUTHORIZED)
-        }
+    override fun deleteNotice(noticeId: Long) {
         noticeRepository.delete(noticeId)
     }
 
-    override fun getNotice(noticeId: Long, user: User): Notice {
+    override fun getNotice(noticeId: Long): Notice {
+        val userId = 1L
         val notice = noticeRepository.findById(noticeId)
-        userNoticeRepository.findByUserIdAndNoticeId(user.id!!, notice.id!!)
-            ?: userNoticeRepository.save(noticeId, user.id!!)
+        userNoticeRepository.findByUserIdAndNoticeId(userId, notice.id!!)
+            ?: userNoticeRepository.save(noticeId, userId)
         notice.read = true
         return notice
     }
 
-    override fun getNotices(user: User): List<Notice> {
+    override fun getNotices(): List<Notice> {
+        val userId = 1L
         val allNotices = noticeRepository.findAll()
-        val readNotices = userNoticeRepository.findByUserId(user.id!!).map { it.noticeId }.toSet()
+        val readNotices = userNoticeRepository.findByUserId(userId).map { it.noticeId }.toSet()
 
         return allNotices.map { notice ->
             notice.read = readNotices.contains(notice.id)

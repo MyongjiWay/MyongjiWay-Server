@@ -9,7 +9,7 @@ spring:
       - db-core.yml
       - client-kakao.yml
       - client-mqtt.yml
-  web.resources.add-mappings: false
+  web.resources.add-mappings: true
 
 server:
   tomcat:

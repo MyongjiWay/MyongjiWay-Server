@@ -57,7 +57,8 @@ internal class SecurityConfig(
                     .requestMatchers("/error").permitAll()
                     .requestMatchers("/").permitAll()
                     .requestMatchers("/h2-console/**").permitAll()
-                    .requestMatchers("/docs/**").hasRole("ADMIN")
+                    .requestMatchers("/docs/**").permitAll()
+                    .requestMatchers("/admin/**").hasRole("ADMIN")
                     .anyRequest().authenticated()
             }.with(JwtSecurityConfig(jwtProvider)) {}
 

@@ -5,6 +5,8 @@ import com.myongjiway.user.ProviderType
 import com.myongjiway.user.Role
 import com.myongjiway.user.User
 import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
 import jakarta.persistence.Table
 
 @Entity
@@ -13,7 +15,9 @@ class UserEntity(
     private var profileImg: String,
     private var name: String,
     val providerId: String,
+    @Enumerated(value = EnumType.STRING)
     val providerType: ProviderType,
+    @Enumerated(value = EnumType.STRING)
     private var role: Role,
 ) : BaseEntity() {
     fun toUser() = User(

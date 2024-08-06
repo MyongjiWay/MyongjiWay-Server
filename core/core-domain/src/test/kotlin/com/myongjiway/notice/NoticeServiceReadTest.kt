@@ -29,7 +29,7 @@ class NoticeServiceReadTest :
                 every { userNoticeRepository.findByUserId(user.id!!) } returns emptyList()
 
                 // When
-                val result = noticeService.getNotices(user)
+                val result = noticeService.getNotices()
 
                 // Then
                 result shouldBe emptyList()
@@ -47,7 +47,7 @@ class NoticeServiceReadTest :
                 every { userNoticeRepository.findByUserId(user.id!!) } returns emptyList()
 
                 // When
-                val result = noticeService.getNotices(user)
+                val result = noticeService.getNotices()
 
                 // Then
                 result.size shouldBe 2
@@ -72,7 +72,7 @@ class NoticeServiceReadTest :
                 }
 
                 // When
-                val result = noticeService.getNotices(user)
+                val result = noticeService.getNotices()
 
                 // Then
                 result.forEach { it.read shouldBe true }
@@ -94,7 +94,7 @@ class NoticeServiceReadTest :
                 }
 
                 // When
-                val result = noticeService.getNotices(user)
+                val result = noticeService.getNotices()
 
                 // Then
                 result[0].read shouldBe true
@@ -116,7 +116,7 @@ class NoticeServiceReadTest :
                 every { userNoticeRepository.save(any(), user.id!!) } returns UserNotice.fixture(user.id!!, noticeId)
 
                 // When
-                val result = noticeService.getNotice(noticeId, user)
+                val result = noticeService.getNotice(noticeId)
 
                 // Then
                 result.read shouldBe true
@@ -134,7 +134,7 @@ class NoticeServiceReadTest :
                 every { userNoticeRepository.findByUserIdAndNoticeId(user.id!!, noticeId) } returns UserNotice.fixture(user.id!!, noticeId)
 
                 // When
-                val result = noticeService.getNotice(noticeId, user)
+                val result = noticeService.getNotice(noticeId)
 
                 // Then
                 result.read shouldBe true
@@ -160,10 +160,10 @@ class NoticeServiceReadTest :
 
                 // When
                 val task1 = Runnable {
-                    noticeService.getNotice(1L, user1)
+                    noticeService.getNotice(1L)
                 }
                 val task2 = Runnable {
-                    val result = noticeService.getNotices(user2)
+                    val result = noticeService.getNotices()
                     result.forEach { it.read shouldBe false }
                 }
 

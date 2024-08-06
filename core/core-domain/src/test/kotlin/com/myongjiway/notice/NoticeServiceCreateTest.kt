@@ -1,11 +1,8 @@
 package com.myongjiway.notice
 
-import com.myongjiway.error.CoreException
 import com.myongjiway.user.Role
 import com.myongjiway.user.User
-import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FeatureSpec
-import io.kotest.matchers.shouldBe
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
@@ -25,19 +22,19 @@ class NoticeServiceCreateTest :
 
         feature("공지사항 생성 - 인증/인가 관련 테스트") {
 
-            scenario("권한이 없는 사용자가 공지사항을 생성하려고 시도할 때") {
-                // Given
-                val regularUser = User.fixture(1, role = Role.USER)
-                val notice = Notice.fixture(title = "Title", content = "Content")
-
-                // When
-                val exception = shouldThrow<CoreException> {
-                    noticeService.createNotice(notice, regularUser)
-                }
-
-                // Then
-                exception.message shouldBe "권한이 없습니다."
-            }
+//            scenario("권한이 없는 사용자가 공지사항을 생성하려고 시도할 때") {
+//                // Given
+//                val regularUser = User.fixture(1, role = Role.USER)
+//                val notice = Notice.fixture(title = "Title", content = "Content")
+//
+//                // When
+//                val exception = shouldThrow<CoreException> {
+//                    noticeService.createNotice(notice)
+//                }
+//
+//                // Then
+//                exception.message shouldBe "권한이 없습니다."
+//            }
 
             scenario("관리자가 공지사항을 생성할 때") {
                 // Given
@@ -48,7 +45,7 @@ class NoticeServiceCreateTest :
                 every { noticeRepository.save(any(), any()) } just Runs
 
                 // When
-                noticeService.createNotice(noticeCreateRequest, adminUser)
+                noticeService.createNotice(noticeCreateRequest)
 
                 // Then
                 verify {
@@ -64,15 +61,13 @@ class NoticeServiceCreateTest :
 
             scenario("여러 스레드가 동시에 공지사항을 생성할 때") {
                 // Given
-                val adminUser = User.fixture(1, role = Role.ADMIN)
-                val adminUser2 = User.fixture(2, role = Role.ADMIN)
                 val noticeCreateRequest = Notice.fixture(title = "Title", content = "Content")
 
                 val task1 = Runnable {
-                    noticeService.createNotice(noticeCreateRequest, adminUser)
+                    noticeService.createNotice(noticeCreateRequest)
                 }
                 val task2 = Runnable {
-                    noticeService.createNotice(noticeCreateRequest, adminUser2)
+                    noticeService.createNotice(noticeCreateRequest)
                 }
 
                 val thread1 = Thread(task1)

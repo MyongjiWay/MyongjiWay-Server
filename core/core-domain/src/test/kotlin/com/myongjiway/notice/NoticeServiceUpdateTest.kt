@@ -1,9 +1,7 @@
 package com.myongjiway.notice
 
-import com.myongjiway.error.CoreException
 import com.myongjiway.user.Role
 import com.myongjiway.user.User
-import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.Runs
@@ -25,18 +23,18 @@ class NoticeServiceUpdateTest :
 
         feature("공지사항 수정 - 인증/인가 관련 테스트") {
 
-            scenario("권한이 없는 사용자가 공지사항을 수정하려고 시도할 때") {
-                // Given
-                val regularUser = User.fixture(1, role = Role.USER)
-                val noticeId = 1L
-                // When
-                val exception = shouldThrow<CoreException> {
-                    noticeService.updateNotice(noticeId, Notice.fixture(title = "New Title", content = "New Content"), regularUser)
-                }
-
-                // Then
-                exception.message shouldBe "권한이 없습니다."
-            }
+//            scenario("권한이 없는 사용자가 공지사항을 수정하려고 시도할 때") {
+//                // Given
+//                val regularUser = User.fixture(1, role = Role.USER)
+//                val noticeId = 1L
+//                // When
+//                val exception = shouldThrow<CoreException> {
+//                    noticeService.updateNotice(noticeId, Notice.fixture(title = "New Title", content = "New Content"))
+//                }
+//
+//                // Then
+//                exception.message shouldBe "권한이 없습니다."
+//            }
 
             scenario("관리자가 공지사항을 수정할 때") {
                 // Given
@@ -50,7 +48,7 @@ class NoticeServiceUpdateTest :
                 val updateDto = Notice.fixture(noticeId, "Updated Title", "Updated Content")
 
                 // When
-                noticeService.updateNotice(noticeId, updateDto, adminUser)
+                noticeService.updateNotice(noticeId, updateDto)
 
                 // Then
                 verify {
@@ -83,12 +81,12 @@ class NoticeServiceUpdateTest :
                 val contents = mutableListOf<String>()
 
                 val task1 = Runnable {
-                    noticeService.updateNotice(updateDto1.id!!, updateDto1, adminUser)
+                    noticeService.updateNotice(updateDto1.id!!, updateDto1)
                     synchronized(titles) { titles.add(updateDto1.title) }
                     synchronized(contents) { contents.add(updateDto1.content) }
                 }
                 val task2 = Runnable {
-                    noticeService.updateNotice(updateDto2.id!!, updateDto2, adminUser2)
+                    noticeService.updateNotice(updateDto2.id!!, updateDto2)
                     synchronized(titles) { titles.add(updateDto2.title) }
                     synchronized(contents) { contents.add(updateDto2.content) }
                 }

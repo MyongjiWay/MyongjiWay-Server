@@ -26,18 +26,18 @@ class NoticeServiceDeleteTest :
 
         feature("공지사항 삭제 - 인증/인가 관련 테스트") {
 
-            scenario("권한이 없는 사용자가 공지사항을 삭제하려고 시도할 때") {
-                // Given
-                val regularUser = User.fixture(1, role = Role.USER)
-
-                // When
-                val exception = shouldThrow<CoreException> {
-                    noticeService.deleteNotice(1, regularUser)
-                }
-
-                // Then
-                exception.message shouldBe "권한이 없습니다."
-            }
+//            scenario("권한이 없는 사용자가 공지사항을 삭제하려고 시도할 때") {
+//                // Given
+//                val regularUser = User.fixture(1, role = Role.USER)
+//
+//                // When
+//                val exception = shouldThrow<CoreException> {
+//                    noticeService.deleteNotice(1)
+//                }
+//
+//                // Then
+//                exception.message shouldBe "권한이 없습니다."
+//            }
 
             scenario("관리자가 존재하지 않는 공지사항을 삭제하려고 시도할 때") {
                 // Given
@@ -46,7 +46,7 @@ class NoticeServiceDeleteTest :
 
                 // When
                 val exception = shouldThrow<CoreException> {
-                    noticeService.deleteNotice(1, adminUser)
+                    noticeService.deleteNotice(1)
                 }
 
                 // Then
@@ -61,10 +61,10 @@ class NoticeServiceDeleteTest :
                 every { noticeRepository.delete(any()) } just Runs
 
                 // When
-                noticeService.deleteNotice(existingNoticeId, adminUser)
+                noticeService.deleteNotice(existingNoticeId)
 
                 // Then
-                verify { noticeService.deleteNotice(match { it == existingNoticeId }, adminUser) }
+                verify { noticeService.deleteNotice(match { it == existingNoticeId }) }
             }
         }
 
@@ -72,8 +72,6 @@ class NoticeServiceDeleteTest :
 
             scenario("여러 스레드가 동시에 공지사항을 삭제할 때") {
                 // Given
-                val adminUser1 = User.fixture(1, role = Role.ADMIN)
-                val adminUser2 = User.fixture(2, role = Role.ADMIN)
 
                 every { noticeRepository.delete(any()) } just Runs
 
@@ -81,10 +79,10 @@ class NoticeServiceDeleteTest :
                 val deleteId2 = 2L
 
                 val task1 = Runnable {
-                    noticeService.deleteNotice(deleteId1, adminUser1)
+                    noticeService.deleteNotice(deleteId1)
                 }
                 val task2 = Runnable {
-                    noticeService.deleteNotice(deleteId2, adminUser2)
+                    noticeService.deleteNotice(deleteId2)
                 }
 
                 val thread1 = Thread(task1)
@@ -97,15 +95,12 @@ class NoticeServiceDeleteTest :
                 thread2.join()
 
                 // Then
-                verify(exactly = 1) { noticeService.deleteNotice(match { it == deleteId1 }, adminUser1) }
-                verify(exactly = 1) { noticeService.deleteNotice(match { it == deleteId2 }, adminUser2) }
+                verify(exactly = 1) { noticeService.deleteNotice(match { it == deleteId1 }) }
+                verify(exactly = 1) { noticeService.deleteNotice(match { it == deleteId2 }) }
             }
 
             scenario("여러 스레드가 동시에 동일한 공지사항을 삭제할 때 하나는 성공하고 하나는 실패하는 경우") {
                 // Given
-                val adminUser = User.fixture(1, role = Role.ADMIN)
-                val adminUser2 = User.fixture(2, role = Role.ADMIN)
-
                 // 초기 공지사항 설정
                 val initialNotice = Notice.fixture(1, "Initial Title", "Initial Content")
 
@@ -120,7 +115,7 @@ class NoticeServiceDeleteTest :
 
                 val task1 = Runnable {
                     try {
-                        noticeService.deleteNotice(deleteId1, adminUser)
+                        noticeService.deleteNotice(deleteId1)
                         synchronized(successes) { successes.add(true) }
                     } catch (e: Exception) {
                         synchronized(exceptions) { exceptions.add(e) }
@@ -129,7 +124,7 @@ class NoticeServiceDeleteTest :
 
                 val task2 = Runnable {
                     try {
-                        noticeService.deleteNotice(deleteId2, adminUser2)
+                        noticeService.deleteNotice(deleteId2)
                         synchronized(successes) { successes.add(true) }
                     } catch (e: Exception) {
                         synchronized(exceptions) { exceptions.add(e) }

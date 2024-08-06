@@ -2,15 +2,18 @@ name: CD
 
 on:
   pull_request:
+    types: [closed]
     branches: ["main"]
-  workflow_dispatch:
+
 
 permissions:
   contents: write
 
 jobs:
   deploy:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
+
 
     steps:
       - name: Checkout repository
@@ -68,17 +71,9 @@ jobs:
             docker pull ${{ secrets.DOCKER_USERNAME }}/dev:latest
             docker stop app || true
             docker rm app || true
-            docker run -d --name app -p 80:80 \
-              -e KAKAO_ADMIN_KEY=${{ secrets.KAKAO_ADMIN_KEY }} \
-              -e JWT_ACCESS_TOKEN_SECRET=${{ secrets.JWT_ACCESS_TOKEN_SECRET }} \
-              -e JWT_REFRESH_TOKEN_SECRET=${{ secrets.JWT_REFRESH_TOKEN_SECRET }} \
-              -e STORAGE_DATABASE_CORE_DB_URL=${{ secrets.STORAGE_DATABASE_CORE_DB_URL }} \
-              -e STORAGE_DATABASE_CORE_DB_USERNAME=${{ secrets.STORAGE_DATABASE_CORE_DB_USERNAME }} \
-              -e STORAGE_DATABASE_CORE_DB_PASSWORD=${{ secrets.STORAGE_DATABASE_CORE_DB_PASSWORD }} \
-              -e AWS_IOT_ENDPOINT=${{ secrets.AWS_IOT_ENDPOINT }} \
-              -e AWS_IOT_CLIENTID=${{ secrets.AWS_IOT_CLIENTID }} \
-              -e AWS_IOT_CERTIFICATE=${{ secrets.AWS_IOT_CERTIFICATE }} \
-              -e AWS_IOT_PRIVATE_KEY=${{ secrets.AWS_IOT_PRIVATE_KEY }} \
+            docker run -d --name app -p 8080:8080 \
+              --env-file /home/ubuntu/.env \
+              -v /home/ubuntu/cert:/cert \
               ${{ secrets.DOCKER_USERNAME }}/dev:latest
             docker ps -a
             docker logs app

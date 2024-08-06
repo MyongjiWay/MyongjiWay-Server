@@ -23,4 +23,7 @@ abstract class BaseEntity {
     @Column
     var updatedAt: LocalDateTime? = null
         protected set
+
+    var isDeleted: Boolean = false
+        protected set
 }

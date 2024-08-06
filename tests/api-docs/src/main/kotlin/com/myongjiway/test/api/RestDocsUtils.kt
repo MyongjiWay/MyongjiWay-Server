@@ -6,7 +6,7 @@ import org.springframework.restdocs.operation.preprocess.Preprocessors
 
 object RestDocsUtils {
     fun requestPreprocessor(): OperationRequestPreprocessor = Preprocessors.preprocessRequest(
-        Preprocessors.modifyUris().scheme("https").host("3.37.209.15").removePort(),
+        Preprocessors.modifyUris().scheme("https").host("api.myongjiway.store").removePort(),
         Preprocessors.prettyPrint(),
     )
 

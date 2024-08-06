@@ -21,6 +21,7 @@ class AuthServiceTest :
             lateinit var jwtProvider: JwtProvider
             lateinit var jwtProperty: JwtProperty
             lateinit var userAppender: UserAppender
+            lateinit var tokenAppender: TokenAppender
 
             val kakaoLoginData = KakaoLoginData(
                 providerId = "1234",
@@ -31,10 +32,11 @@ class AuthServiceTest :
             beforeTest {
                 jwtProperty = mockk()
                 userRepository = mockk()
+                tokenAppender = mockk()
 
                 jwtProvider = JwtProvider(jwtProperty, userRepository)
                 userAppender = UserAppender(userRepository)
-                sut = AuthService(jwtProvider, userAppender)
+                sut = AuthService(jwtProvider, userAppender, tokenAppender)
 
                 every { jwtProperty.accessToken.secret } returns "lnp1ISIafo9E+U+xZ4xr0kaRGD5uNVCT1tiJ8gXmqWvp32L7JoXC9EjAy0z2F6NVSwrKLxbCkpzT+DZJazy3Pg=="
                 every { jwtProperty.accessToken.expiration } returns 1000
@@ -46,6 +48,7 @@ class AuthServiceTest :
                 scenario("입력 받은 providerId가 DB에 존재하지 않으면 유저를 생성하고 토큰을 반환한다.") {
                     // given
                     every { userAppender.upsert(any(), any(), any(), any(), any()) } returns 1000L
+                    every { tokenAppender.upsert(any(), any(), any()) } returns 1000L
 
                     // when
                     val actual = sut.kakaoLogin(kakaoLoginData)

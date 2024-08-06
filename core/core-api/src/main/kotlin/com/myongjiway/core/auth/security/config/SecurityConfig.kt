@@ -3,6 +3,8 @@ package com.myongjiway.core.auth.security.config
 import com.myongjiway.core.auth.security.domain.JwtProvider
 import com.myongjiway.core.auth.security.jwt.JwtAccessDeniedHandler
 import com.myongjiway.core.auth.security.jwt.JwtAuthenticationEntryPoint
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication
+import org.springframework.boot.autoconfigure.security.ConditionalOnDefaultWebSecurity
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -16,6 +18,8 @@ import org.springframework.security.web.SecurityFilterChain
 
 @Configuration
 @EnableWebSecurity
+@ConditionalOnDefaultWebSecurity
+@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 internal class SecurityConfig(
     private val jwtProvider: JwtProvider,
     private val jwtAccessDeniedHandler: JwtAccessDeniedHandler,
@@ -52,6 +56,7 @@ internal class SecurityConfig(
                     .requestMatchers("/favicon.ico").permitAll()
                     .requestMatchers("/error").permitAll()
                     .requestMatchers("/").permitAll()
+                    .requestMatchers("/h2-console/**").permitAll()
                     .requestMatchers("/docs/**").hasRole("ADMIN")
                     .anyRequest().authenticated()
             }.with(JwtSecurityConfig(jwtProvider)) {}

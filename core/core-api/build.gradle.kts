@@ -7,6 +7,7 @@ dependencies {
     implementation(project(":clients:client-mqtt"))
 
     testImplementation(project(":tests:api-docs"))
+    testImplementation("org.springframework.security:spring-security-test")
 
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-security")

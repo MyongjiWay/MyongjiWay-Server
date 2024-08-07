@@ -4,6 +4,7 @@ import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 
 class UserUpdaterTest :
     FeatureSpec(
@@ -30,6 +31,21 @@ class UserUpdaterTest :
 
                     // then
                     actual shouldBe 1L
+                }
+            }
+
+            feature("유저 비활성화") {
+                scenario("유저 비활성화에 성공한다.") {
+                    // given
+                    val userId = 1000L
+                    every { userRepository.inactive(any()) } returns 1000L
+
+                    // when
+                    val actual = sut.inactive(userId)
+
+                    // then
+                    actual shouldBe 1000L
+                    verify(exactly = 1) { userRepository.inactive(userId) }
                 }
             }
         },

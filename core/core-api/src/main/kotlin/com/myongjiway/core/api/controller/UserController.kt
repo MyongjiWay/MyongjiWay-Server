@@ -13,7 +13,6 @@ class UserController(
     private val userService: UserService,
     private val kakaoClient: KakaoClient,
 ) {
-
     @PostMapping("/inactive")
     fun inactive(
         @AuthenticationPrincipal user: User,

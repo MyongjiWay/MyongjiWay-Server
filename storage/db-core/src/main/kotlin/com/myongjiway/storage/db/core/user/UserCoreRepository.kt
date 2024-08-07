@@ -5,6 +5,7 @@ import com.myongjiway.user.Role
 import com.myongjiway.user.User
 import com.myongjiway.user.UserRepository
 import jakarta.transaction.Transactional
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 
 @Repository
@@ -62,7 +63,9 @@ class UserCoreRepository(
     }
 
     @Transactional
-    override fun inactive(providerId: Long): Long {
-        TODO("Not yet implemented")
+    override fun inactive(userId: Long): Long {
+        val user = userJpaRepository.findByIdOrNull(userId)
+        user?.inactive()
+        return user?.id!!
     }
 }

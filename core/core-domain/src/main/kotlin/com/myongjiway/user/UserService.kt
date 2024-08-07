@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service
 @Service
 class UserService {
 
-    fun inactive(providerId: Long) {
+    fun inactive(userId: Long) {
         TODO("Not yet implemented")
     }
 }

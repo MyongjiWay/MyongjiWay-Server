@@ -21,6 +21,7 @@ dependencies {
 
 tasks.getByName("bootJar") {
     enabled = true
+    dependsOn("copyApiDocument")
 }
 
 tasks.getByName("jar") {

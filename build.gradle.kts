@@ -113,8 +113,4 @@ subprojects {
         from(tasks.named<AsciidoctorTask>("asciidoctor").get().outputDir)
         into(file("src/main/resources/static/docs"))
     }
-
-    tasks.named("build") {
-        dependsOn("copyApiDocument")
-    }
 }

@@ -7,7 +7,6 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.every
 import io.mockk.mockk
-import org.springframework.data.repository.findByIdOrNull
 import java.util.Optional
 
 class UserCoreRepositoryTest :
@@ -164,11 +163,11 @@ class UserCoreRepositoryTest :
             feature("유저 비활성화") {
                 scenario("유저를 비활성화에 성공한다.") {
                     // given
-                    val userId = 1000L
-                    every { userJpaRepository.findByIdOrNull(userId) } returns userEntity
+                    val providerId = "123123123"
+                    every { userJpaRepository.findByProviderId(providerId) } returns userEntity
 
                     // when
-                    val actual = sut.inactive(userId)
+                    val actual = sut.inactive(providerId)
 
                     // then
                     actual shouldBe 1000L

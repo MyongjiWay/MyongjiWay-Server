@@ -9,5 +9,5 @@ class UserUpdater(
     fun modify(providerId: String, profileImg: String, name: String, role: Role): Long =
         userRepository.modify(providerId, profileImg, name, role)
 
-    fun inactive(userId: Long): Long = userRepository.inactive(userId)
+    fun inactive(providerId: String): Long = userRepository.inactive(providerId)
 }

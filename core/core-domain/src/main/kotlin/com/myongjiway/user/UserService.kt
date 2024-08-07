@@ -3,9 +3,8 @@ package com.myongjiway.user
 import org.springframework.stereotype.Service
 
 @Service
-class UserService {
-
-    fun inactive(userId: Long) {
-        TODO("Not yet implemented")
-    }
+class UserService(
+    private val userUpdater: UserUpdater,
+) {
+    fun inactive(providerId: String): Long = userUpdater.inactive(providerId)
 }

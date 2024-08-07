@@ -37,15 +37,15 @@ class UserUpdaterTest :
             feature("유저 비활성화") {
                 scenario("유저 비활성화에 성공한다.") {
                     // given
-                    val userId = 1000L
-                    every { userRepository.inactive(any()) } returns 1000L
+                    val providerId = "123123123"
+                    every { userRepository.inactive(providerId) } returns 1000L
 
                     // when
-                    val actual = sut.inactive(userId)
+                    val actual = sut.inactive(providerId)
 
                     // then
                     actual shouldBe 1000L
-                    verify(exactly = 1) { userRepository.inactive(userId) }
+                    verify(exactly = 1) { userRepository.inactive(any()) }
                 }
             }
         },

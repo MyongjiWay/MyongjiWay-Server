@@ -1,6 +1,5 @@
 import org.asciidoctor.gradle.jvm.AsciidoctorTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
     kotlin("jvm")
@@ -113,9 +112,5 @@ subprojects {
         }
         from(tasks.named<AsciidoctorTask>("asciidoctor").get().outputDir)
         into(file("src/main/resources/static/docs"))
-    }
-
-    tasks.named<BootJar>("bootJar") {
-        dependsOn("copyApiDocument")
     }
 }

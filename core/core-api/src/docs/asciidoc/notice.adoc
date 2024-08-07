@@ -1,0 +1,121 @@
+= 공지사항 관련 API 문서
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 3
+:sectlinks:
+:snippets: build/generated-snippets
+
+== 개요
+
+이 문서는 공지사항 관련 API에 대한 설명을 제공합니다.
+공지사항 생성, 수정, 삭제, 단건 조회, 목록 조회를 다룹니다.
+
+== 공지사항 API
+
+=== 공지사항 생성 (POST)
+
+==== 개요
+
+공지사항을 생성합니다.
+
+==== Curl 요청
+
+include::{snippets}/createNotice/curl-request.adoc[]
+
+==== 요청 필드
+
+include::{snippets}/createNotice/request-fields.adoc[]
+
+==== HTTP 응답
+
+include::{snippets}/createNotice/http-response.adoc[]
+
+==== 응답 필드
+
+include::{snippets}/createNotice/response-body.adoc[]
+
+---
+
+=== 공지사항 수정 (PUT)
+
+==== 개요
+
+공지사항을 수정합니다.
+
+==== Curl 요청
+
+include::{snippets}/updateNotice/curl-request.adoc[]
+
+==== 요청 필드
+
+include::{snippets}/updateNotice/request-fields.adoc[]
+
+==== HTTP 응답
+
+include::{snippets}/updateNotice/http-response.adoc[]
+
+==== 응답 필드
+
+include::{snippets}/updateNotice/response-body.adoc[]
+
+---
+
+=== 공지사항 삭제 (DELETE)
+
+==== 개요
+
+공지사항을 삭제합니다.
+
+==== Curl 요청
+
+include::{snippets}/deleteNotice/curl-request.adoc[]
+
+==== HTTP 응답
+
+include::{snippets}/deleteNotice/http-response.adoc[]
+
+==== 응답 필드
+
+include::{snippets}/deleteNotice/response-body.adoc[]
+
+---
+
+=== 공지사항 단건 조회 (GET)
+
+==== 개요
+
+공지사항의 세부 정보를 조회합니다.
+
+==== Curl 요청
+
+include::{snippets}/getNotice/curl-request.adoc[]
+
+==== HTTP 응답
+
+include::{snippets}/getNotice/http-response.adoc[]
+
+==== 응답 필드
+
+include::{snippets}/getNotice/response-fields.adoc[]
+
+---
+
+=== 공지사항 목록 조회 (GET)
+
+==== 개요
+
+공지사항 목록을 조회합니다.
+
+==== Curl 요청
+
+include::{snippets}/listNotices/curl-request.adoc[]
+
+==== HTTP 응답
+
+include::{snippets}/listNotices/http-response.adoc[]
+
+==== 응답 필드
+
+include::{snippets}/listNotices/response-fields.adoc[]

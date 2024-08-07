@@ -29,6 +29,7 @@ tasks.named<BootJar>("bootJar") {
         into("static/docs")
     }
 }
+
 tasks.getByName("jar") {
     enabled = false
 }

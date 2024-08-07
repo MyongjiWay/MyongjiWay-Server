@@ -38,7 +38,7 @@ jobs:
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v3
         with:
-          arguments: build
+          arguments: build restDocsTest asciidoctor copyApiDocument
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2

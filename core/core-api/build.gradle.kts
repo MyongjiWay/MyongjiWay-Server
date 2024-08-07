@@ -21,12 +21,6 @@ dependencies {
 
 tasks.getByName("bootJar") {
     enabled = true
-    doLast {
-        copy {
-            from("src/main/resources/static/docs")
-            into("BOOT-INF/classes/static/docs")
-        }
-    }
 }
 
 tasks.getByName("jar") {

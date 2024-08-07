@@ -114,7 +114,10 @@ subprojects {
         into(file("src/main/resources/static/docs"))
     }
 
-    tasks.named("build") {
+    tasks.named<Jar>("jar") {
         dependsOn("copyApiDocument")
+        from("src/main/resources/static/docs") {
+            into("static/docs")
+        }
     }
 }

@@ -1,3 +1,5 @@
+import org.springframework.boot.gradle.tasks.bundling.BootJar
+
 dependencies {
     implementation(project(":core:core-domain"))
     implementation(project(":support:monitoring"))
@@ -19,11 +21,14 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt-jackson:0.12.6")
 }
 
-tasks.getByName("bootJar") {
+tasks.named<BootJar>("bootJar") {
     enabled = true
     dependsOn("copyApiDocument")
-}
 
+    from("src/main/resources/static/docs") {
+        into("static/docs")
+    }
+}
 tasks.getByName("jar") {
     enabled = false
 }

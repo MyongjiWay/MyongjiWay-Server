@@ -35,6 +35,39 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
+      - name: Build with Gradle and run restDocsTest
+        uses: gradle/gradle-build-action@v3
+        with:
+          arguments: restDocsTest
+          build-root-directory: .
+
+      - name: List entire directory after restDocsTest
+        run: |
+          echo "Listing entire directory structure after restDocsTest:"
+          find . -type f
+
+      - name: Build with Gradle and run asciidoctor
+        uses: gradle/gradle-build-action@v3
+        with:
+          arguments: asciidoctor
+          build-root-directory: .
+
+      - name: List entire directory after asciidoctor
+        run: |
+          echo "Listing entire directory structure after asciidoctor:"
+          find . -type f
+
+      - name: Build with Gradle and copy API Documents
+        uses: gradle/gradle-build-action@v3
+        with:
+          arguments: copyApiDocument
+          build-root-directory: .
+
+      - name: List entire directory after copyApiDocument
+        run: |
+          echo "Listing entire directory structure after copyApiDocument:"
+          find . -type f
+
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v3
         with:

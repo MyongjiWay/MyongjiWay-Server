@@ -8,41 +8,8 @@ on:
 permissions:
   contents: read
 
-#jobs:
-#  build-and-test:
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#      - uses: actions/checkout@v3
-#
-#      - name: Set up JDK
-#        uses: actions/setup-java@v3
-#        with:
-#          java-version: '21'
-#          distribution: 'adopt'
-#
-#      - name: Cache Gradle packages
-#        uses: actions/cache@v3
-#        with:
-#          path: |
-#            ~/.gradle/caches
-#            ~/.gradle/wrapper
-#          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-#          restore-keys: |
-#            ${{ runner.os }}-gradle-
-#
-#      - name: Lint
-#        uses: gradle/gradle-build-action@v2
-#        with:
-#          arguments: ktlintCheck
-#
-#      - name: Test
-#        uses: gradle/gradle-build-action@v2
-#        with:
-#          arguments: test
-
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -54,38 +21,22 @@ jobs:
           java-version: '21'
           distribution: 'adopt'
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x ./gradlew
-
-      - name: Build with Gradle and run restDocsTest
-        uses: gradle/gradle-build-action@v3
+      - name: Cache Gradle packages
+        uses: actions/cache@v3
         with:
-          arguments: restDocsTest
-          build-root-directory: .
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
-      - name: List entire directory after restDocsTest
-        run: |
-          echo "Listing entire directory structure after restDocsTest:"
-          find . -type f
-
-      - name: Build with Gradle and run asciidoctor
-        uses: gradle/gradle-build-action@v3
+      - name: Lint
+        uses: gradle/gradle-build-action@v2
         with:
-          arguments: asciidoctor
-          build-root-directory: .
+          arguments: ktlintCheck
 
-      - name: List entire directory after asciidoctor
-        run: |
-          echo "Listing entire directory structure after asciidoctor:"
-          find . -type f
-
-      - name: Build with Gradle and copy API Documents
-        uses: gradle/gradle-build-action@v3
+      - name: Test
+        uses: gradle/gradle-build-action@v2
         with:
-          arguments: copyApiDocument
-          build-root-directory: .
-
-      - name: List entire directory after copyApiDocument
-        run: |
-          echo "Listing entire directory structure after copyApiDocument:"
-          find . -type f
+          arguments: test

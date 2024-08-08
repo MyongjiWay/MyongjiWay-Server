@@ -2,17 +2,141 @@
 <configuration>
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
 
+    <!-- 기본 콘솔 출력 앱펜더 -->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%clr(%d{HH:mm:ss.SSS}){faint}|%clr(${level:-%5p})|%32X{traceId:-},%16X{spanId:-}|%clr(%-40.40logger{39}){cyan}%clr(|){faint}%m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}</pattern>
+            <pattern>%clr(%d{HH:mm:ss.SSS}){faint}|%clr(${level:-%5p})|%clr(%-40.40logger{39}){cyan}%clr(|){faint}%m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}</pattern>
             <charset>utf8</charset>
         </encoder>
     </appender>
 
-    <logger name="org.springframework" level="INFO"/>
-    <logger name="com.myongjiway" level="DEBUG"/>
+    <!-- WARN 이상의 로그를 파일로 출력하는 앱펜더 -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/application.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/application.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <charset>utf8</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
+    </appender>
 
+    <!-- 요청 로그 파일 출력 앱펜더 -->
+    <appender name="REQUEST_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/request.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/request.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <pattern>
+                    <pattern>
+                        {
+                        "timestamp": "%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}",
+                        "level": "%level",
+                        "logger": "%logger",
+                        "thread": "%thread",
+                        "method": "%X{method:-}",
+                        "requestUri": "%X{requestUri:-}",
+                        "sourceIp": "%X{sourceIp:-}",
+                        "referer": "%X{referer:-}",
+                        "userAgent": "%X{userAgent:-}",
+                        "requestId": "%X{requestId:-}",
+                        "message": "%message"
+                        }
+                    </pattern>
+                </pattern>
+            </providers>
+        </encoder>
+    </appender>
+
+    <!-- 응답 로그 파일 출력 앱펜더 -->
+    <appender name="RESPONSE_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/response.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/response.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <pattern>
+                    <pattern>
+                        {
+                        "timestamp": "%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}",
+                        "level": "%level",
+                        "logger": "%logger",
+                        "thread": "%thread",
+                        "message": "%message",
+                        "status": "%X{status:-}",
+                        "responseTime": "%X{responseTime:-}"
+                        }
+                    </pattern>
+                </pattern>
+            </providers>
+        </encoder>
+    </appender>
+
+    <!-- 인증 로그 파일 출력 앱펜더 -->
+    <appender name="AUTHENTICATION" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/authentication.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/authentication.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <pattern>
+                    <pattern>
+                        {
+                        "timestamp": "%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}",
+                        "level": "%level",
+                        "logger": "%logger",
+                        "thread": "%thread",
+                        "message": "%message",
+                        "userId": "%X{userId:-}",
+                        "sourceIp": "%X{sourceIp:-}",
+                        "requestId": "%X{requestId:-}"
+                        }
+                    </pattern>
+                </pattern>
+            </providers>
+        </encoder>
+    </appender>
+
+    <!-- 요청 로거 -->
+    <logger name="HttpRequestLog" level="INFO" additivity="false">
+        <appender-ref ref="REQUEST_LOG"/>
+    </logger>
+
+    <!-- 응답 로거 -->
+    <logger name="HttpResponseLog" level="INFO" additivity="false">
+        <appender-ref ref="RESPONSE_LOG"/>
+    </logger>
+
+    <!-- 인증 로거 -->
+    <logger name="AuthenticationLog" level="INFO" additivity="false">
+        <appender-ref ref="AUTHENTICATION"/>
+    </logger>
+
+    <!-- Spring 프레임워크 로거 -->
+    <logger name="org.springframework" level="INFO" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <!-- 사용자 정의 패키지 로거 -->
+    <logger name="com.myongjiway" level="DEBUG" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <!-- 루트 로거 -->
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
     </root>
 </configuration>

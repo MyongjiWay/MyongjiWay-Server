@@ -3,6 +3,7 @@ package com.myongjiway.core.auth.security.config
 import com.myongjiway.core.auth.security.domain.JwtProvider
 import com.myongjiway.core.auth.security.jwt.JwtAccessDeniedHandler
 import com.myongjiway.core.auth.security.jwt.JwtAuthenticationEntryPoint
+import com.myongjiway.core.auth.security.log.RequestResponseLoggingFilter
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication
 import org.springframework.boot.autoconfigure.security.ConditionalOnDefaultWebSecurity
 import org.springframework.context.annotation.Bean
@@ -24,6 +25,7 @@ internal class SecurityConfig(
     private val jwtProvider: JwtProvider,
     private val jwtAccessDeniedHandler: JwtAccessDeniedHandler,
     private val jwtAuthenticationEntryPoint: JwtAuthenticationEntryPoint,
+    private val requestResponseLoggingFilter: RequestResponseLoggingFilter,
 ) {
 
     @Bean
@@ -50,17 +52,14 @@ internal class SecurityConfig(
             .formLogin { it.disable() }
             .httpBasic { it.disable() }
             .authorizeHttpRequests { authorizeRequests ->
-                authorizeRequests
-                    .requestMatchers("/auth/**").permitAll()
-                    .requestMatchers("/actuator/**").permitAll()
-                    .requestMatchers("/favicon.ico").permitAll()
-                    .requestMatchers("/error").permitAll()
-                    .requestMatchers("/").permitAll()
-                    .requestMatchers("/h2-console/**").permitAll()
-                    .requestMatchers("/docs/**").permitAll()
-                    .requestMatchers("/admin/**").hasRole("ADMIN")
-                    .anyRequest().authenticated()
-            }.with(JwtSecurityConfig(jwtProvider)) {}
+                SecurityConstants.PERMIT_ALL_URLS.forEach { url ->
+                    authorizeRequests.requestMatchers(url).permitAll()
+                }
+                SecurityConstants.ROLE_ADMIN_URLS.forEach { (url, role) ->
+                    authorizeRequests.requestMatchers(url).hasRole(role)
+                }
+                authorizeRequests.anyRequest().authenticated()
+            }.with(JwtSecurityConfig(jwtProvider, requestResponseLoggingFilter)) {}
 
         return http.build()
     }

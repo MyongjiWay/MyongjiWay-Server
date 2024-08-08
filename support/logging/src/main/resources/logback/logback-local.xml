@@ -10,14 +10,6 @@
         </encoder>
     </appender>
 
-    <!-- 커스텀 콘솔 앱펜더 -->
-    <appender name="THREAD_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg | requestId=%X{requestId:-}%n</pattern>
-            <charset>utf8</charset>
-        </encoder>
-    </appender>
-
     <!-- WARN 이상의 로그를 파일로 출력하는 앱펜더 -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>logs/application.log</file>
@@ -133,18 +125,18 @@
     </logger>
 
     <!-- Spring 프레임워크 로거 -->
-    <logger name="org.springframework" level="INFO">
-        <appender-ref ref="THREAD_CONSOLE"/>
+    <logger name="org.springframework" level="INFO" additivity="false">
+        <appender-ref ref="STDOUT"/>
     </logger>
 
     <!-- 사용자 정의 패키지 로거 -->
-    <logger name="com.myongjiway" level="DEBUG">
-        <appender-ref ref="THREAD_CONSOLE"/>
+    <logger name="com.myongjiway" level="DEBUG" additivity="false">
+        <appender-ref ref="STDOUT"/>
     </logger>
 
     <!-- 루트 로거 -->
     <root level="INFO">
-        <appender-ref ref="THREAD_CONSOLE"/>
+        <appender-ref ref="STDOUT"/>
         <appender-ref ref="FILE"/>
     </root>
 </configuration>

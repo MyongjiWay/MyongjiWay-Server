@@ -41,11 +41,11 @@ class RequestResponseLoggingFilter : OncePerRequestFilter() {
                 MDC.put("userId", authentication.name)
             }
 
-            // 필터 체인 실행
-            filterChain.doFilter(wrappedRequest, wrappedResponse)
-
             // 요청 로그 기록
             logRequest(wrappedRequest)
+
+            // 필터 체인 실행
+            filterChain.doFilter(wrappedRequest, wrappedResponse)
         } finally {
             val endTime = System.currentTimeMillis()
             val responseTime = endTime - startTime

@@ -1,5 +1,6 @@
 package com.myongjiway.core.auth.security.jwt
 
+import com.myongjiway.core.auth.security.config.SecurityConstants
 import com.myongjiway.core.auth.security.domain.JwtProvider
 import jakarta.servlet.FilterChain
 import jakarta.servlet.ServletRequest
@@ -24,6 +25,12 @@ class JwtFilter(
         val httpServletRequest = servletRequest as HttpServletRequest
         val jwt = getJwt()
         val requestURI = httpServletRequest.requestURI
+
+        if (isExcludedUrl(requestURI)) {
+            filterChain.doFilter(servletRequest, servletResponse)
+            return
+        }
+
         if (!jwt.isNullOrBlank() && jwtProvider.validateAccessTokenFromRequest(servletRequest, jwt)) {
             val authentication = jwtProvider.getAuthentication(jwt)
             SecurityContextHolder.getContext().authentication = authentication
@@ -46,7 +53,9 @@ class JwtFilter(
         }
     }
 
+    private fun isExcludedUrl(uri: String): Boolean = SecurityConstants.EXCLUDED_URLS.any { regex -> uri.matches(regex) }
+
     companion object {
-        private val logger = LoggerFactory.getLogger(JwtFilter::class.java)
+        private val logger = LoggerFactory.getLogger("AuthenticationLog")
     }
 }

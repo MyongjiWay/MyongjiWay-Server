@@ -4,6 +4,7 @@ import com.myongjiway.error.CoreErrorType
 import com.myongjiway.error.CoreException
 import com.myongjiway.notice.Notice
 import com.myongjiway.notice.NoticeRepository
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 
@@ -25,18 +26,21 @@ class NoticeCoreRepository(
 
     @Transactional
     override fun update(notice: Notice, noticeId: Long) {
-        val noticeEntity = noticeJpaRepository.findById(noticeId).orElseThrow { throw CoreException(CoreErrorType.NOT_FOUND_DATA) }
+        val noticeEntity = noticeJpaRepository.findByIdOrNull(noticeId)
+            ?: throw CoreException(CoreErrorType.NOT_FOUND_DATA)
         noticeEntity.update(notice.title, notice.author, notice.content)
     }
 
     @Transactional
     override fun delete(noticeId: Long) {
-        val noticeEntity = noticeJpaRepository.findById(noticeId).orElseThrow { throw CoreException(CoreErrorType.NOT_FOUND_DATA) }
+        val noticeEntity = noticeJpaRepository.findByIdOrNull(noticeId)
+            ?: throw CoreException(CoreErrorType.NOT_FOUND_DATA)
         noticeJpaRepository.delete(noticeEntity)
     }
 
     override fun findById(noticeId: Long): Notice {
-        val noticeEntity = noticeJpaRepository.findById(noticeId).orElseThrow { throw CoreException(CoreErrorType.NOT_FOUND_DATA) }
+        val noticeEntity = noticeJpaRepository.findByIdOrNull(noticeId)
+            ?: throw CoreException(CoreErrorType.NOT_FOUND_DATA)
         return noticeEntity.toNotice()
     }
 

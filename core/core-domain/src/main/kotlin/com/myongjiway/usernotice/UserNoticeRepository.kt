@@ -1,4 +1,4 @@
-package com.myongjiway.notice
+package com.myongjiway.usernotice
 
 interface UserNoticeRepository {
     fun save(noticeId: Long, userId: Long): UserNotice

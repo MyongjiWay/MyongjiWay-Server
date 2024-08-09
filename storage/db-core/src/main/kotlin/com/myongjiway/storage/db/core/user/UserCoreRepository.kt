@@ -60,4 +60,11 @@ class UserCoreRepository(
         user.update(profileImg, name, role)
         return user.id!!
     }
+
+    @Transactional
+    override fun inactive(providerId: String): Long {
+        val user = userJpaRepository.findByProviderId(providerId)
+        user?.inactive()
+        return user?.id!!
+    }
 }

@@ -13,8 +13,10 @@ import org.springframework.restdocs.RestDocumentationContextProvider
 import org.springframework.restdocs.RestDocumentationExtension
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.test.web.servlet.setup.StandaloneMockMvcBuilder
+import org.springframework.web.filter.CharacterEncodingFilter
 
 @Tag("restdocs")
 @ExtendWith(RestDocumentationExtension::class)
@@ -27,9 +29,7 @@ abstract class RestDocsTest {
         this.restDocumentation = restDocumentation
     }
 
-    protected fun given(): MockMvcRequestSpecification {
-        return mockMvc
-    }
+    protected fun given(): MockMvcRequestSpecification = mockMvc
 
     protected fun mockController(controller: Any): MockMvcRequestSpecification {
         val mockMvc = createMockMvc(controller)
@@ -41,15 +41,16 @@ abstract class RestDocsTest {
         val converter = MappingJackson2HttpMessageConverter(objectMapper())
 
         return MockMvcBuilders.standaloneSetup(controller)
+            .setCustomArgumentResolvers(PrincipalArgumentResolver())
             .apply<StandaloneMockMvcBuilder>(MockMvcRestDocumentation.documentationConfiguration(restDocumentation))
+            .addFilters<StandaloneMockMvcBuilder>(CharacterEncodingFilter("UTF-8", true))
+            .alwaysDo<StandaloneMockMvcBuilder>(MockMvcResultHandlers.print())
             .setMessageConverters(converter)
             .build()
     }
 
-    private fun objectMapper(): ObjectMapper {
-        return jacksonObjectMapper()
-            .findAndRegisterModules()
-            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-            .disable(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS)
-    }
+    private fun objectMapper(): ObjectMapper = jacksonObjectMapper()
+        .findAndRegisterModules()
+        .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+        .disable(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS)
 }

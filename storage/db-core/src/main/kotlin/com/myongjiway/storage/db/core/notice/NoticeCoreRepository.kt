@@ -24,8 +24,8 @@ class NoticeCoreRepository(
     }
 
     @Transactional
-    override fun update(notice: Notice) {
-        val noticeEntity = noticeJpaRepository.findById(notice.id!!).orElseThrow { throw CoreException(CoreErrorType.NOT_FOUND_DATA) }
+    override fun update(notice: Notice, noticeId: Long) {
+        val noticeEntity = noticeJpaRepository.findById(noticeId).orElseThrow { throw CoreException(CoreErrorType.NOT_FOUND_DATA) }
         noticeEntity.update(notice.title, notice.author, notice.content)
     }
 

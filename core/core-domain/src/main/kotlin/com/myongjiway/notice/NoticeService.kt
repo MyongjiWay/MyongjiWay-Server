@@ -13,8 +13,8 @@ class NoticeService(
     fun createNotice(notice: Notice) {
         noticeCreator.createNotice(notice)
     }
-    fun updateNotice(notice: Notice) {
-        noticeUpdater.updateNotice(notice)
+    fun updateNotice(notice: Notice, noticeId: Long) {
+        noticeUpdater.updateNotice(notice, noticeId)
     }
     fun deleteNotice(noticeId: Long) {
         noticeDeleter.deleteNotice(noticeId)

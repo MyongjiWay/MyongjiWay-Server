@@ -27,14 +27,14 @@ class NoticeController(
     @PostMapping("/domain/notices")
     fun createNotice(@RequestBody noticeRequest: NoticeRequest, @AuthenticationPrincipal user: User): ApiResponse<Any> {
         authenticate(user)
-        noticeService.createNotice(noticeRequest.toNotice(null))
+        noticeService.createNotice(noticeRequest.toNotice())
         return ApiResponse.success()
     }
 
     @PutMapping("/domain/notices/{noticeId}")
     fun updateNotice(@PathVariable noticeId: Long, @RequestBody noticeRequest: NoticeRequest, @AuthenticationPrincipal user: User): ApiResponse<Any> {
         authenticate(user)
-        noticeService.updateNotice(noticeRequest.toNotice(noticeId))
+        noticeService.updateNotice(noticeRequest.toNotice(), noticeId)
         return ApiResponse.success()
     }
 

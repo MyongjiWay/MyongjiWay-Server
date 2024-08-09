@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component
 class NoticeUpdater(
     private val noticeRepository: NoticeRepository,
 ) {
-    fun updateNotice(notice: Notice) {
-        noticeRepository.update(notice)
+    fun updateNotice(notice: Notice, noticeId: Long) {
+        noticeRepository.update(notice, noticeId)
     }
 }

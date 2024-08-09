@@ -31,15 +31,16 @@ class NoticeUpdaterTest :
                 val updateNotice = Notice.fixture(noticeId, "Updated Title", "Updated Content")
 
                 every { noticeRepository.findById(noticeId) } returns existingNotice
-                every { noticeService.updateNotice(match { it == updateNotice }) } just runs
+                every { noticeService.updateNotice(match { it == updateNotice }, noticeId) } just runs
 
                 // When
-                noticeService.updateNotice(updateNotice)
+                noticeService.updateNotice(updateNotice, noticeId)
 
                 // Then
                 verify {
                     noticeService.updateNotice(
                         match { it == updateNotice },
+                        noticeId,
                     )
                 }
             }
@@ -51,7 +52,7 @@ class NoticeUpdaterTest :
                 // Given
                 val initialNotice = Notice.fixture(1, "Initial Title", "Initial Content")
                 every { noticeRepository.findById(1) } returns initialNotice
-                every { noticeService.updateNotice(any()) } just runs
+                every { noticeService.updateNotice(any(), any()) } just runs
 
                 val updateDto1 = Notice.fixture(1, "Updated Title 1", "Updated Content 1")
                 val updateDto2 = Notice.fixture(1, "Updated Title 2", "Updated Content 2")
@@ -63,13 +64,13 @@ class NoticeUpdaterTest :
                 runBlocking {
                     // When
                     val job1 = async {
-                        noticeService.updateNotice(updateDto1)
+                        noticeService.updateNotice(updateDto1, updateDto1.id!!)
                         synchronized(titles) { titles.add(updateDto1.title) }
                         synchronized(contents) { contents.add(updateDto1.content) }
                     }
 
                     val job2 = async {
-                        noticeService.updateNotice(updateDto2)
+                        noticeService.updateNotice(updateDto2, updateDto2.id!!)
                         synchronized(titles) { titles.add(updateDto2.title) }
                         synchronized(contents) { contents.add(updateDto2.content) }
                     }
@@ -80,7 +81,7 @@ class NoticeUpdaterTest :
                 }
 
                 // Then
-                verify(exactly = 2) { noticeService.updateNotice(any()) }
+                verify(exactly = 2) { noticeService.updateNotice(any(), any()) }
                 titles shouldHaveSize 2 // 두 번의 수정이 수행되었는지 확인
                 contents shouldHaveSize 2 // 두 번의 수정이 수행되었는지 확인
 

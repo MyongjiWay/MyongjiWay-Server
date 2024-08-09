@@ -35,7 +35,7 @@ class NoticeCoreRepository(
     override fun delete(noticeId: Long) {
         val noticeEntity = noticeJpaRepository.findByIdOrNull(noticeId)
             ?: throw CoreException(CoreErrorType.NOT_FOUND_DATA)
-        noticeJpaRepository.delete(noticeEntity)
+        noticeEntity.inactive()
     }
 
     override fun findById(noticeId: Long): Notice {

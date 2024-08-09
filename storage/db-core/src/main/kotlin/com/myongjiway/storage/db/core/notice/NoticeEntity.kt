@@ -26,4 +26,8 @@ class NoticeEntity(
         this.author = author
         this.content = content
     }
+
+    fun inactive() {
+        this.isDeleted = true
+    }
 }

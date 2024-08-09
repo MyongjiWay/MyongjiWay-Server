@@ -43,8 +43,8 @@ class NoticeFinderTest :
                 // Given
                 val userId = 1000L
                 val notices = listOf(
-                    getNotice("Notice 1", "Content 1"),
-                    getNotice("Notice 2", "Content 2"),
+                    getNotice(1L, "Notice 1", "Content 1", false),
+                    getNotice(2L, "Notice 2", "Content 2", false),
                 )
 
                 every { noticeRepository.findAll() } returns notices
@@ -60,13 +60,12 @@ class NoticeFinderTest :
         }
 
         feature("공지사항 조회 - 읽음 상태 확인 테스트") {
-
             scenario("모든 공지사항이 읽음 상태일 때 조회") {
                 // Given
                 val userId = 1000L
                 val notices = listOf(
-                    getNotice("Notice 1", "Content 1"),
-                    getNotice("Notice 2", "Content 2"),
+                    getNotice(1L, "Notice 1", "Content 1", false),
+                    getNotice(2L, "Notice 2", "Content 2", false),
                 )
                 val readNotices = listOf(1L, 2L)
 
@@ -86,9 +85,9 @@ class NoticeFinderTest :
                 // Given
                 val userId = 1000L
                 val notices = listOf(
-                    getNotice("Notice 1", "Content 1"),
-                    getNotice("Notice 2", "Content 2"),
-                    getNotice("Notice 3", "Content 3"),
+                    getNotice(1L, "Notice 1", "Content 1", true),
+                    getNotice(2L, "Notice 2", "Content 2", true),
+                    getNotice(3L, "Notice 3", "Content 3", false),
                 )
                 val readNotices = listOf(1L, 2L)
 
@@ -108,11 +107,11 @@ class NoticeFinderTest :
         }
 
         feature("공지사항 단건 조회 테스트") {
+            val notice = getNotice(1, "Notice 1", "Content 1", false)
 
             scenario("특정 공지사항을 읽고 읽음 상태를 업데이트") {
                 // Given
                 val userId = 1000L
-                val notice = getNotice("Notice 1", "Content 1")
                 val noticeId = 1L
 
                 every { noticeRepository.findById(noticeId) } returns notice
@@ -135,7 +134,6 @@ class NoticeFinderTest :
             scenario("이미 읽은 공지사항을 다시 조회할 때 중복된 읽음 상태가 업데이트되지 않음") {
                 // Given
                 val userId = 1000L
-                val notice = getNotice("Notice 1", "Content 1")
                 val noticeId = 1L
 
                 every { noticeRepository.findById(noticeId) } returns notice // Notice 조회 설정
@@ -152,12 +150,12 @@ class NoticeFinderTest :
         }
 
         feature("공지사항 조회 - 비동기 테스트") {
+            val notice = getNotice(1L, "Notice 1", "Content 1", false)
 
             scenario("비동기 동작으로 여러 사용자가 같은 공지사항을 다르게 조회") {
                 // Given
                 val userId = 1000L
                 val userId2 = 10001L
-                val notice = getNotice("Notice 1", "Content 1")
 
                 every { noticeRepository.findById(notice.id!!) } returns notice
                 every { noticeRepository.findAll() } returns listOf(notice)
@@ -190,12 +188,12 @@ class NoticeFinderTest :
         }
     }) {
     companion object {
-        fun getNotice(title: String, content: String): Notice = Notice(
-            id = 1L,
+        fun getNotice(id: Long, title: String, content: String, read: Boolean): Notice = Notice(
+            id = id,
             title = title,
             author = "author",
             content = content,
-            read = false,
+            read = read,
             createdAt = LocalDateTime.now(),
             updatedAt = LocalDateTime.now(),
         )

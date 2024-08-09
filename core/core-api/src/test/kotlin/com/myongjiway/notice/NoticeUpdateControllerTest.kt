@@ -24,12 +24,12 @@ class NoticeUpdateControllerTest :
         }
         feature("공지사항 수정 - 권한 검사 테스트") {
             // Given
-            val user = getUser(Role.ADMIN)
+            val user = getUser(Role.USER)
 
             scenario("관리자가 아닌 경우") {
                 // When
                 val exception = shouldThrow<CoreException> {
-                    noticeController.updateNotice(1, NoticeRequest(title = "Title", content = "Content"), user)
+                    noticeController.updateNotice(1L, NoticeRequest(title = "Title", content = "Content"), user)
                 }
 
                 // Then

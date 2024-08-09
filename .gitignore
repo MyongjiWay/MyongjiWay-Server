@@ -11,3 +11,7 @@ build/
 *.ipr
 out/
 .env
+/cert/8c47424d12c1196399546f5c31133b1aa5b252d1c44ee8f11a723626b4a55f98-certificate.pem.crt
+/cert/8c47424d12c1196399546f5c31133b1aa5b252d1c44ee8f11a723626b4a55f98-private.pem.key
+/core/core-api/src/main/resources/static/docs/auth.html
+/core/core-api/src/main/resources/static/docs/notice.html

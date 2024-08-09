@@ -3,10 +3,12 @@ package com.myongjiway.core.notice.controller.v1.request
 import com.myongjiway.notice.Notice
 
 data class NoticeRequest(
+    val id: Long?,
     val title: String,
     val content: String,
 ) {
-    fun toNotice(): Notice = Notice.fixture(
+    fun toNotice(noticeId: Long?): Notice = Notice.fixture(
+        id = noticeId,
         title = title,
         content = content,
     )

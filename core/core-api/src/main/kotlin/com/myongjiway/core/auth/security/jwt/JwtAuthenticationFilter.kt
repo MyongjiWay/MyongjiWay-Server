@@ -45,6 +45,6 @@ class JwtAuthenticationFilter(
     }
 
     companion object {
-        private val logger = LoggerFactory.getLogger(JwtAuthenticationFilter::class.java)
+        private val logger = LoggerFactory.getLogger("AuthenticationLog")
     }
 }

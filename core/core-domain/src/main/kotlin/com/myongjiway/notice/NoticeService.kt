@@ -1,9 +1,24 @@
 package com.myongjiway.notice
 
-interface NoticeService {
-    fun createNotice(notice: Notice): Unit
-    fun updateNotice(noticeId: Long, notice: Notice): Unit
-    fun deleteNotice(noticeId: Long): Unit
-    fun getNotice(noticeId: Long): Notice
-    fun getNotices(): List<Notice>
+import org.springframework.stereotype.Service
+
+@Service
+class NoticeService(
+    private val noticeCreator: NoticeCreator,
+    private val noticeUpdater: NoticeUpdater,
+    private val noticeDeleter: NoticeDeleter,
+    private val noticeFinder: NoticeFinder,
+) {
+
+    fun createNotice(notice: Notice) {
+        noticeCreator.createNotice(notice)
+    }
+    fun updateNotice(notice: Notice) {
+        noticeUpdater.updateNotice(notice)
+    }
+    fun deleteNotice(noticeId: Long) {
+        noticeDeleter.deleteNotice(noticeId)
+    }
+    fun getNotice(noticeId: Long, userId: Long): Notice = noticeFinder.findNotice(noticeId, userId)
+    fun getNotices(userId: Long): List<Notice> = noticeFinder.findNotices(userId)
 }

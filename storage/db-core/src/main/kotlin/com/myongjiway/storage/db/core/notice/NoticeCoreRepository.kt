@@ -14,18 +14,19 @@ class NoticeCoreRepository(
 ) : NoticeRepository {
 
     @Transactional
-    override fun save(title: String, content: String) {
+    override fun save(notice: Notice) {
         val noticeEntity = NoticeEntity(
-            title = title,
-            content = content,
+            title = notice.title,
+            author = notice.author,
+            content = notice.content,
         )
         noticeJpaRepository.save(noticeEntity)
     }
 
     @Transactional
-    override fun update(noticeId: Long, title: String, content: String) {
-        val noticeEntity = noticeJpaRepository.findById(noticeId).orElseThrow { throw CoreException(CoreErrorType.NOT_FOUND_DATA) }
-        noticeEntity.update(title, content)
+    override fun update(notice: Notice) {
+        val noticeEntity = noticeJpaRepository.findById(notice.id!!).orElseThrow { throw CoreException(CoreErrorType.NOT_FOUND_DATA) }
+        noticeEntity.update(notice.title, notice.author, notice.content)
     }
 
     @Transactional

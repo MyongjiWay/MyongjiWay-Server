@@ -1,7 +1,7 @@
 package com.myongjiway.storage.db.core.notice
 
-import com.myongjiway.notice.UserNotice
 import com.myongjiway.storage.db.core.common.BaseEntity
+import com.myongjiway.usernotice.UserNotice
 import jakarta.persistence.Entity
 import jakarta.persistence.Table
 

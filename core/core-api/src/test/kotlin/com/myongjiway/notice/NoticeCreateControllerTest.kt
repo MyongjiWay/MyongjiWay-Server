@@ -1,8 +1,8 @@
 package com.myongjiway.notice
 
+import com.myongjiway.core.api.support.error.CoreApiException
 import com.myongjiway.core.notice.controller.NoticeController
 import com.myongjiway.core.notice.controller.v1.request.NoticeRequest
-import com.myongjiway.error.CoreException
 import com.myongjiway.user.ProviderType
 import com.myongjiway.user.Role
 import com.myongjiway.user.User
@@ -28,12 +28,12 @@ class NoticeCreateControllerTest :
                 val user = getUser(Role.USER)
 
                 // When
-                val exception = shouldThrow<CoreException> {
+                val exception = shouldThrow<CoreApiException> {
                     noticeController.createNotice(NoticeRequest(title = "Title", content = "Content"), user)
                 }
 
                 // Then
-                exception.message shouldBe "권한이 없습니다."
+                exception.message shouldBe "접근 권한이 없습니다."
             }
         }
 

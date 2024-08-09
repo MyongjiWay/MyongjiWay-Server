@@ -1,10 +1,10 @@
 package com.myongjiway.core.notice.controller
 
+import com.myongjiway.core.api.support.error.CoreApiException
+import com.myongjiway.core.api.support.error.ErrorType
 import com.myongjiway.core.api.support.response.ApiResponse
 import com.myongjiway.core.notice.controller.v1.request.NoticeRequest
 import com.myongjiway.core.notice.controller.v1.response.NoticeResponse
-import com.myongjiway.error.CoreErrorType
-import com.myongjiway.error.CoreException
 import com.myongjiway.notice.NoticeService
 import com.myongjiway.user.Role
 import com.myongjiway.user.User
@@ -54,7 +54,7 @@ class NoticeController(
     private fun authenticate(user: User) {
         if (user.role != Role.ADMIN) {
             logger.info("${user.id}는 잘못된 권한으로 접근하였습니다.")
-            throw CoreException(CoreErrorType.UNAUTHORIZED)
+            throw CoreApiException(ErrorType.NOT_ALLOWED_ACCESS_ERROR)
         }
     }
 

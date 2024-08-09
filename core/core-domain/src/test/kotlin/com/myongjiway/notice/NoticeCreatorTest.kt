@@ -8,6 +8,7 @@ import io.mockk.mockk
 import io.mockk.runs
 import io.mockk.verify
 import kotlinx.coroutines.async
+import java.time.LocalDateTime
 
 class NoticeCreatorTest :
     FeatureSpec({
@@ -24,7 +25,7 @@ class NoticeCreatorTest :
 
             scenario("관리자가 공지사항을 생성할 때") {
                 // Given
-                val noticeCreateRequest = Notice.fixture(title = "Title", content = "Content")
+                val noticeCreateRequest = getNotice("Title", "Content")
 
                 // Mocking
                 every { noticeRepository.save(any()) } just Runs
@@ -48,7 +49,7 @@ class NoticeCreatorTest :
 
             scenario("여러 스레드가 동시에 공지사항을 생성할 때 정상적으로 생성되어야 한다.") {
                 // Given
-                val noticeCreateRequest = Notice.fixture(title = "Title", content = "Content")
+                val noticeCreateRequest = getNotice("Title", "Content")
 
                 every { noticeRepository.save(any()) } just runs
 
@@ -65,4 +66,16 @@ class NoticeCreatorTest :
                 verify(exactly = 10) { noticeRepository.save(any()) }
             }
         }
-    })
+    }) {
+    companion object {
+        fun getNotice(title: String, content: String): Notice = Notice(
+            id = 1L,
+            title = title,
+            author = "author",
+            content = content,
+            read = false,
+            createdAt = LocalDateTime.now(),
+            updatedAt = LocalDateTime.now(),
+        )
+    }
+}

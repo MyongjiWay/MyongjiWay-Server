@@ -10,6 +10,7 @@ import io.mockk.runs
 import io.mockk.verify
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
+import java.time.LocalDateTime
 
 class NoticeUpdaterTest :
     FeatureSpec({
@@ -27,8 +28,8 @@ class NoticeUpdaterTest :
             scenario("관리자가 공지사항을 수정할 때") {
                 // Given
                 val noticeId = 1L
-                val existingNotice = Notice.fixture(noticeId, "Title", "Content")
-                val updateNotice = Notice.fixture(noticeId, "Updated Title", "Updated Content")
+                val existingNotice = getNotice("Initial Title", "Initial Content")
+                val updateNotice = getNotice("Updated Title", "Updated Content")
 
                 every { noticeRepository.findById(noticeId) } returns existingNotice
                 every { noticeService.updateNotice(match { it == updateNotice }, noticeId) } just runs
@@ -50,12 +51,12 @@ class NoticeUpdaterTest :
 
             scenario("여러 코루틴이 동시에 공지사항을 수정할 때") {
                 // Given
-                val initialNotice = Notice.fixture(1, "Initial Title", "Initial Content")
+                val initialNotice = getNotice("Initial Title", "Initial Content")
                 every { noticeRepository.findById(1) } returns initialNotice
                 every { noticeService.updateNotice(any(), any()) } just runs
 
-                val updateDto1 = Notice.fixture(1, "Updated Title 1", "Updated Content 1")
-                val updateDto2 = Notice.fixture(1, "Updated Title 2", "Updated Content 2")
+                val updateDto1 = getNotice("Updated Title 1", "Updated Content 1")
+                val updateDto2 = getNotice("Updated Title 2", "Updated Content 2")
 
                 // 상태를 추적하기 위한 리스트 (수정된 제목과 내용을 저장)
                 val titles = mutableListOf<String>()
@@ -90,4 +91,16 @@ class NoticeUpdaterTest :
                 (contents.contains(updateDto1.content) || contents.contains(updateDto2.content)) shouldBe true
             }
         }
-    })
+    }) {
+    companion object {
+        fun getNotice(title: String, content: String): Notice = Notice(
+            id = 1L,
+            title = title,
+            author = "author",
+            content = content,
+            read = false,
+            createdAt = LocalDateTime.now(),
+            updatedAt = LocalDateTime.now(),
+        )
+    }
+}

@@ -9,6 +9,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.time.LocalDateTime
 
 class NoticeFinderTest :
     FeatureSpec({
@@ -42,8 +43,8 @@ class NoticeFinderTest :
                 // Given
                 val userId = 1000L
                 val notices = listOf(
-                    Notice.fixture(1, "Notice 1", "Content 1"),
-                    Notice.fixture(2, "Notice 2", "Content 2"),
+                    getNotice("Notice 1", "Content 1"),
+                    getNotice("Notice 2", "Content 2"),
                 )
 
                 every { noticeRepository.findAll() } returns notices
@@ -64,8 +65,8 @@ class NoticeFinderTest :
                 // Given
                 val userId = 1000L
                 val notices = listOf(
-                    Notice.fixture(1, "Notice 1", "Content 1"),
-                    Notice.fixture(2, "Notice 2", "Content 2"),
+                    getNotice("Notice 1", "Content 1"),
+                    getNotice("Notice 2", "Content 2"),
                 )
                 val readNotices = listOf(1L, 2L)
 
@@ -85,9 +86,9 @@ class NoticeFinderTest :
                 // Given
                 val userId = 1000L
                 val notices = listOf(
-                    Notice.fixture(1, "Notice 1", "Content 1"),
-                    Notice.fixture(2, "Notice 2", "Content 2"),
-                    Notice.fixture(3, "Notice 3", "Content 3"),
+                    getNotice("Notice 1", "Content 1"),
+                    getNotice("Notice 2", "Content 2"),
+                    getNotice("Notice 3", "Content 3"),
                 )
                 val readNotices = listOf(1L, 2L)
 
@@ -111,7 +112,7 @@ class NoticeFinderTest :
             scenario("특정 공지사항을 읽고 읽음 상태를 업데이트") {
                 // Given
                 val userId = 1000L
-                val notice = Notice.fixture(1, "Notice 1", "Content 1")
+                val notice = getNotice("Notice 1", "Content 1")
                 val noticeId = 1L
 
                 every { noticeRepository.findById(noticeId) } returns notice
@@ -134,7 +135,7 @@ class NoticeFinderTest :
             scenario("이미 읽은 공지사항을 다시 조회할 때 중복된 읽음 상태가 업데이트되지 않음") {
                 // Given
                 val userId = 1000L
-                val notice = Notice.fixture(1, "Notice 1", "Content 1")
+                val notice = getNotice("Notice 1", "Content 1")
                 val noticeId = 1L
 
                 every { noticeRepository.findById(noticeId) } returns notice // Notice 조회 설정
@@ -156,7 +157,7 @@ class NoticeFinderTest :
                 // Given
                 val userId = 1000L
                 val userId2 = 10001L
-                val notice = Notice.fixture(1, "Notice 1", "Content 1")
+                val notice = getNotice("Notice 1", "Content 1")
 
                 every { noticeRepository.findById(notice.id!!) } returns notice
                 every { noticeRepository.findAll() } returns listOf(notice)
@@ -187,4 +188,16 @@ class NoticeFinderTest :
                 verify(exactly = 0) { userNoticeRepository.save(any(), userId2) }
             }
         }
-    })
+    }) {
+    companion object {
+        fun getNotice(title: String, content: String): Notice = Notice(
+            id = 1L,
+            title = title,
+            author = "author",
+            content = content,
+            read = false,
+            createdAt = LocalDateTime.now(),
+            updatedAt = LocalDateTime.now(),
+        )
+    }
+}

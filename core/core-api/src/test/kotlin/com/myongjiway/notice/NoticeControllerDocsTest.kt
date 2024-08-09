@@ -110,13 +110,11 @@ class NoticeControllerDocsTest : RestDocsTest() {
     @Test
     fun getNotice() {
         val noticeId = 1L
-        val noticeResponse = Notice.fixture(
-            id = noticeId,
-            author = "장호진",
-            title = "Existing Notice",
-            content = "Notice Content",
-            read = true,
-            createdAt = LocalDateTime.now(),
+        val noticeResponse = Companion.getNotice(
+            noticeId,
+            "Existing Notice",
+            "Notice Content",
+            false,
         )
 
         every { noticeService.getNotice(any(), any()) } returns noticeResponse
@@ -150,21 +148,17 @@ class NoticeControllerDocsTest : RestDocsTest() {
     @Test
     fun listNotices() {
         val notices = listOf(
-            Notice.fixture(
+            getNotice(
                 id = 1,
-                author = "장호진",
                 title = "First Existing Notice",
                 content = "First Notice Content",
-                read = true,
-                createdAt = LocalDateTime.now(),
+                read = false,
             ),
-            Notice.fixture(
+            getNotice(
                 id = 2,
-                author = "장호진",
                 title = "Second Existing Notice",
                 content = "Second Notice Content",
                 read = false,
-                createdAt = LocalDateTime.now(),
             ),
         )
 
@@ -191,5 +185,16 @@ class NoticeControllerDocsTest : RestDocsTest() {
                     ),
                 ),
             )
+    }
+    companion object {
+        fun getNotice(id: Long, title: String, content: String, read: Boolean): Notice = Notice(
+            id = id,
+            title = title,
+            author = "장호진",
+            content = content,
+            read = read,
+            createdAt = LocalDateTime.now(),
+            updatedAt = LocalDateTime.now(),
+        )
     }
 }

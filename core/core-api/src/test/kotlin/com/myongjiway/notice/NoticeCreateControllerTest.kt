@@ -3,12 +3,14 @@ package com.myongjiway.notice
 import com.myongjiway.core.notice.controller.NoticeController
 import com.myongjiway.core.notice.controller.v1.request.NoticeRequest
 import com.myongjiway.error.CoreException
+import com.myongjiway.user.ProviderType
 import com.myongjiway.user.Role
 import com.myongjiway.user.User
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
+import java.time.LocalDateTime
 
 class NoticeCreateControllerTest :
     FeatureSpec({
@@ -23,7 +25,7 @@ class NoticeCreateControllerTest :
         feature("공지사항 생성 - 권한 검사 테스트") {
             scenario("관리자가 아닌 경우") {
                 // Given
-                val user = User.fixture(role = Role.USER)
+                val user = getUser(Role.USER)
 
                 // When
                 val exception = shouldThrow<CoreException> {
@@ -36,11 +38,10 @@ class NoticeCreateControllerTest :
         }
 
         feature("공지사항 생성 - 유효성 검사 테스트") {
+            // Given
+            val user = getUser(Role.ADMIN)
 
             scenario("제목이 빈 문자열일 때") {
-                // Given
-                val user = User.fixture(role = Role.ADMIN)
-
                 // When
                 val exception = shouldThrow<IllegalArgumentException> {
                     noticeController.createNotice(NoticeRequest(title = "", content = "Content"), user)
@@ -51,9 +52,6 @@ class NoticeCreateControllerTest :
             }
 
             scenario("내용이 빈 문자열일 때") {
-                // Given
-                val user = User.fixture(role = Role.ADMIN)
-
                 // When
                 val exception = shouldThrow<IllegalArgumentException> {
                     noticeController.createNotice(NoticeRequest(title = "Title", content = ""), user)
@@ -64,9 +62,6 @@ class NoticeCreateControllerTest :
             }
 
             scenario("제목이 최대 길이를 초과할 때") {
-                // Given
-                val user = User.fixture(role = Role.ADMIN)
-
                 // When
                 val exception = shouldThrow<IllegalArgumentException> {
                     noticeController.createNotice(NoticeRequest(title = "a".repeat(101), content = "content"), user)
@@ -77,9 +72,6 @@ class NoticeCreateControllerTest :
             }
 
             scenario("내용이 최대 길이를 초과할 때") {
-                // Given
-                val user = User.fixture(role = Role.ADMIN)
-
                 // When
                 val exception = shouldThrow<IllegalArgumentException> {
                     noticeController.createNotice(NoticeRequest(title = "title", content = "a".repeat(1001)), user)
@@ -91,10 +83,10 @@ class NoticeCreateControllerTest :
         }
 
         feature("공지사항 생성 - 입력 데이터 검사") {
+            // Given
+            val user = getUser(Role.ADMIN)
 
             scenario("제목에 특수 문자만 포함된 경우") {
-                // Given
-                val user = User.fixture(role = Role.ADMIN)
                 // When
                 val exception = shouldThrow<IllegalArgumentException> {
                     noticeController.createNotice(NoticeRequest(title = "@#$%^&*", content = "Content"), user)
@@ -105,9 +97,6 @@ class NoticeCreateControllerTest :
             }
 
             scenario("내용에 특수 문자만 포함된 경우") {
-                // Given
-                val user = User.fixture(role = Role.ADMIN)
-
                 // When
                 val exception = shouldThrow<IllegalArgumentException> {
                     // When
@@ -119,9 +108,6 @@ class NoticeCreateControllerTest :
             }
 
             scenario("제목에 숫자만 포함된 경우") {
-                // Given
-                val user = User.fixture(role = Role.ADMIN)
-
                 // When
                 val exception = shouldThrow<IllegalArgumentException> {
                     noticeController.createNotice(NoticeRequest(title = "123456", content = "Content"), user)
@@ -132,9 +118,6 @@ class NoticeCreateControllerTest :
             }
 
             scenario("내용에 숫자만 포함된 경우") {
-                // Given
-                val user = User.fixture(role = Role.ADMIN)
-
                 // When
                 val exception = shouldThrow<IllegalArgumentException> {
                     noticeController.createNotice(NoticeRequest(title = "Title", content = "123456"), user)
@@ -145,9 +128,6 @@ class NoticeCreateControllerTest :
             }
 
             scenario("제목에 SQL Injection 시도가 포함된 경우") {
-                // Given
-                val user = User.fixture(role = Role.ADMIN)
-
                 // When
                 val exception = shouldThrow<IllegalArgumentException> {
                     noticeController.createNotice(NoticeRequest(title = "DROP TABLE notices;", content = "Content"), user)
@@ -158,9 +138,6 @@ class NoticeCreateControllerTest :
             }
 
             scenario("내용에 SQL Injection 시도가 포함된 경우") {
-                // Given
-                val user = User.fixture(role = Role.ADMIN)
-
                 // When
                 val exception = shouldThrow<IllegalArgumentException> {
                     noticeController.createNotice(NoticeRequest(title = "Title", content = "DROP TABLE notices;"), user)
@@ -170,4 +147,17 @@ class NoticeCreateControllerTest :
                 exception.message shouldBe "SQL Injection이 포함되어 있습니다."
             }
         }
-    })
+    }) {
+    companion object {
+        fun getUser(role: Role) = User(
+            id = 1L,
+            profileImg = "profileImg",
+            name = "name",
+            providerId = "providerId",
+            providerType = ProviderType.KAKAO,
+            role = role,
+            createdAt = LocalDateTime.now(),
+            updatedAt = LocalDateTime.now(),
+        )
+    }
+}

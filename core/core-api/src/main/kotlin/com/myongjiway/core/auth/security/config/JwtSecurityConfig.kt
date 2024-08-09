@@ -1,7 +1,7 @@
 package com.myongjiway.core.auth.security.config
 
 import com.myongjiway.core.auth.security.domain.JwtProvider
-import com.myongjiway.core.auth.security.jwt.JwtFilter
+import com.myongjiway.core.auth.security.jwt.JwtAuthenticationFilter
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -14,7 +14,7 @@ class JwtSecurityConfig(
 ) : SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity>() {
 
     override fun configure(http: HttpSecurity) {
-        val customFilter = JwtFilter(jwtProvider)
+        val customFilter = JwtAuthenticationFilter(jwtProvider)
         http
             .addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter::class.java)
     }

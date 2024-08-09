@@ -36,4 +36,8 @@ class UserEntity(
         this.name = name
         this.role = role
     }
+
+    fun inactive() {
+        this.isDeleted = true
+    }
 }

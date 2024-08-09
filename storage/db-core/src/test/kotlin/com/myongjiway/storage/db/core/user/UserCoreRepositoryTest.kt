@@ -159,5 +159,20 @@ class UserCoreRepositoryTest :
                     actual shouldBe 1000L
                 }
             }
+
+            feature("유저 비활성화") {
+                scenario("유저를 비활성화에 성공한다.") {
+                    // given
+                    val providerId = "123123123"
+                    every { userJpaRepository.findByProviderId(providerId) } returns userEntity
+
+                    // when
+                    val actual = sut.inactive(providerId)
+
+                    // then
+                    actual shouldBe 1000L
+                    userEntity.isDeleted shouldBe true
+                }
+            }
         },
     )

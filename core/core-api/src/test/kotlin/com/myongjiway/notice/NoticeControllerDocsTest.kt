@@ -5,7 +5,6 @@ import com.myongjiway.core.notice.controller.v1.request.NoticeRequest
 import com.myongjiway.test.api.RestDocsTest
 import com.myongjiway.test.api.RestDocsUtils.requestPreprocessor
 import com.myongjiway.test.api.RestDocsUtils.responsePreprocessor
-import com.myongjiway.user.User
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
@@ -21,23 +20,22 @@ import org.springframework.restdocs.payload.PayloadDocumentation.requestFields
 import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 import org.springframework.restdocs.request.RequestDocumentation.parameterWithName
 import org.springframework.restdocs.request.RequestDocumentation.pathParameters
+import java.time.LocalDateTime
 
 class NoticeControllerDocsTest : RestDocsTest() {
     private lateinit var noticeService: NoticeService
     private lateinit var controller: NoticeController
-    private lateinit var user: User
 
     @BeforeEach
     fun setUp() {
-        noticeService = mockk() // Mocking the service
-        controller = NoticeController(noticeService) // Initializing the controller
-        mockMvc = mockController(controller) // Setting up MockMvc with the controller
-        user = User.fixture(1) // Initialize user mock object
+        noticeService = mockk()
+        controller = NoticeController(noticeService)
+        mockMvc = mockController(controller)
     }
 
     @Test
     fun createNotice() {
-        val noticeRequest = NoticeRequest("New Notice", "Notice Content")
+        val noticeRequest = NoticeRequest(title = "New Notice", content = "Notice Content")
 
         every { noticeService.createNotice(any()) } just Runs
 
@@ -65,7 +63,7 @@ class NoticeControllerDocsTest : RestDocsTest() {
         val noticeId = 1L
         val noticeRequest = NoticeRequest("Updated Notice", "Updated Content")
 
-        every { noticeService.updateNotice(any(), any()) } just Runs
+        every { noticeService.updateNotice(any(), noticeId) } just Runs
 
         given()
             .contentType(ContentType.JSON)
@@ -112,9 +110,14 @@ class NoticeControllerDocsTest : RestDocsTest() {
     @Test
     fun getNotice() {
         val noticeId = 1L
-        val noticeResponse = Notice.fixture(noticeId, "Existing Notice", "Notice Content", read = true)
+        val noticeResponse = Companion.getNotice(
+            noticeId,
+            "Existing Notice",
+            "Notice Content",
+            false,
+        )
 
-        every { noticeService.getNotice(any()) } returns noticeResponse
+        every { noticeService.getNotice(any(), any()) } returns noticeResponse
 
         given()
             .get("/api/v1/notices/{noticeId}", noticeId.toString())
@@ -131,9 +134,11 @@ class NoticeControllerDocsTest : RestDocsTest() {
                     responseFields(
                         fieldWithPath("result").type(JsonFieldType.STRING).description("응답 결과 상태"),
                         fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("공지사항 ID"),
+                        fieldWithPath("data.author").type(JsonFieldType.STRING).description("공지사항 작성자"),
                         fieldWithPath("data.title").type(JsonFieldType.STRING).description("공지사항 제목"),
                         fieldWithPath("data.content").type(JsonFieldType.STRING).description("공지사항 내용"),
                         fieldWithPath("data.read").type(JsonFieldType.BOOLEAN).description("읽음 여부"),
+                        fieldWithPath("data.createdAt").type(JsonFieldType.STRING).description("공지사항 작성일"),
                         fieldWithPath("error").type(JsonFieldType.NULL).description("오류 정보"),
                     ),
                 ),
@@ -143,11 +148,21 @@ class NoticeControllerDocsTest : RestDocsTest() {
     @Test
     fun listNotices() {
         val notices = listOf(
-            Notice.fixture(1, "Notice 1", "Content 1", read = true),
-            Notice.fixture(2, "Notice 2", "Content 2", read = false),
+            getNotice(
+                id = 1,
+                title = "First Existing Notice",
+                content = "First Notice Content",
+                read = false,
+            ),
+            getNotice(
+                id = 2,
+                title = "Second Existing Notice",
+                content = "Second Notice Content",
+                read = false,
+            ),
         )
 
-        every { noticeService.getNotices() } returns notices
+        every { noticeService.getNotices(any()) } returns notices
 
         given()
             .get("/api/v1/notices/all")
@@ -161,12 +176,25 @@ class NoticeControllerDocsTest : RestDocsTest() {
                     responseFields(
                         fieldWithPath("result").type(JsonFieldType.STRING).description("응답 결과 상태"),
                         fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("공지사항 ID"),
+                        fieldWithPath("data[].author").type(JsonFieldType.STRING).description("공지사항 작성자"),
                         fieldWithPath("data[].title").type(JsonFieldType.STRING).description("공지사항 제목"),
                         fieldWithPath("data[].content").type(JsonFieldType.STRING).description("공지사항 내용"),
                         fieldWithPath("data[].read").type(JsonFieldType.BOOLEAN).description("읽음 여부"),
+                        fieldWithPath("data[].createdAt").type(JsonFieldType.STRING).description("공지사항 작성일"),
                         fieldWithPath("error").type(JsonFieldType.NULL).description("오류 정보"),
                     ),
                 ),
             )
+    }
+    companion object {
+        fun getNotice(id: Long, title: String, content: String, read: Boolean): Notice = Notice(
+            id = id,
+            title = title,
+            author = "장호진",
+            content = content,
+            read = read,
+            createdAt = LocalDateTime.now(),
+            updatedAt = LocalDateTime.now(),
+        )
     }
 }

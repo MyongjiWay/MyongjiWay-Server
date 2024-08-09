@@ -27,7 +27,7 @@ class PrincipalArgumentResolver : HandlerMethodArgumentResolver {
         name = "test",
         providerId = "1234",
         providerType = ProviderType.KAKAO,
-        role = Role.USER,
+        role = Role.ADMIN,
         createdAt = LocalDateTime.now(),
         updatedAt = LocalDateTime.now(),
     )

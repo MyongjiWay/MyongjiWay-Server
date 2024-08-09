@@ -22,6 +22,9 @@ class UserController(
     ): ApiResponse<Any> {
         val kakaoClientResult = kakaoClient.unlink(user.providerId)
         val inactiveUserId = userService.inactive(kakaoClientResult.id.toString())
+        println(kakaoClientResult)
+        println(inactiveUserId)
+        println(user)
         return ApiResponse.success(UserInactiveResponseDto(inactiveUserId))
     }
 }

@@ -2,23 +2,22 @@ package com.myongjiway.core.auth.security.jwt
 
 import com.myongjiway.core.auth.security.domain.JwtProvider
 import jakarta.servlet.FilterChain
-import jakarta.servlet.ServletRequest
-import jakarta.servlet.ServletResponse
 import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.LoggerFactory
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 import org.springframework.web.context.request.RequestContextHolder
 import org.springframework.web.context.request.ServletRequestAttributes
-import org.springframework.web.filter.GenericFilterBean
+import org.springframework.web.filter.OncePerRequestFilter
 
 @Component
-class JwtFilter(
+class JwtAuthenticationFilter(
     private val jwtProvider: JwtProvider,
-) : GenericFilterBean() {
-    override fun doFilter(
-        servletRequest: ServletRequest,
-        servletResponse: ServletResponse,
+) : OncePerRequestFilter() {
+    override fun doFilterInternal(
+        servletRequest: HttpServletRequest,
+        servletResponse: HttpServletResponse,
         filterChain: FilterChain,
     ) {
         val httpServletRequest = servletRequest as HttpServletRequest
@@ -28,9 +27,8 @@ class JwtFilter(
             val authentication = jwtProvider.getAuthentication(jwt)
             SecurityContextHolder.getContext().authentication = authentication
             Companion.logger.info("Security Context에 '${authentication.name}' 인증 정보를 저장했습니다. uri: $requestURI")
-        } else {
-            Companion.logger.info("유효한 JWT 토큰이 없습니다. uri: $requestURI")
         }
+
         filterChain.doFilter(servletRequest, servletResponse)
     }
 
@@ -39,7 +37,7 @@ class JwtFilter(
         val authHeader = request.getHeader("Authorization")
         return authHeader?.let {
             if (it.startsWith("Bearer ")) {
-                it.substring(7) // "Bearer " 이후의 문자열 반환
+                it.substring(7)
             } else {
                 null
             }
@@ -47,6 +45,6 @@ class JwtFilter(
     }
 
     companion object {
-        private val logger = LoggerFactory.getLogger(JwtFilter::class.java)
+        private val logger = LoggerFactory.getLogger(JwtAuthenticationFilter::class.java)
     }
 }

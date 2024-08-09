@@ -46,6 +46,7 @@ subprojects {
         testImplementation("io.kotest:kotest-runner-junit5-jvm:5.9.1")
         implementation("io.kotest.extensions:kotest-extensions-spring:1.3.0")
         testImplementation("org.springframework.boot:spring-boot-starter-test")
+        testImplementation("org.springframework.security:spring-security-test")
         testImplementation("com.ninja-squad:springmockk:${property("springMockkVersion")}")
         annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
         kapt("org.springframework.boot:spring-boot-configuration-processor")

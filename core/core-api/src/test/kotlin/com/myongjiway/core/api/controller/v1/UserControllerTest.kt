@@ -9,12 +9,11 @@ import com.myongjiway.test.api.RestDocsUtils.responsePreprocessor
 import com.myongjiway.user.UserService
 import io.mockk.every
 import io.mockk.mockk
-import io.restassured.http.ContentType
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
-import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 
@@ -38,20 +37,19 @@ class UserControllerTest : RestDocsTest() {
         every { userService.inactive(any()) } returns 1000L
 
         given()
-            .contentType(ContentType.JSON)
-            .header("Authorization", "Bearer token")
+            .header(HttpHeaders.AUTHORIZATION, "Bearer access-token")
             .patch("/api/v1/users/inactive")
             .then()
             .status(HttpStatus.OK)
             .apply(
                 document(
-                    "userInactive",
+                    "inactiveUser",
                     requestPreprocessor(),
                     responsePreprocessor(),
                     responseFields(
-                        fieldWithPath("result").type(JsonFieldType.STRING).description("ResultType"),
-                        fieldWithPath("data.userId").type(JsonFieldType.STRING).description("Inactive User Id"),
-                        fieldWithPath("error").type(JsonFieldType.NULL).ignored(),
+                        fieldWithPath("result").description("Result"),
+                        fieldWithPath("data.userId").description("Inactive User Id"),
+                        fieldWithPath("error").ignored(),
                     ),
                 ),
             )

@@ -2,6 +2,7 @@ package com.myongjiway.notice
 
 import com.myongjiway.core.notice.controller.NoticeController
 import com.myongjiway.core.notice.controller.v1.request.NoticeRequest
+import com.myongjiway.error.CoreException
 import com.myongjiway.user.Role
 import com.myongjiway.user.User
 import io.kotest.assertions.throwables.shouldThrow
@@ -18,6 +19,20 @@ class NoticeUpdateControllerTest :
         beforeTest {
             noticeService = mockk()
             noticeController = NoticeController(noticeService)
+        }
+        feature("공지사항 수정 - 권한 검사 테스트") {
+            scenario("관리자가 아닌 경우") {
+                // Given
+                val user = User.fixture(role = Role.USER)
+
+                // When
+                val exception = shouldThrow<CoreException> {
+                    noticeController.updateNotice(1, NoticeRequest(title = "Title", content = "Content"), user)
+                }
+
+                // Then
+                exception.message shouldBe "권한이 없습니다."
+            }
         }
 
         feature("공지사항 수정 - 유효성 검사 테스트") {

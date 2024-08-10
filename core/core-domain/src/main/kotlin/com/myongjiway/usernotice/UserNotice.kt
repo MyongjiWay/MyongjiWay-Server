@@ -1,4 +1,4 @@
-package com.myongjiway.notice
+package com.myongjiway.usernotice
 
 import java.time.LocalDateTime
 

@@ -3,6 +3,7 @@ package com.myongjiway.core.api.controller
 import com.myongjiway.core.api.support.error.CoreApiException
 import com.myongjiway.core.api.support.error.ErrorType
 import com.myongjiway.core.api.support.response.ApiResponse
+import com.myongjiway.error.CoreException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.boot.logging.LogLevel
@@ -27,6 +28,12 @@ class ApiControllerAdvice {
     @ExceptionHandler(Exception::class)
     fun handleException(e: Exception): ResponseEntity<ApiResponse<Any>> {
         log.error("Exception : {}", e.message, e)
-        return ResponseEntity(ApiResponse.error(ErrorType.DEFAULT_ERROR), ErrorType.DEFAULT_ERROR.status)
+        return ResponseEntity(ApiResponse.error(ErrorType.DEFAULT_ERROR, e.message), ErrorType.DEFAULT_ERROR.status)
+    }
+
+    @ExceptionHandler(CoreException::class)
+    fun handleCoreException(e: CoreException): ResponseEntity<ApiResponse<Any>> {
+        log.error("CoreException : {}", e.message, e)
+        return ResponseEntity(ApiResponse.error(e.coreErrorType, e.data), ErrorType.COMMON_ERROR.status)
     }
 }

@@ -1,6 +1,5 @@
 package com.myongjiway.token
 
-import com.myongjiway.core.auth.security.domain.JwtValidator
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
@@ -13,10 +12,8 @@ class TokenTypeTest :
         {
             lateinit var jwtProperty: JwtProperty
             lateinit var tokenGenerator: TokenGenerator
-            lateinit var jwtValidator: JwtValidator
 
             beforeTest {
-                jwtValidator = mockk()
                 jwtProperty = mockk()
                 tokenGenerator = mockk()
                 every { jwtProperty.accessToken.secret } returns "lnp1ISIafo9E+U+xZ4xr0kaRGD5uNVCT1tiJ8gXmqWvp32L7JoXC9EjAy0z2F6NVSwrKLxbCkpzT+DZJazy3Pg=="

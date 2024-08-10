@@ -103,12 +103,19 @@ class AuthControllerTest : RestDocsTest() {
             .body(RefreshRequest("refreshToken"))
             .delete("/auth/logout")
             .then()
+            .status(HttpStatus.OK)
             .apply(
                 document(
                     "logout",
                     requestPreprocessor(),
+                    responsePreprocessor(),
                     requestFields(
                         fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("Refresh Token"),
+                    ),
+                    responseFields(
+                        fieldWithPath("result").type(JsonFieldType.STRING).description("ResultType"),
+                        fieldWithPath("data").ignored(),
+                        fieldWithPath("error").ignored(),
                     ),
                 ),
             )

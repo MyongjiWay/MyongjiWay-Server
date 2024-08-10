@@ -93,4 +93,24 @@ class AuthControllerTest : RestDocsTest() {
                 ),
             )
     }
+
+    @Test
+    fun logout() {
+        every { tokenService.delete(any()) } returns Unit
+
+        given()
+            .contentType(ContentType.JSON)
+            .body(RefreshRequest("refreshToken"))
+            .delete("/auth/logout")
+            .then()
+            .apply(
+                document(
+                    "logout",
+                    requestPreprocessor(),
+                    requestFields(
+                        fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("Refresh Token"),
+                    ),
+                ),
+            )
+    }
 }

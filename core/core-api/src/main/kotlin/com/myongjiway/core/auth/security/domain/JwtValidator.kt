@@ -63,6 +63,6 @@ class JwtValidator(
     }
 
     companion object {
-        private val logger = LoggerFactory.getLogger(JwtValidator::class.java)
+        private val logger = LoggerFactory.getLogger("AuthenticationLog")
     }
 }

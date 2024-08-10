@@ -11,6 +11,7 @@ class TokenService(
     private val tokenGenerator: TokenGenerator,
     private val tokenReader: TokenReader,
     private val userReader: UserReader,
+    private val tokenProcessor: TokenProcessor,
 ) {
     fun refresh(refreshData: RefreshData): TokenResult {
         var refreshToken = tokenReader.findByToken(refreshData.refreshToken)
@@ -26,6 +27,15 @@ class TokenService(
 
         val newAccessToken = tokenGenerator.generateAccessTokenByUserId(user.id.toString())
         return TokenResult(newAccessToken.token, refreshToken.token)
+    }
+
+    fun delete(refreshToken: String) {
+        val findRefreshToken = (
+            tokenReader.findByToken(refreshToken)
+                ?: throw CoreException(CoreErrorType.NOT_FOUND_TOKEN)
+            )
+
+        tokenProcessor.deleteToken(findRefreshToken.token)
     }
 
     private fun isExpired(refreshToken: Token?): Boolean = refreshToken?.expiration!! <= System.currentTimeMillis()

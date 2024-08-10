@@ -78,5 +78,18 @@ class TokenCoreRepositoryTest :
                     actual shouldBe null
                 }
             }
+
+            feature("토큰 삭제") {
+                scenario("토큰 삭제에 성공한다.") {
+                    // given
+                    every { tokenJpaRepository.deleteByToken(any()) } returns Unit
+
+                    // when
+                    sut.delete("token")
+
+                    // then
+                    verify(exactly = 1) { tokenJpaRepository.deleteByToken(any()) }
+                }
+            }
         },
     )

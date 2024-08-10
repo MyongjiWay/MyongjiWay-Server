@@ -20,5 +20,6 @@ enum class CoreErrorType(
     /*
      * 토큰 관련 에러
      */
-    UNAUTHORIZED_TOKEN(CoreErrorKind.CLIENT_ERROR, CoreErrorCode.TOKEN0001, "토큰이 유효하지 않습니다. 로그인을 다시 해주세요.", CoreErrorLevel.INFO),
+    UNAUTHORIZED_TOKEN(CoreErrorKind.SERVER_ERROR, CoreErrorCode.TOKEN0001, "토큰이 유효하지 않습니다. 로그인을 다시 해주세요.", CoreErrorLevel.INFO),
+    NOT_FOUND_TOKEN(CoreErrorKind.SERVER_ERROR, CoreErrorCode.TOKEN0002, "이미 로그아웃 된 유저입니다. 로그인을 다시 해주세요.", CoreErrorLevel.INFO),
 }

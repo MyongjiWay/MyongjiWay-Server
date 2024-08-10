@@ -1,6 +1,7 @@
 package com.myongjiway.storage.db.core.token
 
 import io.kotest.core.spec.style.FeatureSpec
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -22,6 +23,10 @@ class TokenCoreRepositoryTest :
             beforeTest {
                 tokenJpaRepository = mockk()
                 sut = TokenCoreRepository(tokenJpaRepository)
+            }
+
+            afterTest {
+                tokenEntity.token = "token"
             }
 
             feature("토큰이 존재하지 않으면 새로 생성한고 존재하면 업데이트한다.") {
@@ -47,6 +52,30 @@ class TokenCoreRepositoryTest :
 
                     // then
                     verify(exactly = 0) { tokenJpaRepository.save(any()) }
+                }
+            }
+
+            feature("토큰 조회") {
+                scenario("토큰이 존재하면 조회에 성공한다.") {
+                    // given
+                    every { tokenJpaRepository.findByUserIdAndToken(any(), any()) } returns tokenEntity
+
+                    // when
+                    val actual = sut.find(1000L, "token")
+
+                    // then
+                    actual?.token shouldBe "token"
+                }
+
+                scenario("토큰이 존재하지 않으면 null을 반환한다.") {
+                    // given
+                    every { tokenJpaRepository.findByUserIdAndToken(any(), any()) } returns null
+
+                    // when
+                    val actual = sut.find(1000L, "token")
+
+                    // then
+                    actual shouldBe null
                 }
             }
         },

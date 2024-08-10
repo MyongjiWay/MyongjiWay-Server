@@ -1,7 +1,6 @@
 package com.myongjiway.token
 
-import com.myongjiway.core.auth.security.config.JwtProperty
-import com.myongjiway.core.auth.security.domain.JwtProvider
+import com.myongjiway.core.auth.security.domain.JwtValidator
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
@@ -13,11 +12,13 @@ class TokenTypeTest :
     FeatureSpec(
         {
             lateinit var jwtProperty: JwtProperty
-            lateinit var jwtProvider: JwtProvider
+            lateinit var tokenGenerator: TokenGenerator
+            lateinit var jwtValidator: JwtValidator
 
             beforeTest {
-                jwtProvider = mockk()
+                jwtValidator = mockk()
                 jwtProperty = mockk()
+                tokenGenerator = mockk()
                 every { jwtProperty.accessToken.secret } returns "lnp1ISIafo9E+U+xZ4xr0kaRGD5uNVCT1tiJ8gXmqWvp32L7JoXC9EjAy0z2F6NVSwrKLxbCkpzT+DZJazy3Pg=="
                 every { jwtProperty.accessToken.expiration } returns 1000
                 every { jwtProperty.refreshToken.secret } returns "lnp1ISIafo9E+U+xZ4xr0kaRGD5uNVCT1tiJ8gXmqWvp32L7JoXC9EjAy0z2F6NVSwrKLxbCkpzT+DZJazy3Pg=="
@@ -30,7 +31,7 @@ class TokenTypeTest :
 
                 scenario("토큰 타입이 ACCESS_TOKEN일 경우 AccessToken을 생성한다.") {
                     // given
-                    every { jwtProvider.generateAccessTokenByUserId(userId) } returns AccessToken(
+                    every { tokenGenerator.generateAccessTokenByUserId(userId) } returns AccessToken(
                         userId,
                         "token",
                         now,
@@ -39,7 +40,7 @@ class TokenTypeTest :
                     // when
                     val actual = TokenType.ACCESS.generate(
                         Date(now + jwtProperty.accessToken.expiration),
-                        jwtProvider.generateAccessTokenByUserId(userId).token,
+                        tokenGenerator.generateAccessTokenByUserId(userId).token,
                         userId,
                     )
 
@@ -51,7 +52,7 @@ class TokenTypeTest :
 
                 scenario("토큰 타입이 REFRESH_TOKEN일 경우 RefreshToken을 생성한다.") {
                     // given
-                    every { jwtProvider.generateRefreshTokenByUserId(userId) } returns RefreshToken(
+                    every { tokenGenerator.generateRefreshTokenByUserId(userId) } returns RefreshToken(
                         userId,
                         "token",
                         now,
@@ -60,7 +61,7 @@ class TokenTypeTest :
                     // when
                     val actual = TokenType.REFRESH.generate(
                         Date(now + jwtProperty.refreshToken.expiration),
-                        jwtProvider.generateRefreshTokenByUserId(userId).token,
+                        tokenGenerator.generateRefreshTokenByUserId(userId).token,
                         userId,
                     )
 

@@ -3,7 +3,7 @@ package com.myongjiway.user
 import java.time.LocalDateTime
 
 data class User(
-    val id: Long?,
+    val id: Long,
     val profileImg: String,
     val name: String,
     val providerId: String,
@@ -14,7 +14,7 @@ data class User(
 ) {
     companion object {
         fun fixture(
-            id: Long? = null,
+            id: Long = 1000L,
             profileImg: String = "profileImg",
             name: String = "name",
             providerId: String = "providerId",

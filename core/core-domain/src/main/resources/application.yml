@@ -1,0 +1,7 @@
+jwt:
+  access-token:
+    secret: ${JWT_ACCESS_TOKEN_SECRET}
+    expiration: 3600000
+  refresh-token:
+    secret: ${JWT_REFRESH_TOKEN_SECRET}
+    expiration: 1209600000

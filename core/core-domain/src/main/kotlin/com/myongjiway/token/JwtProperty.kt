@@ -1,12 +1,15 @@
-package com.myongjiway.core.auth.security.config
+package com.myongjiway.token
 
-import org.springframework.boot.context.properties.ConfigurationProperties
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-@ConfigurationProperties(prefix = "jwt")
 class JwtProperty {
+
+    @Value("\${jwt.access-token}")
     lateinit var accessToken: TokenProperties
+
+    @Value("\${jwt.refresh-token}")
     lateinit var refreshToken: TokenProperties
 
     class TokenProperties {

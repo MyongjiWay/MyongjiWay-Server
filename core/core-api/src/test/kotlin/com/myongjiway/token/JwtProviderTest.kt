@@ -4,8 +4,7 @@ package com.myongjiway.token
 
 import com.myongjiway.core.api.support.error.CoreApiException
 import com.myongjiway.core.api.support.error.ErrorType
-import com.myongjiway.core.auth.security.config.JwtProperty
-import com.myongjiway.core.auth.security.domain.JwtProvider
+import com.myongjiway.core.auth.security.domain.JwtValidator
 import com.myongjiway.user.ProviderType
 import com.myongjiway.user.Role
 import com.myongjiway.user.User
@@ -21,20 +20,19 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import java.time.LocalDateTime
-import java.util.Date
 
 class JwtProviderTest :
     FeatureSpec(
         {
             lateinit var jwtProperty: JwtProperty
             lateinit var userRepository: UserRepository
-            lateinit var sut: JwtProvider
+            lateinit var sut: JwtValidator
             val userId = "1234"
 
             beforeTest {
                 jwtProperty = mockk()
                 userRepository = mockk()
-                sut = JwtProvider(jwtProperty, userRepository)
+                sut = JwtValidator(jwtProperty, userRepository)
 
                 every { jwtProperty.accessToken.secret } returns "lnp1ISIafo9E+U+xZ4xr0kaRGD5uNVCT1tiJ8gXmqWvp32L7JoXC9EjAy0z2F6NVSwrKLxbCkpzT+DZJazy3Pg=="
                 every { jwtProperty.accessToken.expiration } returns 1000
@@ -50,44 +48,6 @@ class JwtProviderTest :
                     createdAt = LocalDateTime.now(),
                     updatedAt = LocalDateTime.now(),
                 )
-            }
-
-            feature("토큰 생성") {
-                scenario("AccessToken을 생성한다.") {
-                    // given
-                    val tokenType = TokenType.ACCESS
-                    val now = System.currentTimeMillis()
-
-                    // when
-                    val actual = tokenType.generate(
-                        Date(now + jwtProperty.accessToken.expiration),
-                        sut.generateAccessTokenByUserId(userId).token,
-                        userId,
-                    )
-
-                    // then
-                    actual.shouldBeInstanceOf<AccessToken>()
-                    actual.userId shouldBe "1234"
-                    actual.expiration shouldBe now + jwtProperty.accessToken.expiration
-                }
-
-                scenario("RefreshToken을 생성한다.") {
-                    // given
-                    val tokenType = TokenType.REFRESH
-                    val now = System.currentTimeMillis()
-
-                    // when
-                    val actual = tokenType.generate(
-                        Date(now + jwtProperty.refreshToken.expiration),
-                        sut.generateAccessTokenByUserId(userId).token,
-                        userId,
-                    )
-
-                    // then
-                    actual.shouldBeInstanceOf<RefreshToken>()
-                    actual.userId shouldBe "1234"
-                    actual.expiration shouldBe now + jwtProperty.refreshToken.expiration
-                }
             }
 
             feature("토큰 검증") {

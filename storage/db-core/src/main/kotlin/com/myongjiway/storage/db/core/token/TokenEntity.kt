@@ -9,7 +9,7 @@ import jakarta.persistence.Table
 @Table(name = "refresh_token")
 class TokenEntity(
     val userId: Long,
-    private var token: String,
+    var token: String,
     private var expiration: Long,
 ) : BaseEntity() {
     fun toRefreshToken(): RefreshToken = RefreshToken(userId.toString(), token, expiration)

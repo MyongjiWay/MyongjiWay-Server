@@ -6,6 +6,7 @@ import com.myongjiway.core.api.controller.UserController
 import com.myongjiway.test.api.RestDocsTest
 import com.myongjiway.test.api.RestDocsUtils.requestPreprocessor
 import com.myongjiway.test.api.RestDocsUtils.responsePreprocessor
+import com.myongjiway.token.TokenService
 import com.myongjiway.user.UserService
 import io.mockk.every
 import io.mockk.mockk
@@ -19,6 +20,7 @@ import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 
 class UserControllerTest : RestDocsTest() {
 
+    private lateinit var tokenService: TokenService
     private lateinit var userService: UserService
     private lateinit var kakaoClient: KakaoClient
     private lateinit var controller: UserController
@@ -27,7 +29,7 @@ class UserControllerTest : RestDocsTest() {
     fun setUp() {
         userService = mockk()
         kakaoClient = mockk()
-        controller = UserController(userService, kakaoClient)
+        controller = UserController(userService, tokenService, kakaoClient)
         mockMvc = mockController(controller)
     }
 

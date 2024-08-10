@@ -2,10 +2,10 @@ package com.myongjiway.core.auth.controller
 
 import com.myongjiway.core.auth.controller.v1.request.KakaoLoginRequest
 import com.myongjiway.core.auth.security.domain.AuthService
-import com.myongjiway.core.auth.security.domain.TokenResult
 import com.myongjiway.test.api.RestDocsTest
 import com.myongjiway.test.api.RestDocsUtils.requestPreprocessor
 import com.myongjiway.test.api.RestDocsUtils.responsePreprocessor
+import com.myongjiway.token.TokenResult
 import io.mockk.every
 import io.mockk.mockk
 import io.restassured.http.ContentType

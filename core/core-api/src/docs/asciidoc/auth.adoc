@@ -12,7 +12,7 @@
 이 문서는 유저 인증/인가 관련 API에 대한 설명을 제공합니다.
 OAuth2를 사용하여 인증을 수행합니다.
 
-== 카카오 로그인 API
+== 로그인/로그아웃
 
 === 카카오 로그인 (POST)
 
@@ -35,3 +35,41 @@ include::{snippets}/kakaoLoginPost/http-response.adoc[]
 ==== 응답 필드
 
 include::{snippets}/kakaoLoginPost/response-body.adoc[]
+
+=== 로그아웃 (DELETE)
+
+==== 개요
+
+로그아웃을 수행합니다.
+
+==== Curl 요청
+
+include::{snippets}/logout/curl-request.adoc[]
+
+==== HTTP 응답
+
+include::{snippets}/logout/http-response.adoc[]
+
+==== 응답 필드
+
+include::{snippets}/logout/response-body.adoc[]
+
+== Token 갱신
+
+=== AccessToken 갱신 (POST)
+
+==== 개요
+
+AccessToken을 갱신합니다.
+
+==== Curl 요청
+
+include::{snippets}/refreshToken/curl-request.adoc[]
+
+==== HTTP 응답
+
+include::{snippets}/refreshToken/http-response.adoc[]
+
+==== 응답 필드
+
+include::{snippets}/refreshToken/response-body.adoc[]

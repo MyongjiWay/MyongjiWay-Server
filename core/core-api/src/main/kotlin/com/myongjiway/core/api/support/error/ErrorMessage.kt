@@ -1,5 +1,7 @@
 package com.myongjiway.core.api.support.error
 
+import com.myongjiway.error.CoreErrorType
+
 data class ErrorMessage private constructor(
     val code: String,
     val message: String,
@@ -8,6 +10,12 @@ data class ErrorMessage private constructor(
     constructor(errorType: ErrorType, data: Any? = null) : this(
         code = errorType.code.name,
         message = errorType.message,
+        data = data,
+    )
+
+    constructor(coreErrorType: CoreErrorType, data: Any? = null) : this(
+        code = coreErrorType.code.name,
+        message = coreErrorType.message,
         data = data,
     )
 }

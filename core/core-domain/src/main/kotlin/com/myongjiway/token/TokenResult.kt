@@ -1,4 +1,4 @@
-package com.myongjiway.core.auth.security.domain
+package com.myongjiway.token
 
 data class TokenResult(
     val accessToken: String,

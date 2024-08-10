@@ -8,7 +8,7 @@ import io.mockk.mockk
 class UserFinderTest :
     FeatureSpec(
         {
-            lateinit var sut: UserFinder
+            lateinit var sut: UserReader
             lateinit var userRepository: UserRepository
 
             val user = User(
@@ -24,7 +24,7 @@ class UserFinderTest :
 
             beforeTest {
                 userRepository = mockk()
-                sut = UserFinder(userRepository)
+                sut = UserReader(userRepository)
             }
 
             feature("유저 조회") {

@@ -3,7 +3,7 @@ package com.myongjiway.user
 import org.springframework.stereotype.Component
 
 @Component
-class UserFinder(
+class UserReader(
     private val userRepository: UserRepository,
 ) {
     fun find(id: Long): User? = userRepository.findUserById(id)

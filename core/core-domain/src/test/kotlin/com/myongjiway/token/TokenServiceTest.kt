@@ -39,12 +39,14 @@ class TokenServiceTest :
                     "newRefreshToken",
                     10000,
                 )
+
+                every { tokenAppender.upsert(any(), any(), any()) } returns 1
             }
 
             feature("토큰 갱신") {
                 scenario("RefreshToken의 expiration이 지나지 않았다면 AccessToken을 갱신한다.") {
                     // given
-                    val expiration = System.currentTimeMillis() + 10000
+                    val expiration = System.currentTimeMillis() + 100000
                     every { tokenReader.findByToken(any()) } returns RefreshToken(
                         "1000",
                         "refreshToken",
@@ -68,13 +70,12 @@ class TokenServiceTest :
                     // then
                     verify(exactly = 0) { tokenGenerator.generateRefreshTokenByUserId(any()) }
                     verify(exactly = 1) { tokenGenerator.generateAccessTokenByUserId(any()) }
-                    verify(exactly = 1) { tokenGenerator.generateAccessTokenByUserId(any()) }
                     verify(exactly = 0) { tokenAppender.upsert(any(), any(), any()) }
                 }
 
                 scenario("RefreshToken의 expiration이 지났다면 RefreshToken과 AccessToken을 같이 갱신한다.") {
                     // given
-                    val expiration = System.currentTimeMillis() - 10000
+                    val expiration = System.currentTimeMillis() - 100000
 
                     every { tokenReader.findByToken(any()) } returns RefreshToken(
                         "1000",

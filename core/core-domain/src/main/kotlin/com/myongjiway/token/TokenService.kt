@@ -28,5 +28,5 @@ class TokenService(
         return TokenResult(newAccessToken.token, refreshToken.token)
     }
 
-    private fun isExpired(refreshToken: Token?): Boolean = refreshToken?.expiration!! > System.currentTimeMillis()
+    private fun isExpired(refreshToken: Token?): Boolean = refreshToken?.expiration!! <= System.currentTimeMillis()
 }

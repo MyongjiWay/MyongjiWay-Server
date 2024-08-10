@@ -18,8 +18,8 @@ class TokenCoreRepository(
         return tokenEntity.id!!
     }
 
-    override fun find(userId: Long, refreshToken: String): Token? {
-        val tokenEntity = tokenJpaRepository.findByUserIdAndToken(userId, refreshToken)
+    override fun find(refreshToken: String): Token? {
+        val tokenEntity = tokenJpaRepository.findByToken(refreshToken)
         return tokenEntity?.toRefreshToken()
     }
 }

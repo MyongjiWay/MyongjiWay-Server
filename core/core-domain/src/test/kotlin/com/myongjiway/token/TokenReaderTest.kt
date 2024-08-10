@@ -19,28 +19,27 @@ class TokenReaderTest :
             feature("토큰 조회") {
                 scenario("토큰이 존재하면 조회에 성공한다.") {
                     // given
-                    val userId = 1000L
                     val token = "token"
-                    every { tokenRepository.find(userId, token) } returns RefreshToken(
-                        userId = userId.toString(),
+                    every { tokenRepository.find(token) } returns RefreshToken(
+                        userId = "1000",
                         token = token,
                         expiration = 1721041381000,
                     )
 
                     // when
-                    val refreshToken = sut.findByTokenAndUserId(userId, token)
+                    val refreshToken = sut.findByToken(token)
 
                     // then
                     refreshToken?.token shouldBe token
-                    refreshToken?.userId shouldBe userId.toString()
+                    refreshToken?.userId shouldBe "1000"
                 }
 
                 scenario("토큰이 존재하지 않으면 null을 반환한다.") {
                     // given
-                    every { tokenRepository.find(1000L, "token") } returns null
+                    every { tokenRepository.find("token") } returns null
 
                     // when
-                    val refreshToken = sut.findByTokenAndUserId(1000L, "token")
+                    val refreshToken = sut.findByToken("token")
 
                     // then
                     refreshToken shouldBe null

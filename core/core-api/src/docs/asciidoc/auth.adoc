@@ -35,3 +35,21 @@ include::{snippets}/kakaoLoginPost/http-response.adoc[]
 ==== 응답 필드
 
 include::{snippets}/kakaoLoginPost/response-body.adoc[]
+
+=== AccessToken 갱신 (POST)
+
+==== 개요
+
+AccessToken을 갱신합니다.
+
+==== Curl 요청
+
+include::{snippets}/refreshToken/curl-request.adoc[]
+
+==== HTTP 응답
+
+include::{snippets}/refreshToken/http-response.adoc[]
+
+==== 응답 필드
+
+include::{snippets}/refreshToken/response-body.adoc[]

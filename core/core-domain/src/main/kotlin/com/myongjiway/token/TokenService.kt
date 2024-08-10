@@ -2,6 +2,7 @@ package com.myongjiway.token
 
 import com.myongjiway.error.CoreErrorType
 import com.myongjiway.error.CoreException
+import com.myongjiway.user.UserReader
 import org.springframework.stereotype.Service
 
 @Service
@@ -9,21 +10,23 @@ class TokenService(
     private val tokenAppender: TokenAppender,
     private val tokenGenerator: TokenGenerator,
     private val tokenReader: TokenReader,
+    private val userReader: UserReader,
 ) {
     fun refresh(refreshData: RefreshData): TokenResult {
-        var refreshToken = tokenReader.findByTokenAndUserId(refreshData.userId, refreshData.refreshToken)
+        var refreshToken = tokenReader.findByToken(refreshData.refreshToken)
             ?: throw CoreException(CoreErrorType.UNAUTHORIZED_TOKEN)
 
-        val isExpired = validateRefreshToken(refreshToken)
+        val user = userReader.find(refreshToken.userId.toLong())
+            ?: throw CoreException(CoreErrorType.USER_NOT_FOUND)
 
-        if (isExpired) {
-            refreshToken = tokenGenerator.generateRefreshTokenByUserId(refreshData.userId.toString())
-            tokenAppender.upsert(refreshData.userId, refreshToken.token, refreshToken.expiration)
+        if (isExpired(refreshToken)) {
+            refreshToken = tokenGenerator.generateRefreshTokenByUserId(user.id.toString())
+            tokenAppender.upsert(user.id, refreshToken.token, refreshToken.expiration)
         }
 
-        val newAccessToken = tokenGenerator.generateAccessTokenByUserId(refreshData.userId.toString())
+        val newAccessToken = tokenGenerator.generateAccessTokenByUserId(user.id.toString())
         return TokenResult(newAccessToken.token, refreshToken.token)
     }
 
-    private fun validateRefreshToken(refreshToken: Token?): Boolean = refreshToken?.expiration!! <= System.currentTimeMillis()
+    private fun isExpired(refreshToken: Token?): Boolean = refreshToken?.expiration!! > System.currentTimeMillis()
 }

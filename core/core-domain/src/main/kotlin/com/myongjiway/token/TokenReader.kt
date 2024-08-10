@@ -6,5 +6,5 @@ import org.springframework.stereotype.Component
 class TokenReader(
     private val tokenRepository: TokenRepository,
 ) {
-    fun findByTokenAndUserId(userId: Long, token: String): Token? = tokenRepository.find(userId, token)
+    fun findByToken(token: String): Token? = tokenRepository.find(token)
 }

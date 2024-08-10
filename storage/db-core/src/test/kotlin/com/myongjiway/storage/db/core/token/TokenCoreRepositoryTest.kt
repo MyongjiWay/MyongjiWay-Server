@@ -58,10 +58,10 @@ class TokenCoreRepositoryTest :
             feature("토큰 조회") {
                 scenario("토큰이 존재하면 조회에 성공한다.") {
                     // given
-                    every { tokenJpaRepository.findByUserIdAndToken(any(), any()) } returns tokenEntity
+                    every { tokenJpaRepository.findByToken(any()) } returns tokenEntity
 
                     // when
-                    val actual = sut.find(1000L, "token")
+                    val actual = sut.find("token")
 
                     // then
                     actual?.token shouldBe "token"
@@ -69,10 +69,10 @@ class TokenCoreRepositoryTest :
 
                 scenario("토큰이 존재하지 않으면 null을 반환한다.") {
                     // given
-                    every { tokenJpaRepository.findByUserIdAndToken(any(), any()) } returns null
+                    every { tokenJpaRepository.findByToken(any()) } returns null
 
                     // when
-                    val actual = sut.find(1000L, "token")
+                    val actual = sut.find("token")
 
                     // then
                     actual shouldBe null

@@ -6,9 +6,9 @@ import com.amazonaws.services.iot.client.AWSIotQos
 import com.amazonaws.services.iot.client.AWSIotTopic
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.myongjiway.clientmqtt.util.AwsIotUtil
 import com.myongjiway.buslocation.BusLocation
 import com.myongjiway.buslocation.BusLocationService
+import com.myongjiway.clientmqtt.util.AwsIotUtil
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

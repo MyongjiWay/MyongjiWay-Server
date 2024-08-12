@@ -1,4 +1,4 @@
-package com.myongjiway.domain.buslocation
+package com.myongjiway.buslocation
 
 import org.springframework.stereotype.Service
 import java.util.concurrent.ConcurrentHashMap

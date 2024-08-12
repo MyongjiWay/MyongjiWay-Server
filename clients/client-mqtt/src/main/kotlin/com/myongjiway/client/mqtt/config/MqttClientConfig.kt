@@ -6,9 +6,9 @@ import com.amazonaws.services.iot.client.AWSIotQos
 import com.amazonaws.services.iot.client.AWSIotTopic
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.myongjiway.buslocation.BusLocation
+import com.myongjiway.buslocation.BusLocationService
 import com.myongjiway.clientmqtt.util.AwsIotUtil
-import com.myongjiway.domain.buslocation.BusLocation
-import com.myongjiway.domain.buslocation.BusLocationService
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -66,11 +66,13 @@ class MqttClientConfig(
         val latlng = reportedNode.path("latlng").asText().split(",")
         val latitude = latlng[0].toDouble()
         val longitude = latlng[1].toDouble()
+        val direction = reportedNode.path("ang").asInt()
 
         return BusLocation(
             busId = topic,
             latitude = latitude,
             longitude = longitude,
+            direction = direction,
             timestamp = System.currentTimeMillis(),
         )
     }

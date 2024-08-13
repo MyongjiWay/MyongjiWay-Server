@@ -7,6 +7,7 @@ import com.myongjiway.core.auth.security.domain.AuthService
 import com.myongjiway.token.RefreshData
 import com.myongjiway.token.TokenService
 import jakarta.validation.Valid
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -32,5 +33,13 @@ class AuthController(
     ): ApiResponse<Any> {
         val result = tokenService.refresh(RefreshData(request.refreshToken))
         return ApiResponse.success(result)
+    }
+
+    @DeleteMapping("/logout")
+    fun logout(
+        @Valid @RequestBody request: RefreshRequest,
+    ): ApiResponse<Any> {
+        tokenService.delete(request.refreshToken)
+        return ApiResponse.success()
     }
 }

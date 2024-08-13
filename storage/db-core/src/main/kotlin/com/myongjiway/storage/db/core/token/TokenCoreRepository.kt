@@ -22,4 +22,9 @@ class TokenCoreRepository(
         val tokenEntity = tokenJpaRepository.findByToken(refreshToken)
         return tokenEntity?.toRefreshToken()
     }
+
+    @Transactional
+    override fun delete(refreshToken: String) {
+        tokenJpaRepository.deleteByToken(refreshToken)
+    }
 }

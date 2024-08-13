@@ -19,6 +19,7 @@ class TokenServiceTest :
             lateinit var tokenAppender: TokenAppender
             lateinit var tokenGenerator: TokenGenerator
             lateinit var userReader: UserReader
+            lateinit var tokenProcessor: TokenProcessor
             lateinit var sut: TokenService
 
             beforeTest {
@@ -26,7 +27,8 @@ class TokenServiceTest :
                 tokenAppender = mockk()
                 tokenGenerator = mockk()
                 userReader = mockk()
-                sut = TokenService(tokenAppender, tokenGenerator, tokenReader, userReader)
+                tokenProcessor = mockk()
+                sut = TokenService(tokenAppender, tokenGenerator, tokenReader, userReader, tokenProcessor)
 
                 every { tokenGenerator.generateAccessTokenByUserId(any()) } returns AccessToken(
                     "1000",
@@ -132,6 +134,36 @@ class TokenServiceTest :
 
                     // then
                     actual.exceptionOrNull() shouldBe CoreException(CoreErrorType.USER_NOT_FOUND)
+                }
+            }
+
+            feature("토큰 삭제") {
+                scenario("RefreshToken 삭제에 성공한다.") {
+                    // given
+                    every { tokenReader.findByToken(any()) } returns RefreshToken(
+                        "1000",
+                        "refreshToken",
+                        10000,
+                    )
+                    every { tokenProcessor.deleteToken(any()) } returns Unit
+
+                    // when
+                    sut.delete("refreshToken")
+
+                    // then
+                    verify(exactly = 1) { tokenReader.findByToken("refreshToken") }
+                    verify(exactly = 1) { tokenProcessor.deleteToken("refreshToken") }
+                }
+
+                scenario("RefreshToken이 존재하지 않는다면 NOT_FOUND_TOKEN 에러를 반환한다.") {
+                    // given
+                    every { tokenReader.findByToken(any()) } returns null
+
+                    // when
+                    val actual = runCatching { sut.delete("refreshToken") }
+
+                    // then
+                    actual.exceptionOrNull() shouldBe CoreException(CoreErrorType.NOT_FOUND_TOKEN)
                 }
             }
         },

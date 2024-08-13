@@ -10,7 +10,7 @@
         </encoder>
     </appender>
 
-    <appender name="ERROR_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>logs/error.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>logs/error.%d{yyyy-MM-dd}.log</fileNamePattern>
@@ -18,9 +18,6 @@
         </rollingPolicy>
         <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
             <providers>
-                <timestamp>
-                    <timeZone>UTC</timeZone>
-                </timestamp>
                 <pattern>
                     {
                     "timestamp": "%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}",

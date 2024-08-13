@@ -107,6 +107,7 @@ jobs:
             docker run -d --name app -p 8080:8080 \
               --env-file /home/ubuntu/.env \
               -v /home/ubuntu/cert:/cert \
+              -v /var/logs:/logs \
               ${{ secrets.DOCKER_USERNAME }}/dev:latest
             docker ps -a
             docker logs app

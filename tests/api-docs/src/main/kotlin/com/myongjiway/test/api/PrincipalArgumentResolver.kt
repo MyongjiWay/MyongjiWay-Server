@@ -1,8 +1,8 @@
 package com.myongjiway.test.api
 
-import com.myongjiway.user.ProviderType
-import com.myongjiway.user.Role
-import com.myongjiway.user.User
+import com.myongjiway.core.domain.user.ProviderType
+import com.myongjiway.core.domain.user.Role
+import com.myongjiway.core.domain.user.User
 import org.springframework.core.MethodParameter
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.support.WebDataBinderFactory

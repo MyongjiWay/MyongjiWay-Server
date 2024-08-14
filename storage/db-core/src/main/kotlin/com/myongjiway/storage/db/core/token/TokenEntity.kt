@@ -1,7 +1,7 @@
 package com.myongjiway.storage.db.core.token
 
+import com.myongjiway.core.domain.token.RefreshToken
 import com.myongjiway.storage.db.core.common.BaseEntity
-import com.myongjiway.token.RefreshToken
 import jakarta.persistence.Entity
 import jakarta.persistence.Table
 

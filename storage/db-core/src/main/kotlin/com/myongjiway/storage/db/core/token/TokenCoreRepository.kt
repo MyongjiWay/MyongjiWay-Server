@@ -1,7 +1,7 @@
 package com.myongjiway.storage.db.core.token
 
-import com.myongjiway.token.Token
-import com.myongjiway.token.TokenRepository
+import com.myongjiway.core.domain.token.Token
+import com.myongjiway.core.domain.token.TokenRepository
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 

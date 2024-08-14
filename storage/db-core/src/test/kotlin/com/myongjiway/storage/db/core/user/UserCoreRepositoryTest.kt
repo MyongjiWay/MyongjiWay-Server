@@ -1,7 +1,7 @@
 package com.myongjiway.storage.db.core.user
 
-import com.myongjiway.user.ProviderType
-import com.myongjiway.user.Role
+import com.myongjiway.core.domain.user.ProviderType
+import com.myongjiway.core.domain.user.Role
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf

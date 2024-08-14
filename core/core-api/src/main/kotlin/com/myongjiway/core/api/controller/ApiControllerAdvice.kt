@@ -3,7 +3,7 @@ package com.myongjiway.core.api.controller
 import com.myongjiway.core.api.support.error.CoreApiException
 import com.myongjiway.core.api.support.error.ErrorType
 import com.myongjiway.core.api.support.response.ApiResponse
-import com.myongjiway.error.CoreException
+import com.myongjiway.core.domain.error.CoreException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.boot.logging.LogLevel

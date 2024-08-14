@@ -1,9 +1,9 @@
 package com.myongjiway.storage.db.core.user
 
+import com.myongjiway.core.domain.user.ProviderType
+import com.myongjiway.core.domain.user.Role
+import com.myongjiway.core.domain.user.User
 import com.myongjiway.storage.db.core.common.BaseEntity
-import com.myongjiway.user.ProviderType
-import com.myongjiway.user.Role
-import com.myongjiway.user.User
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated

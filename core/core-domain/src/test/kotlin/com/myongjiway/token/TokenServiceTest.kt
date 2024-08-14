@@ -1,11 +1,18 @@
 package com.myongjiway.token
 
-import com.myongjiway.error.CoreErrorType
-import com.myongjiway.error.CoreException
-import com.myongjiway.user.ProviderType
-import com.myongjiway.user.Role
-import com.myongjiway.user.User
-import com.myongjiway.user.UserReader
+import com.myongjiway.core.domain.error.CoreErrorType
+import com.myongjiway.core.domain.token.AccessToken
+import com.myongjiway.core.domain.token.RefreshData
+import com.myongjiway.core.domain.token.RefreshToken
+import com.myongjiway.core.domain.token.TokenAppender
+import com.myongjiway.core.domain.token.TokenGenerator
+import com.myongjiway.core.domain.token.TokenProcessor
+import com.myongjiway.core.domain.token.TokenReader
+import com.myongjiway.core.domain.token.TokenService
+import com.myongjiway.core.domain.user.ProviderType
+import com.myongjiway.core.domain.user.Role
+import com.myongjiway.core.domain.user.User
+import com.myongjiway.core.domain.user.UserReader
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -115,7 +122,7 @@ class TokenServiceTest :
                     val actual = runCatching { sut.refresh(RefreshData("refreshToken")) }
 
                     // then
-                    actual.exceptionOrNull() shouldBe CoreException(CoreErrorType.UNAUTHORIZED_TOKEN)
+                    actual.exceptionOrNull() shouldBe com.myongjiway.core.domain.error.CoreException(CoreErrorType.UNAUTHORIZED_TOKEN)
                 }
 
                 scenario("User가 없다면 USER_NOT_FOUND 에러를 반환한다.") {
@@ -133,7 +140,7 @@ class TokenServiceTest :
                     val actual = runCatching { sut.refresh(RefreshData("refreshToken")) }
 
                     // then
-                    actual.exceptionOrNull() shouldBe CoreException(CoreErrorType.USER_NOT_FOUND)
+                    actual.exceptionOrNull() shouldBe com.myongjiway.core.domain.error.CoreException(CoreErrorType.USER_NOT_FOUND)
                 }
             }
 
@@ -163,7 +170,7 @@ class TokenServiceTest :
                     val actual = runCatching { sut.delete("refreshToken") }
 
                     // then
-                    actual.exceptionOrNull() shouldBe CoreException(CoreErrorType.NOT_FOUND_TOKEN)
+                    actual.exceptionOrNull() shouldBe com.myongjiway.core.domain.error.CoreException(CoreErrorType.NOT_FOUND_TOKEN)
                 }
             }
         },

@@ -59,6 +59,7 @@ internal class SecurityConfig(
                     AntPathRequestMatcher("/"),
                     AntPathRequestMatcher("/h2-console"),
                     AntPathRequestMatcher("/docs/**"),
+                    AntPathRequestMatcher("/actuator/prometheus"),
                 ).permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/v1/**").hasAnyRole("USER", "ADMIN")

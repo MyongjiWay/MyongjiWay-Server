@@ -19,15 +19,11 @@
         <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
             <providers>
                 <pattern>
-                    <pattern>
-                        {
-                        "timestamp": "%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}",
-                        "level": "%level",
-                        "logger": "%logger",
-                        "thread": "%thread",
-                        "message": "%message"
-                        }
-                    </pattern>
+                    {
+                    "timestamp": "%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}",
+                    "level": "%level",
+                    "message": "%message"
+                    }
                 </pattern>
             </providers>
         </encoder>
@@ -47,8 +43,6 @@
                         {
                         "timestamp": "%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}",
                         "level": "%level",
-                        "logger": "%logger",
-                        "thread": "%thread",
                         "method": "%X{method:-}",
                         "requestUri": "%X{requestUri:-}",
                         "sourceIp": "%X{sourceIp:-}",
@@ -77,9 +71,6 @@
                         {
                         "timestamp": "%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}",
                         "level": "%level",
-                        "logger": "%logger",
-                        "thread": "%thread",
-                        "message": "%message",
                         "status": "%X{status:-}",
                         "responseTime": "%X{responseTime:-}"
                         }
@@ -103,8 +94,6 @@
                         {
                         "timestamp": "%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}",
                         "level": "%level",
-                        "logger": "%logger",
-                        "thread": "%thread",
                         "message": "%message",
                         "userId": "%X{userId:-}",
                         "sourceIp": "%X{sourceIp:-}",

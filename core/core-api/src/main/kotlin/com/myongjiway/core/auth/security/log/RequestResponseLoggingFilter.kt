@@ -52,7 +52,7 @@ class RequestResponseLoggingFilter : OncePerRequestFilter() {
             MDC.put("responseTime", responseTime.toString())
             MDC.put("status", wrappedResponse.status.toString())
 
-            logResponseBody(wrappedResponse)
+            logResponseBody()
 
             wrappedResponse.copyBodyToResponse()
             MDC.clear()
@@ -69,12 +69,8 @@ class RequestResponseLoggingFilter : OncePerRequestFilter() {
         }
     }
 
-    private fun logResponseBody(response: ContentCachingResponseWrapper) {
-        val content = response.contentAsByteArray
-        if (content.isNotEmpty()) {
-            val responseBody = String(content, Charsets.UTF_8)
-            responseLogger.info("Response Body: {}", responseBody)
-        }
+    private fun logResponseBody() {
+        responseLogger.info("Response Status: {}", MDC.get("status"))
     }
 
     companion object {

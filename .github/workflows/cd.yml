@@ -104,7 +104,7 @@ jobs:
             docker pull ${{ secrets.DOCKER_USERNAME }}/dev:latest
             docker stop app || true
             docker rm app || true
-            docker run -d --name app -p 8080:8080 \
+            docker run -d --name app --network monitoring -p 8080:8080 \
               --env-file /home/ubuntu/.env \
               -v /home/ubuntu/cert:/cert \
               -v /var/logs:/logs \

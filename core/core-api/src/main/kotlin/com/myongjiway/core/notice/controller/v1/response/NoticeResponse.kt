@@ -1,7 +1,7 @@
 package com.myongjiway.core.notice.controller.v1.response
 
 import com.myongjiway.notice.Notice
-import java.time.LocalDateTime
+import java.time.LocalDate
 
 data class NoticeResponse(
     val id: Long,
@@ -9,7 +9,7 @@ data class NoticeResponse(
     val title: String,
     val content: String,
     val read: Boolean = false,
-    val createdAt: LocalDateTime?,
+    val createdAt: LocalDate?,
 ) {
     companion object {
         fun of(
@@ -20,7 +20,7 @@ data class NoticeResponse(
             title = notice.title,
             content = notice.content,
             read = notice.read,
-            createdAt = notice.createdAt,
+            createdAt = notice.createdAt?.toLocalDate(),
         )
     }
 }

@@ -1,6 +1,6 @@
 package com.myongjiway.core.api.support.error
 
-import com.myongjiway.error.CoreErrorType
+import com.myongjiway.core.domain.error.CoreErrorType
 
 data class ErrorMessage private constructor(
     val code: String,

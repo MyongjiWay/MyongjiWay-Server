@@ -1,5 +1,7 @@
 package com.myongjiway.token
 
+import com.myongjiway.core.domain.token.TokenAppender
+import com.myongjiway.core.domain.token.TokenRepository
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every

@@ -1,5 +1,7 @@
 package com.myongjiway.notice
 
+import com.myongjiway.core.domain.notice.Notice
+import com.myongjiway.core.domain.notice.NoticeRepository
 import io.kotest.core.spec.style.FeatureSpec
 import io.mockk.Runs
 import io.mockk.every
@@ -14,11 +16,13 @@ class NoticeCreatorTest :
     FeatureSpec({
 
         lateinit var noticeRepository: NoticeRepository
-        lateinit var noticeService: NoticeService
+        lateinit var noticeService: com.myongjiway.core.domain.notice.NoticeService
 
         beforeTest {
             noticeRepository = mockk()
-            noticeService = NoticeService(NoticeCreator(noticeRepository), mockk(), mockk(), mockk())
+            noticeService = com.myongjiway.core.domain.notice.NoticeService(
+                com.myongjiway.core.domain.notice.NoticeCreator(noticeRepository), mockk(), mockk(), mockk(),
+            )
         }
 
         feature("공지사항 생성 테스트 (권한이 있다고 가정 없다면 Controller 에서 예외 처리") {

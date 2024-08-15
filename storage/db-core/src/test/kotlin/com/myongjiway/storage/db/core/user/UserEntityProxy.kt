@@ -1,7 +1,7 @@
 package com.myongjiway.storage.db.core.user
 
-import com.myongjiway.user.ProviderType
-import com.myongjiway.user.Role
+import com.myongjiway.core.domain.user.ProviderType
+import com.myongjiway.core.domain.user.Role
 import java.time.LocalDateTime
 
 class UserEntityProxy(

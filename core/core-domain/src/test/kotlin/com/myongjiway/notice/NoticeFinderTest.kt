@@ -1,7 +1,10 @@
 package com.myongjiway.notice
 
-import com.myongjiway.usernotice.UserNotice
-import com.myongjiway.usernotice.UserNoticeRepository
+import com.myongjiway.core.domain.notice.Notice
+import com.myongjiway.core.domain.notice.NoticeFinder
+import com.myongjiway.core.domain.notice.NoticeRepository
+import com.myongjiway.core.domain.usernotice.UserNotice
+import com.myongjiway.core.domain.usernotice.UserNoticeRepository
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -16,12 +19,17 @@ class NoticeFinderTest :
 
         lateinit var noticeRepository: NoticeRepository
         lateinit var userNoticeRepository: UserNoticeRepository
-        lateinit var noticeService: NoticeService
+        lateinit var noticeService: com.myongjiway.core.domain.notice.NoticeService
 
         beforeTest {
             noticeRepository = mockk()
             userNoticeRepository = mockk()
-            noticeService = NoticeService(mockk(), mockk(), mockk(), NoticeFinder(noticeRepository, userNoticeRepository))
+            noticeService = com.myongjiway.core.domain.notice.NoticeService(
+                mockk(),
+                mockk(),
+                mockk(),
+                NoticeFinder(noticeRepository, userNoticeRepository),
+            )
         }
 
         feature("공지사항 조회 - 기본 기능 테스트") {

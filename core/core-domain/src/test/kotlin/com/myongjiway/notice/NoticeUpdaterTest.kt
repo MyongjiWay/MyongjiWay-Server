@@ -1,5 +1,8 @@
 package com.myongjiway.notice
 
+import com.myongjiway.core.domain.notice.Notice
+import com.myongjiway.core.domain.notice.NoticeRepository
+import com.myongjiway.core.domain.notice.NoticeUpdater
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
@@ -16,11 +19,16 @@ class NoticeUpdaterTest :
     FeatureSpec({
 
         lateinit var noticeRepository: NoticeRepository
-        lateinit var noticeService: NoticeService
+        lateinit var noticeService: com.myongjiway.core.domain.notice.NoticeService
 
         beforeTest {
             noticeRepository = mockk()
-            noticeService = NoticeService(mockk(), NoticeUpdater(noticeRepository), mockk(), mockk())
+            noticeService = com.myongjiway.core.domain.notice.NoticeService(
+                mockk(),
+                NoticeUpdater(noticeRepository),
+                mockk(),
+                mockk(),
+            )
         }
 
         feature("공지사항 수정") {

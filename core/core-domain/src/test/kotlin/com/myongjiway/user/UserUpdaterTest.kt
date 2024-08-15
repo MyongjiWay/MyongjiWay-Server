@@ -1,5 +1,8 @@
 package com.myongjiway.user
 
+import com.myongjiway.core.domain.user.Role
+import com.myongjiway.core.domain.user.UserRepository
+import com.myongjiway.core.domain.user.UserUpdater
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every

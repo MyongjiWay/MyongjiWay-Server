@@ -1,6 +1,7 @@
 package com.myongjiway.storage.db.core.notice
 
-import com.myongjiway.core.domain.notice.Notice
+import com.myongjiway.core.domain.notice.NoticeMetadata
+import com.myongjiway.core.domain.notice.NoticeView
 import com.myongjiway.storage.db.core.common.BaseEntity
 import jakarta.persistence.Entity
 import jakarta.persistence.Table
@@ -12,13 +13,11 @@ class NoticeEntity(
     private var author: String,
     private var content: String,
 ) : BaseEntity() {
-    fun toNotice() = Notice(
+    fun toNoticeView() = NoticeView(
         id = id!!,
-        title = title,
-        author = author,
-        content = content,
-        createdAt = createdAt,
-        updatedAt = updatedAt,
+        metadata = NoticeMetadata(title, author, content),
+        read = false,
+        createdAt = createdAt!!,
     )
 
     fun update(title: String, author: String, content: String) {

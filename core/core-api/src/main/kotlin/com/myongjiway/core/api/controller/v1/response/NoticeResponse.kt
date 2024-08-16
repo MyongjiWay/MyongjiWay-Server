@@ -1,6 +1,6 @@
 package com.myongjiway.core.api.controller.v1.response
 
-import com.myongjiway.core.domain.notice.Notice
+import com.myongjiway.core.domain.notice.NoticeView
 import java.time.LocalDate
 
 data class NoticeResponse(
@@ -13,14 +13,14 @@ data class NoticeResponse(
 ) {
     companion object {
         fun of(
-            notice: Notice,
+            noticeView: NoticeView,
         ): NoticeResponse = NoticeResponse(
-            id = notice.id!!,
-            author = notice.author,
-            title = notice.title,
-            content = notice.content,
-            read = notice.read,
-            createdAt = notice.createdAt?.toLocalDate(),
+            id = noticeView.id,
+            author = noticeView.metadata.author,
+            title = noticeView.metadata.title,
+            content = noticeView.metadata.content,
+            read = noticeView.read,
+            createdAt = noticeView.createdAt.toLocalDate(),
         )
     }
 }

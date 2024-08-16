@@ -8,12 +8,12 @@ import jakarta.persistence.Table
 @Entity
 @Table(name = "user_notice")
 class UserNoticeEntity(
-    private var userId: Long?,
-    private var noticeId: Long?,
+    private var userId: Long,
+    private var noticeId: Long,
 ) : BaseEntity() {
     fun toUserNotice() = UserNotice(
-        id = id!!,
-        noticeId = noticeId!!,
+        id = id,
+        noticeId = noticeId,
         createdAt = createdAt,
         updatedAt = updatedAt,
     )

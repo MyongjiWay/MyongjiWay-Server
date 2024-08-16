@@ -1,19 +1,16 @@
 package com.myongjiway.core.api.controller.v1.request
 
-import com.myongjiway.core.domain.notice.Notice
+import com.myongjiway.core.domain.notice.NoticeMetadata
 
 data class NoticeRequest(
     val title: String,
+    val author: String,
     val content: String,
 ) {
-    fun toNotice(): Notice = Notice(
-        id = null,
+    fun toMetaData(author: String): NoticeMetadata = NoticeMetadata(
         title = title,
-        author = "admin",
+        author = author,
         content = content,
-        read = false,
-        createdAt = null,
-        updatedAt = null,
     )
     init {
         NoticeValidator.validateTitle(title)

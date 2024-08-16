@@ -4,9 +4,9 @@ import org.springframework.stereotype.Component
 
 @Component
 class NoticeCreator(
-    private val noticeRepository: com.myongjiway.core.domain.notice.NoticeRepository,
+    private val noticeRepository: NoticeRepository,
 ) {
-    fun createNotice(notice: com.myongjiway.core.domain.notice.Notice) {
-        noticeRepository.save(notice)
+    fun createNotice(noticeMetadata: NoticeMetadata) {
+        noticeRepository.save(noticeMetadata)
     }
 }

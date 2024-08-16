@@ -4,21 +4,21 @@ import org.springframework.stereotype.Service
 
 @Service
 class NoticeService(
-    private val noticeCreator: com.myongjiway.core.domain.notice.NoticeCreator,
-    private val noticeUpdater: com.myongjiway.core.domain.notice.NoticeUpdater,
-    private val noticeDeleter: com.myongjiway.core.domain.notice.NoticeDeleter,
-    private val noticeFinder: com.myongjiway.core.domain.notice.NoticeFinder,
+    private val noticeCreator: NoticeCreator,
+    private val noticeUpdater: NoticeUpdater,
+    private val noticeDeleter: NoticeDeleter,
+    private val noticeFinder: NoticeFinder,
 ) {
 
-    fun createNotice(notice: com.myongjiway.core.domain.notice.Notice) {
-        noticeCreator.createNotice(notice)
+    fun createNotice(noticeMetadata: NoticeMetadata) {
+        noticeCreator.createNotice(noticeMetadata)
     }
-    fun updateNotice(notice: com.myongjiway.core.domain.notice.Notice, noticeId: Long) {
-        noticeUpdater.updateNotice(notice, noticeId)
+    fun updateNotice(noticeMetadata: NoticeMetadata, noticeId: Long) {
+        noticeUpdater.updateNotice(noticeMetadata, noticeId)
     }
     fun deleteNotice(noticeId: Long) {
         noticeDeleter.deleteNotice(noticeId)
     }
-    fun getNotice(noticeId: Long, userId: Long): com.myongjiway.core.domain.notice.Notice = noticeFinder.findNotice(noticeId, userId)
-    fun getNotices(userId: Long): List<com.myongjiway.core.domain.notice.Notice> = noticeFinder.findNotices(userId)
+    fun getNotice(noticeId: Long, userId: Long): NoticeView = noticeFinder.findNotice(noticeId, userId)
+    fun getNotices(userId: Long): List<NoticeView> = noticeFinder.findNotices(userId)
 }

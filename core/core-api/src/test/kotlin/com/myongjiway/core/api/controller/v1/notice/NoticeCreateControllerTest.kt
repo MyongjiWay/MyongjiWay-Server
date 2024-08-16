@@ -1,8 +1,7 @@
 package com.myongjiway.core.api.controller.v1.notice
 
-import com.myongjiway.core.api.controller.NoticeController
+import com.myongjiway.core.api.controller.NoticeAdminController
 import com.myongjiway.core.api.controller.v1.request.NoticeRequest
-import com.myongjiway.core.api.support.error.CoreApiException
 import com.myongjiway.core.domain.notice.NoticeService
 import com.myongjiway.core.domain.user.ProviderType
 import com.myongjiway.core.domain.user.Role
@@ -17,26 +16,12 @@ class NoticeCreateControllerTest :
     FeatureSpec(
         {
 
-            lateinit var noticeController: NoticeController
+            lateinit var noticeAdminController: NoticeAdminController
             lateinit var noticeService: NoticeService
 
             beforeTest {
                 noticeService = mockk()
-                noticeController = NoticeController(noticeService)
-            }
-            feature("공지사항 생성 - 권한 검사 테스트") {
-                scenario("관리자가 아닌 경우") {
-                    // Given
-                    val user = getUser(Role.USER)
-
-                    // When
-                    val exception = shouldThrow<CoreApiException> {
-                        noticeController.createNotice(NoticeRequest(title = "Title", content = "Content"), user)
-                    }
-
-                    // Then
-                    exception.message shouldBe "접근 권한이 없습니다."
-                }
+                noticeAdminController = NoticeAdminController(noticeService)
             }
 
             feature("공지사항 생성 - 유효성 검사 테스트") {
@@ -46,7 +31,7 @@ class NoticeCreateControllerTest :
                 scenario("제목이 빈 문자열일 때") {
                     // When
                     val exception = shouldThrow<IllegalArgumentException> {
-                        noticeController.createNotice(NoticeRequest(title = "", content = "Content"), user)
+                        noticeAdminController.createNotice(NoticeRequest(title = "", author = "admin", content = "Content"), user)
                     }
 
                     // Then
@@ -56,7 +41,7 @@ class NoticeCreateControllerTest :
                 scenario("내용이 빈 문자열일 때") {
                     // When
                     val exception = shouldThrow<IllegalArgumentException> {
-                        noticeController.createNotice(NoticeRequest(title = "Title", content = ""), user)
+                        noticeAdminController.createNotice(NoticeRequest(title = "Title", author = "admin", content = ""), user)
                     }
 
                     // Then
@@ -66,7 +51,7 @@ class NoticeCreateControllerTest :
                 scenario("제목이 최대 길이를 초과할 때") {
                     // When
                     val exception = shouldThrow<IllegalArgumentException> {
-                        noticeController.createNotice(NoticeRequest(title = "a".repeat(101), content = "content"), user)
+                        noticeAdminController.createNotice(NoticeRequest(title = "a".repeat(101), author = "admin", content = "content"), user)
                     }
 
                     // Then
@@ -76,7 +61,7 @@ class NoticeCreateControllerTest :
                 scenario("내용이 최대 길이를 초과할 때") {
                     // When
                     val exception = shouldThrow<IllegalArgumentException> {
-                        noticeController.createNotice(NoticeRequest(title = "title", content = "a".repeat(1001)), user)
+                        noticeAdminController.createNotice(NoticeRequest(title = "title", author = "admin", content = "a".repeat(1001)), user)
                     }
 
                     // Then
@@ -91,7 +76,7 @@ class NoticeCreateControllerTest :
                 scenario("제목에 특수 문자만 포함된 경우") {
                     // When
                     val exception = shouldThrow<IllegalArgumentException> {
-                        noticeController.createNotice(NoticeRequest(title = "@#$%^&*", content = "Content"), user)
+                        noticeAdminController.createNotice(NoticeRequest(title = "@#$%^&*", author = "admin", content = "Content"), user)
                     }
 
                     // Then
@@ -102,7 +87,7 @@ class NoticeCreateControllerTest :
                     // When
                     val exception = shouldThrow<IllegalArgumentException> {
                         // When
-                        noticeController.createNotice(NoticeRequest(title = "Title", content = "@#$%^&*"), user)
+                        noticeAdminController.createNotice(NoticeRequest(title = "Title", author = "admin", content = "@#$%^&*"), user)
                     }
 
                     // Then
@@ -112,7 +97,7 @@ class NoticeCreateControllerTest :
                 scenario("제목에 숫자만 포함된 경우") {
                     // When
                     val exception = shouldThrow<IllegalArgumentException> {
-                        noticeController.createNotice(NoticeRequest(title = "123456", content = "Content"), user)
+                        noticeAdminController.createNotice(NoticeRequest(title = "123456", author = "admin", content = "Content"), user)
                     }
 
                     // Then
@@ -122,7 +107,7 @@ class NoticeCreateControllerTest :
                 scenario("내용에 숫자만 포함된 경우") {
                     // When
                     val exception = shouldThrow<IllegalArgumentException> {
-                        noticeController.createNotice(NoticeRequest(title = "Title", content = "123456"), user)
+                        noticeAdminController.createNotice(NoticeRequest(title = "Title", author = "admin", content = "123456"), user)
                     }
 
                     // Then
@@ -132,8 +117,8 @@ class NoticeCreateControllerTest :
                 scenario("제목에 SQL Injection 시도가 포함된 경우") {
                     // When
                     val exception = shouldThrow<IllegalArgumentException> {
-                        noticeController.createNotice(
-                            NoticeRequest(title = "DROP TABLE notices;", content = "Content"),
+                        noticeAdminController.createNotice(
+                            NoticeRequest(title = "DROP TABLE notices;", author = "admin", content = "Content"),
                             user,
                         )
                     }
@@ -145,8 +130,8 @@ class NoticeCreateControllerTest :
                 scenario("내용에 SQL Injection 시도가 포함된 경우") {
                     // When
                     val exception = shouldThrow<IllegalArgumentException> {
-                        noticeController.createNotice(
-                            NoticeRequest(title = "Title", content = "DROP TABLE notices;"),
+                        noticeAdminController.createNotice(
+                            NoticeRequest(title = "Title", author = "admin", content = "DROP TABLE notices;"),
                             user,
                         )
                     }

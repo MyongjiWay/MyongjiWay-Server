@@ -1,8 +1,10 @@
 package com.myongjiway.notice
 
-import com.myongjiway.core.domain.notice.Notice
 import com.myongjiway.core.domain.notice.NoticeFinder
+import com.myongjiway.core.domain.notice.NoticeMetadata
 import com.myongjiway.core.domain.notice.NoticeRepository
+import com.myongjiway.core.domain.notice.NoticeService
+import com.myongjiway.core.domain.notice.NoticeView
 import com.myongjiway.core.domain.usernotice.UserNotice
 import com.myongjiway.core.domain.usernotice.UserNoticeRepository
 import io.kotest.core.spec.style.FeatureSpec
@@ -19,12 +21,12 @@ class NoticeFinderTest :
 
         lateinit var noticeRepository: NoticeRepository
         lateinit var userNoticeRepository: UserNoticeRepository
-        lateinit var noticeService: com.myongjiway.core.domain.notice.NoticeService
+        lateinit var noticeService: NoticeService
 
         beforeTest {
             noticeRepository = mockk()
             userNoticeRepository = mockk()
-            noticeService = com.myongjiway.core.domain.notice.NoticeService(
+            noticeService = NoticeService(
                 mockk(),
                 mockk(),
                 mockk(),
@@ -165,10 +167,10 @@ class NoticeFinderTest :
                 val userId = 1000L
                 val userId2 = 10001L
 
-                every { noticeRepository.findById(notice.id!!) } returns notice
+                every { noticeRepository.findById(notice.id) } returns notice
                 every { noticeRepository.findAll() } returns listOf(notice)
-                every { userNoticeRepository.findByUserIdAndNoticeId(userId, notice.id!!) } returns null
-                every { userNoticeRepository.findByUserIdAndNoticeId(userId2, notice.id!!) } returns null
+                every { userNoticeRepository.findByUserIdAndNoticeId(userId, notice.id) } returns null
+                every { userNoticeRepository.findByUserIdAndNoticeId(userId2, notice.id) } returns null
                 every { userNoticeRepository.findByUserId(any()) } returns emptyList()
                 every { userNoticeRepository.save(any(), any()) } answers {
                     UserNotice.fixture(firstArg(), secondArg()) // 올바른 타입의 객체를 반환
@@ -177,7 +179,7 @@ class NoticeFinderTest :
                 runBlocking {
                     // When
                     val job1 = launch {
-                        noticeService.getNotice(notice.id!!, userId)
+                        noticeService.getNotice(notice.id, userId)
                     }
                     val job2 = launch {
                         val result = noticeService.getNotices(userId)
@@ -196,14 +198,11 @@ class NoticeFinderTest :
         }
     }) {
     companion object {
-        fun getNotice(id: Long, title: String, content: String, read: Boolean): Notice = Notice(
+        fun getNotice(id: Long, title: String, content: String, read: Boolean): NoticeView = NoticeView(
             id = id,
-            title = title,
-            author = "author",
-            content = content,
+            metadata = NoticeMetadata(title, "author", content),
             read = read,
             createdAt = LocalDateTime.now(),
-            updatedAt = LocalDateTime.now(),
         )
     }
 }

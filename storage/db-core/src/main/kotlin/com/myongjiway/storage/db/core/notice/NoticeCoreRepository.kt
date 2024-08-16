@@ -28,20 +28,20 @@ class NoticeCoreRepository(
     @Transactional
     override fun update(noticeMetadata: NoticeMetadata, noticeId: Long) {
         val noticeEntity = noticeJpaRepository.findByIdOrNull(noticeId)
-            ?: throw CoreException(CoreErrorType.NOT_FOUND_DATA)
+            ?: throw CoreException(CoreErrorType.NOTICE_NOT_FOUND)
         noticeEntity.update(noticeMetadata.title, noticeMetadata.author, noticeMetadata.content)
     }
 
     @Transactional
     override fun delete(noticeId: Long) {
         val noticeEntity = noticeJpaRepository.findByIdOrNull(noticeId)
-            ?: throw CoreException(CoreErrorType.NOT_FOUND_DATA)
+            ?: throw CoreException(CoreErrorType.NOTICE_NOT_FOUND)
         noticeEntity.inactive()
     }
 
     override fun findById(noticeId: Long): NoticeView {
         val noticeEntity = noticeJpaRepository.findByIdOrNull(noticeId)
-            ?: throw CoreException(CoreErrorType.NOT_FOUND_DATA)
+            ?: throw CoreException(CoreErrorType.NOTICE_NOT_FOUND)
         return noticeEntity.toNoticeView()
     }
 

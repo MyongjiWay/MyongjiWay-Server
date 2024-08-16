@@ -6,4 +6,5 @@ enum class CoreErrorCode {
     TOKEN0001,
     TOKEN0002,
     USER0001,
+    NOTICE0001,
 }

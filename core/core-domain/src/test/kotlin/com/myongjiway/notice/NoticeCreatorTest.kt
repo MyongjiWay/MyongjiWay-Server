@@ -1,7 +1,9 @@
 package com.myongjiway.notice
 
-import com.myongjiway.core.domain.notice.Notice
+import com.myongjiway.core.domain.notice.NoticeCreator
+import com.myongjiway.core.domain.notice.NoticeMetadata
 import com.myongjiway.core.domain.notice.NoticeRepository
+import com.myongjiway.core.domain.notice.NoticeService
 import io.kotest.core.spec.style.FeatureSpec
 import io.mockk.Runs
 import io.mockk.every
@@ -10,18 +12,20 @@ import io.mockk.mockk
 import io.mockk.runs
 import io.mockk.verify
 import kotlinx.coroutines.async
-import java.time.LocalDateTime
 
 class NoticeCreatorTest :
     FeatureSpec({
 
         lateinit var noticeRepository: NoticeRepository
-        lateinit var noticeService: com.myongjiway.core.domain.notice.NoticeService
+        lateinit var noticeService: NoticeService
 
         beforeTest {
             noticeRepository = mockk()
-            noticeService = com.myongjiway.core.domain.notice.NoticeService(
-                com.myongjiway.core.domain.notice.NoticeCreator(noticeRepository), mockk(), mockk(), mockk(),
+            noticeService = NoticeService(
+                NoticeCreator(noticeRepository),
+                mockk(),
+                mockk(),
+                mockk(),
             )
         }
 
@@ -29,20 +33,20 @@ class NoticeCreatorTest :
 
             scenario("관리자가 공지사항을 생성할 때") {
                 // Given
-                val noticeCreateRequest = getNotice("Title", "Content")
+                val noticeMetadata = getNotice("Title", "Content")
 
                 // Mocking
                 every { noticeRepository.save(any()) } just Runs
 
                 // When
-                noticeService.createNotice(noticeCreateRequest)
+                noticeService.createNotice(noticeMetadata)
 
                 // Then
                 verify(exactly = 1) {
                     noticeRepository.save(
                         match {
-                            it.title == noticeCreateRequest.title &&
-                                it.content == noticeCreateRequest.content
+                            it.title == noticeMetadata.title &&
+                                it.content == noticeMetadata.content
                         },
                     )
                 }
@@ -53,14 +57,14 @@ class NoticeCreatorTest :
 
             scenario("여러 스레드가 동시에 공지사항을 생성할 때 정상적으로 생성되어야 한다.") {
                 // Given
-                val noticeCreateRequest = getNotice("Title", "Content")
+                val noticeMetaData = getNotice("Title", "Content")
 
                 every { noticeRepository.save(any()) } just runs
 
                 // When
                 val jobs = List(10) {
                     async {
-                        noticeService.createNotice(noticeCreateRequest)
+                        noticeService.createNotice(noticeMetaData)
                     }
                 }
 
@@ -72,14 +76,10 @@ class NoticeCreatorTest :
         }
     }) {
     companion object {
-        fun getNotice(title: String, content: String): Notice = Notice(
-            id = 1L,
+        fun getNotice(title: String, content: String): NoticeMetadata = NoticeMetadata(
             title = title,
             author = "author",
             content = content,
-            read = false,
-            createdAt = LocalDateTime.now(),
-            updatedAt = LocalDateTime.now(),
         )
     }
 }

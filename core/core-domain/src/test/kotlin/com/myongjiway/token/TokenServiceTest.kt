@@ -1,14 +1,15 @@
 package com.myongjiway.token
 
 import com.myongjiway.core.domain.error.CoreErrorType
-import com.myongjiway.core.domain.token.AccessToken
+import com.myongjiway.core.domain.error.CoreException
 import com.myongjiway.core.domain.token.RefreshData
-import com.myongjiway.core.domain.token.RefreshToken
+import com.myongjiway.core.domain.token.Token
 import com.myongjiway.core.domain.token.TokenAppender
 import com.myongjiway.core.domain.token.TokenGenerator
 import com.myongjiway.core.domain.token.TokenProcessor
 import com.myongjiway.core.domain.token.TokenReader
 import com.myongjiway.core.domain.token.TokenService
+import com.myongjiway.core.domain.token.TokenType
 import com.myongjiway.core.domain.user.ProviderType
 import com.myongjiway.core.domain.user.Role
 import com.myongjiway.core.domain.user.User
@@ -37,16 +38,18 @@ class TokenServiceTest :
                 tokenProcessor = mockk()
                 sut = TokenService(tokenAppender, tokenGenerator, tokenReader, userReader, tokenProcessor)
 
-                every { tokenGenerator.generateAccessTokenByUserId(any()) } returns AccessToken(
+                every { tokenGenerator.generateAccessTokenByUserId(any()) } returns Token(
                     "1000",
                     "newAccessToken",
                     1000,
+                    TokenType.ACCESS,
                 )
 
-                every { tokenGenerator.generateRefreshTokenByUserId(any()) } returns RefreshToken(
+                every { tokenGenerator.generateRefreshTokenByUserId(any()) } returns Token(
                     "1000",
                     "newRefreshToken",
                     10000,
+                    TokenType.REFRESH,
                 )
 
                 every { tokenAppender.upsert(any(), any(), any()) } returns 1
@@ -56,10 +59,11 @@ class TokenServiceTest :
                 scenario("RefreshToken의 expiration이 지나지 않았다면 AccessToken을 갱신한다.") {
                     // given
                     val expiration = System.currentTimeMillis() + 100000
-                    every { tokenReader.findByToken(any()) } returns RefreshToken(
+                    every { tokenReader.findByToken(any()) } returns Token(
                         "1000",
                         "refreshToken",
                         expiration,
+                        TokenType.REFRESH,
                     )
 
                     every { userReader.find(1000L) } returns User(
@@ -86,10 +90,11 @@ class TokenServiceTest :
                     // given
                     val expiration = System.currentTimeMillis() - 100000
 
-                    every { tokenReader.findByToken(any()) } returns RefreshToken(
+                    every { tokenReader.findByToken(any()) } returns Token(
                         "1000",
                         "refreshToken",
                         expiration,
+                        TokenType.REFRESH,
                     )
 
                     every { userReader.find(1000L) } returns User(
@@ -122,16 +127,17 @@ class TokenServiceTest :
                     val actual = runCatching { sut.refresh(RefreshData("refreshToken")) }
 
                     // then
-                    actual.exceptionOrNull() shouldBe com.myongjiway.core.domain.error.CoreException(CoreErrorType.UNAUTHORIZED_TOKEN)
+                    actual.exceptionOrNull() shouldBe CoreException(CoreErrorType.UNAUTHORIZED_TOKEN)
                 }
 
                 scenario("User가 없다면 USER_NOT_FOUND 에러를 반환한다.") {
                     // given
                     val expiration = System.currentTimeMillis() - 10000
-                    every { tokenReader.findByToken(any()) } returns RefreshToken(
+                    every { tokenReader.findByToken(any()) } returns Token(
                         "1000",
                         "refreshToken",
                         expiration,
+                        TokenType.REFRESH,
                     )
 
                     every { userReader.find(1000) } returns null
@@ -140,17 +146,18 @@ class TokenServiceTest :
                     val actual = runCatching { sut.refresh(RefreshData("refreshToken")) }
 
                     // then
-                    actual.exceptionOrNull() shouldBe com.myongjiway.core.domain.error.CoreException(CoreErrorType.USER_NOT_FOUND)
+                    actual.exceptionOrNull() shouldBe CoreException(CoreErrorType.USER_NOT_FOUND)
                 }
             }
 
             feature("토큰 삭제") {
                 scenario("RefreshToken 삭제에 성공한다.") {
                     // given
-                    every { tokenReader.findByToken(any()) } returns RefreshToken(
+                    every { tokenReader.findByToken(any()) } returns Token(
                         "1000",
                         "refreshToken",
                         10000,
+                        TokenType.REFRESH,
                     )
                     every { tokenProcessor.deleteToken(any()) } returns Unit
 
@@ -170,7 +177,7 @@ class TokenServiceTest :
                     val actual = runCatching { sut.delete("refreshToken") }
 
                     // then
-                    actual.exceptionOrNull() shouldBe com.myongjiway.core.domain.error.CoreException(CoreErrorType.NOT_FOUND_TOKEN)
+                    actual.exceptionOrNull() shouldBe CoreException(CoreErrorType.NOT_FOUND_TOKEN)
                 }
             }
         },

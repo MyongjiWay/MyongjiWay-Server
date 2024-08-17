@@ -1,5 +1,6 @@
 package com.myongjiway.storage.db.core.token
 
+import com.myongjiway.core.domain.token.TokenType
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -18,6 +19,7 @@ class TokenCoreRepositoryTest :
                 userId = 123L,
                 token = "token",
                 expiration = 1721041381000,
+                tokenType = TokenType.REFRESH,
             )
 
             beforeTest {

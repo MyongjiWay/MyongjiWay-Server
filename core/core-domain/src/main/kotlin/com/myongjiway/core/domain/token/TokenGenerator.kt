@@ -40,5 +40,6 @@ class TokenGenerator(
     private fun getExpirationAndSecret(tokenType: TokenType) = when (tokenType) {
         TokenType.ACCESS -> jwtProperty.accessToken.expiration to jwtProperty.accessToken.secret
         TokenType.REFRESH -> jwtProperty.refreshToken.expiration to jwtProperty.refreshToken.secret
+        TokenType.APPLE -> TODO()
     }
 }

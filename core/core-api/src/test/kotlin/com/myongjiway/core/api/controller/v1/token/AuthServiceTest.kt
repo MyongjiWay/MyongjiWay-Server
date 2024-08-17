@@ -4,10 +4,10 @@ package com.myongjiway.core.api.controller.v1.token
 
 import com.myongjiway.core.api.auth.security.domain.AuthService
 import com.myongjiway.core.api.auth.security.domain.KakaoLoginData
-import com.myongjiway.core.domain.token.AccessToken
-import com.myongjiway.core.domain.token.RefreshToken
+import com.myongjiway.core.domain.token.Token
 import com.myongjiway.core.domain.token.TokenAppender
 import com.myongjiway.core.domain.token.TokenGenerator
+import com.myongjiway.core.domain.token.TokenType
 import com.myongjiway.core.domain.user.UserAppender
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldNotBe
@@ -41,8 +41,8 @@ class AuthServiceTest :
                     // given
                     every { userAppender.upsert(any(), any(), any(), any(), any()) } returns 1000L
                     every { tokenAppender.upsert(any(), any(), any()) } returns 1000L
-                    every { tokenGenerator.generateAccessTokenByUserId(any()) } returns AccessToken("1000", "accessToken", 1000)
-                    every { tokenGenerator.generateRefreshTokenByUserId(any()) } returns RefreshToken("1000", "refreshToken", 10000)
+                    every { tokenGenerator.generateAccessTokenByUserId(any()) } returns Token("1000", "accessToken", 1000, TokenType.ACCESS)
+                    every { tokenGenerator.generateRefreshTokenByUserId(any()) } returns Token("1000", "refreshToken", 10000, TokenType.REFRESH)
 
                     // when
                     val actual = sut.kakaoLogin(kakaoLoginData)

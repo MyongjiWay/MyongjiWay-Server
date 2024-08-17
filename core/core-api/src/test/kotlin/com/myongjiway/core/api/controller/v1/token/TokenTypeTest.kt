@@ -1,8 +1,7 @@
 package com.myongjiway.core.api.controller.v1.token
 
-import com.myongjiway.core.domain.token.AccessToken
 import com.myongjiway.core.domain.token.JwtProperty
-import com.myongjiway.core.domain.token.RefreshToken
+import com.myongjiway.core.domain.token.Token
 import com.myongjiway.core.domain.token.TokenGenerator
 import com.myongjiway.core.domain.token.TokenType
 import io.kotest.core.spec.style.FeatureSpec
@@ -33,10 +32,11 @@ class TokenTypeTest :
 
                 scenario("토큰 타입이 ACCESS_TOKEN일 경우 AccessToken을 생성한다.") {
                     // given
-                    every { tokenGenerator.generateAccessTokenByUserId(userId) } returns AccessToken(
+                    every { tokenGenerator.generateAccessTokenByUserId(userId) } returns Token(
                         userId,
                         "token",
                         now,
+                        TokenType.ACCESS,
                     )
 
                     // when
@@ -47,17 +47,19 @@ class TokenTypeTest :
                     )
 
                     // then
-                    actual.shouldBeInstanceOf<AccessToken>()
+                    actual.shouldBeInstanceOf<Token>()
+                    actual.tokenType shouldBe TokenType.ACCESS
                     actual.userId shouldBe userId
                     actual.expiration shouldBe now + jwtProperty.accessToken.expiration
                 }
 
                 scenario("토큰 타입이 REFRESH_TOKEN일 경우 RefreshToken을 생성한다.") {
                     // given
-                    every { tokenGenerator.generateRefreshTokenByUserId(userId) } returns RefreshToken(
+                    every { tokenGenerator.generateRefreshTokenByUserId(userId) } returns Token(
                         userId,
                         "token",
                         now,
+                        TokenType.REFRESH,
                     )
 
                     // when
@@ -68,7 +70,8 @@ class TokenTypeTest :
                     )
 
                     // then
-                    actual.shouldBeInstanceOf<RefreshToken>()
+                    actual.shouldBeInstanceOf<Token>()
+                    actual.tokenType shouldBe TokenType.REFRESH
                     actual.userId shouldBe userId
                     actual.expiration shouldBe now + jwtProperty.refreshToken.expiration
                 }

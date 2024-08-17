@@ -1,5 +1,6 @@
 package com.myongjiway.user
 
+import com.myongjiway.core.domain.user.UserService
 import com.myongjiway.core.domain.user.UserUpdater
 import io.kotest.core.spec.style.FeatureSpec
 import io.mockk.every
@@ -9,12 +10,12 @@ import io.mockk.verify
 class UserServiceTest :
     FeatureSpec(
         {
-            lateinit var userService: com.myongjiway.core.domain.user.UserService
+            lateinit var userService: UserService
             lateinit var userUpdater: UserUpdater
 
             beforeTest {
                 userUpdater = mockk()
-                userService = com.myongjiway.core.domain.user.UserService(userUpdater)
+                userService = UserService(userUpdater)
             }
 
             feature("유저 비활성화") {

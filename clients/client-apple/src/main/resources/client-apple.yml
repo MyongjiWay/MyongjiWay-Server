@@ -1,0 +1,2 @@
+apple:
+  url: ${APPLE_AUTH_URL}

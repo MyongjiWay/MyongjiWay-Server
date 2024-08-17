@@ -52,8 +52,6 @@ class RequestResponseLoggingFilter : OncePerRequestFilter() {
             MDC.put("responseTime", responseTime.toString())
             MDC.put("status", wrappedResponse.status.toString())
 
-            logResponseBody()
-
             wrappedResponse.copyBodyToResponse()
             MDC.clear()
         }
@@ -69,12 +67,7 @@ class RequestResponseLoggingFilter : OncePerRequestFilter() {
         }
     }
 
-    private fun logResponseBody() {
-        responseLogger.info("Response Status: {}", MDC.get("status"))
-    }
-
     companion object {
         private val requestLogger = LoggerFactory.getLogger("HttpRequestLog")
-        private val responseLogger = LoggerFactory.getLogger("HttpResponseLog")
     }
 }

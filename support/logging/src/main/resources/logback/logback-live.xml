@@ -10,6 +10,7 @@
         </encoder>
     </appender>
 
+    <!-- 에러 로그 파일 출력 앱펜더 -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>logs/error.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -22,7 +23,17 @@
                     {
                     "timestamp": "%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}",
                     "level": "%level",
-                    "message": "%message"
+                    "logger": "%logger",
+                    "thread": "%thread",
+                    "class": "%class",
+                    "method": "%method",
+                    "line": "%line",
+                    "exception": "%ex{full}",
+                    "message": "%message",
+                    "api": "%X{api:-}",
+                    "userId": "%X{userId:-}",
+                    "requestId": "%X{requestId:-}",
+                    "status": "%X{status:-}"
                     }
                 </pattern>
             </providers>
@@ -39,42 +50,19 @@
         <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
             <providers>
                 <pattern>
-                    <pattern>
-                        {
-                        "timestamp": "%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}",
-                        "level": "%level",
-                        "method": "%X{method:-}",
-                        "requestUri": "%X{requestUri:-}",
-                        "sourceIp": "%X{sourceIp:-}",
-                        "referer": "%X{referer:-}",
-                        "userAgent": "%X{userAgent:-}",
-                        "requestId": "%X{requestId:-}",
-                        "message": "%message"
-                        }
-                    </pattern>
-                </pattern>
-            </providers>
-        </encoder>
-    </appender>
-
-    <!-- 응답 로그 파일 출력 앱펜더 -->
-    <appender name="RESPONSE_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>logs/response.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logs/response.%d{yyyy-MM-dd}.log</fileNamePattern>
-            <maxHistory>30</maxHistory>
-        </rollingPolicy>
-        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
-            <providers>
-                <pattern>
-                    <pattern>
-                        {
-                        "timestamp": "%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}",
-                        "level": "%level",
-                        "status": "%X{status:-}",
-                        "responseTime": "%X{responseTime:-}"
-                        }
-                    </pattern>
+                    {
+                    "timestamp": "%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}",
+                    "level": "%level",
+                    "method": "%X{method:-}",
+                    "api": "%X{api:-}",
+                    "requestUri": "%X{requestUri:-}",
+                    "sourceIp": "%X{sourceIp:-}",
+                    "referer": "%X{referer:-}",
+                    "userAgent": "%X{userAgent:-}",
+                    "userId": "%X{userId:-}",
+                    "requestId": "%X{requestId:-}",
+                    "message": "%message"
+                    }
                 </pattern>
             </providers>
         </encoder>
@@ -90,16 +78,15 @@
         <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
             <providers>
                 <pattern>
-                    <pattern>
-                        {
-                        "timestamp": "%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}",
-                        "level": "%level",
-                        "message": "%message",
-                        "userId": "%X{userId:-}",
-                        "sourceIp": "%X{sourceIp:-}",
-                        "requestId": "%X{requestId:-}"
-                        }
-                    </pattern>
+                    {
+                    "timestamp": "%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}",
+                    "level": "%level",
+                    "userId": "%X{userId:-}",
+                    "api": "%X{api:-}",
+                    "sourceIp": "%X{sourceIp:-}",
+                    "requestId": "%X{requestId:-}",
+                    "message": "%message"
+                    }
                 </pattern>
             </providers>
         </encoder>
@@ -108,11 +95,6 @@
     <!-- 요청 로거 -->
     <logger name="HttpRequestLog" level="INFO" additivity="false">
         <appender-ref ref="REQUEST_LOG"/>
-    </logger>
-
-    <!-- 응답 로거 -->
-    <logger name="HttpResponseLog" level="INFO" additivity="false">
-        <appender-ref ref="RESPONSE_LOG"/>
     </logger>
 
     <!-- 인증 로거 -->

@@ -1,0 +1,8 @@
+package com.myongjiway
+
+import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan
+
+@ConfigurationPropertiesScan
+@SpringBootApplication
+class ClientAppleTestApplication

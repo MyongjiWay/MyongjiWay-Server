@@ -7,6 +7,7 @@ dependencies {
     implementation(project(":storage:db-core"))
     implementation(project(":clients:client-kakao"))
     implementation(project(":clients:client-mqtt"))
+    implementation(project(":clients:client-apple"))
 
     testImplementation(project(":tests:api-docs"))
 

@@ -5,5 +5,4 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 @ConfigurationProperties(prefix = "apple")
-internal class AppleRestClientConfig {
-}
+internal class AppleRestClientConfig

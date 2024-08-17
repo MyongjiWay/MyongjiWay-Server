@@ -108,6 +108,7 @@ jobs:
               --env-file /home/ubuntu/.env \
               -v /home/ubuntu/cert:/cert \
               -v /var/logs:/logs \
+              -e TZ=Asia/Seoul \
               ${{ secrets.DOCKER_USERNAME }}/dev:latest
             docker ps -a
             docker logs app

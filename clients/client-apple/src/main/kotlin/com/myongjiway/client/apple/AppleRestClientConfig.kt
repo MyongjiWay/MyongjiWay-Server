@@ -13,7 +13,7 @@ internal class AppleRestClientConfig {
     lateinit var url: String
 
     @Bean
-    fun appleIdentityTokenService(): AppleApi {
+    fun publicKeyService(): AppleApi {
         val restClient = RestClient.builder().baseUrl(url).build()
         val adapter = RestClientAdapter.create(restClient)
         val factory = HttpServiceProxyFactory.builderFor(adapter).build()

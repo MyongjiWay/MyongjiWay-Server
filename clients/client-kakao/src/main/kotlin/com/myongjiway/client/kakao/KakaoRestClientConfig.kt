@@ -9,7 +9,7 @@ import org.springframework.web.service.invoker.HttpServiceProxyFactory
 
 @Configuration
 @ConfigurationProperties(prefix = "kakao")
-internal class RestClientConfig {
+internal class KakaoRestClientConfig {
     lateinit var url: String
     lateinit var adminKey: String
 

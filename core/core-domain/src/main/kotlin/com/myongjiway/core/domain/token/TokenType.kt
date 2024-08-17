@@ -5,19 +5,24 @@ import java.util.Date
 enum class TokenType {
     ACCESS,
     REFRESH,
+    APPLE,
     ;
 
     fun generate(expiration: Date, token: String, userId: String): Token = when (this) {
-        ACCESS -> AccessToken(
+        ACCESS -> Token(
             userId,
             token,
             expiration.time,
+            ACCESS,
         )
 
-        REFRESH -> RefreshToken(
+        REFRESH -> Token(
             userId,
             token,
             expiration.time,
+            REFRESH,
         )
+
+        APPLE -> TODO()
     }
 }

@@ -9,6 +9,7 @@ include(
     "support:monitoring",
     "clients:client-kakao",
     "clients:client-mqtt",
+    "clients:client-apple",
 )
 
 pluginManagement {

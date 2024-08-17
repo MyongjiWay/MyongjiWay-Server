@@ -9,6 +9,7 @@ spring:
       - db-core.yml
       - client-kakao.yml
       - client-mqtt.yml
+      - client-apple.yml
       - core-domain.yml
   web.resources.add-mappings: true
 

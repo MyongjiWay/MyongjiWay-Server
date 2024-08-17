@@ -13,14 +13,14 @@ class KakaoClientTest :
         {
             lateinit var sut: KakaoClient
             lateinit var kakaoApi: KakaoApi
-            lateinit var restClientConfig: RestClientConfig
+            lateinit var kakaoRestClientConfig: KakaoRestClientConfig
 
             beforeTest {
                 kakaoApi = mockk()
-                restClientConfig = mockk()
-                sut = KakaoClient(kakaoApi, restClientConfig)
+                kakaoRestClientConfig = mockk()
+                sut = KakaoClient(kakaoApi, kakaoRestClientConfig)
 
-                every { restClientConfig.adminKey } returns "adminKey"
+                every { kakaoRestClientConfig.adminKey } returns "adminKey"
             }
 
             feature("Kakao unlink") {

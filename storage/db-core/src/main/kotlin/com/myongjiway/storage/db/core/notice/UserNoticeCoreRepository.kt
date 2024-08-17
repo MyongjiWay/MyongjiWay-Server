@@ -1,7 +1,7 @@
 package com.myongjiway.storage.db.core.notice
 
-import com.myongjiway.usernotice.UserNotice
-import com.myongjiway.usernotice.UserNoticeRepository
+import com.myongjiway.core.domain.usernotice.UserNotice
+import com.myongjiway.core.domain.usernotice.UserNoticeRepository
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 

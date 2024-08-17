@@ -1,5 +1,9 @@
 package com.myongjiway.token
 
+import com.myongjiway.core.domain.token.JwtProperty
+import com.myongjiway.core.domain.token.Token
+import com.myongjiway.core.domain.token.TokenGenerator
+import com.myongjiway.core.domain.token.TokenType
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
@@ -40,7 +44,8 @@ class TokenGeneratorTest :
                     )
 
                     // then
-                    actual.shouldBeInstanceOf<AccessToken>()
+                    actual.shouldBeInstanceOf<Token>()
+                    actual.tokenType shouldBe TokenType.ACCESS
                     actual.userId shouldBe "1234"
                     actual.expiration shouldBe now + jwtProperty.accessToken.expiration
                 }
@@ -58,7 +63,8 @@ class TokenGeneratorTest :
                     )
 
                     // then
-                    actual.shouldBeInstanceOf<RefreshToken>()
+                    actual.shouldBeInstanceOf<Token>()
+                    actual.tokenType shouldBe TokenType.REFRESH
                     actual.userId shouldBe "1234"
                     actual.expiration shouldBe now + jwtProperty.refreshToken.expiration
                 }

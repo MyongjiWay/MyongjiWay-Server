@@ -2,7 +2,7 @@ package com.myongjiway.core.api.support.response
 
 import com.myongjiway.core.api.support.error.ErrorMessage
 import com.myongjiway.core.api.support.error.ErrorType
-import com.myongjiway.error.CoreErrorType
+import com.myongjiway.core.domain.error.CoreErrorType
 
 data class ApiResponse<T> private constructor(
     val result: ResultType,

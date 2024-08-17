@@ -1,5 +1,7 @@
 package com.myongjiway.user
 
+import com.myongjiway.core.domain.user.UserService
+import com.myongjiway.core.domain.user.UserUpdater
 import io.kotest.core.spec.style.FeatureSpec
 import io.mockk.every
 import io.mockk.mockk

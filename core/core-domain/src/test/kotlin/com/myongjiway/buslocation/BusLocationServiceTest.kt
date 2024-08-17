@@ -1,14 +1,14 @@
-import com.myongjiway.buslocation.BusLocation
-import com.myongjiway.buslocation.BusLocationService
+
+import com.myongjiway.core.domain.buslocation.BusLocation
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
 
 class BusLocationServiceTest : FeatureSpec({
-    lateinit var sut: BusLocationService
+    lateinit var sut: com.myongjiway.core.domain.buslocation.BusLocationService
 
     beforeTest {
-        sut = BusLocationService()
+        sut = com.myongjiway.core.domain.buslocation.BusLocationService()
     }
 
     feature("좌표 갱신") {

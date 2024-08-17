@@ -6,11 +6,11 @@ import org.springframework.stereotype.Component
 @Component
 class KakaoClient internal constructor(
     private val kakaoApi: KakaoApi,
-    private val restClientConfig: RestClientConfig,
+    private val kakaoRestClientConfig: KakaoRestClientConfig,
 ) {
     fun unlink(providerId: String): KakaoUnlinkResult {
         val response = kakaoApi.unlink(
-            "KakaoAK " + restClientConfig.adminKey,
+            "KakaoAK " + kakaoRestClientConfig.adminKey,
             KakaoUnlinkRequest("user_id", providerId.toLong()).toBody(),
         )
         return KakaoUnlinkResult(response.id)

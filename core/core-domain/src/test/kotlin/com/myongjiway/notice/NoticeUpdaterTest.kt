@@ -1,5 +1,10 @@
 package com.myongjiway.notice
 
+import com.myongjiway.core.domain.notice.NoticeMetadata
+import com.myongjiway.core.domain.notice.NoticeRepository
+import com.myongjiway.core.domain.notice.NoticeService
+import com.myongjiway.core.domain.notice.NoticeUpdater
+import com.myongjiway.core.domain.notice.NoticeView
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
@@ -20,7 +25,12 @@ class NoticeUpdaterTest :
 
         beforeTest {
             noticeRepository = mockk()
-            noticeService = NoticeService(mockk(), NoticeUpdater(noticeRepository), mockk(), mockk())
+            noticeService = NoticeService(
+                mockk(),
+                NoticeUpdater(noticeRepository),
+                mockk(),
+                mockk(),
+            )
         }
 
         feature("공지사항 수정") {
@@ -28,11 +38,19 @@ class NoticeUpdaterTest :
             scenario("관리자가 공지사항을 수정할 때") {
                 // Given
                 val noticeId = 1L
-                val existingNotice = getNotice("Initial Title", "Initial Content")
-                val updateNotice = getNotice("Updated Title", "Updated Content")
+                val existingNotice = getNoticeView("Initial Title", "Initial Content")
+                val updateNotice = getNoticeMetadata("Updated Title", "Updated Content")
 
                 every { noticeRepository.findById(noticeId) } returns existingNotice
-                every { noticeService.updateNotice(match { it == updateNotice }, noticeId) } just runs
+                every {
+                    noticeService.updateNotice(
+                        match {
+                            it.title == updateNotice.title &&
+                                it.content == updateNotice.content
+                        },
+                        noticeId,
+                    )
+                } just runs
 
                 // When
                 noticeService.updateNotice(updateNotice, noticeId)
@@ -40,7 +58,10 @@ class NoticeUpdaterTest :
                 // Then
                 verify {
                     noticeService.updateNotice(
-                        match { it == updateNotice },
+                        match {
+                            it.title == updateNotice.title &&
+                                it.content == updateNotice.content
+                        },
                         noticeId,
                     )
                 }
@@ -51,12 +72,14 @@ class NoticeUpdaterTest :
 
             scenario("여러 코루틴이 동시에 공지사항을 수정할 때") {
                 // Given
-                val initialNotice = getNotice("Initial Title", "Initial Content")
-                every { noticeRepository.findById(1) } returns initialNotice
+                val noticeId1 = 1L
+                val noticeId2 = 2L
+                val initialNotice = getNoticeView("Initial Title", "Initial Content")
+                every { noticeRepository.findById(noticeId1) } returns initialNotice
                 every { noticeService.updateNotice(any(), any()) } just runs
 
-                val updateDto1 = getNotice("Updated Title 1", "Updated Content 1")
-                val updateDto2 = getNotice("Updated Title 2", "Updated Content 2")
+                val updateDto1 = getNoticeMetadata("Updated Title 1", "Updated Content 1")
+                val updateDto2 = getNoticeMetadata("Updated Title 2", "Updated Content 2")
 
                 // 상태를 추적하기 위한 리스트 (수정된 제목과 내용을 저장)
                 val titles = mutableListOf<String>()
@@ -65,13 +88,13 @@ class NoticeUpdaterTest :
                 runBlocking {
                     // When
                     val job1 = async {
-                        noticeService.updateNotice(updateDto1, updateDto1.id!!)
+                        noticeService.updateNotice(updateDto1, noticeId1)
                         synchronized(titles) { titles.add(updateDto1.title) }
                         synchronized(contents) { contents.add(updateDto1.content) }
                     }
 
                     val job2 = async {
-                        noticeService.updateNotice(updateDto2, updateDto2.id!!)
+                        noticeService.updateNotice(updateDto2, noticeId2)
                         synchronized(titles) { titles.add(updateDto2.title) }
                         synchronized(contents) { contents.add(updateDto2.content) }
                     }
@@ -93,14 +116,17 @@ class NoticeUpdaterTest :
         }
     }) {
     companion object {
-        fun getNotice(title: String, content: String): Notice = Notice(
+        fun getNoticeView(title: String, content: String): NoticeView = NoticeView(
             id = 1L,
+            metadata = NoticeMetadata(title, "author", content),
+            read = false,
+            createdAt = LocalDateTime.now(),
+        )
+
+        fun getNoticeMetadata(title: String, content: String): NoticeMetadata = NoticeMetadata(
             title = title,
             author = "author",
             content = content,
-            read = false,
-            createdAt = LocalDateTime.now(),
-            updatedAt = LocalDateTime.now(),
         )
     }
 }

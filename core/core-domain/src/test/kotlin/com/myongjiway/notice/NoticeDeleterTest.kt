@@ -1,7 +1,7 @@
 package com.myongjiway.notice
 
-import com.myongjiway.error.CoreErrorType
-import com.myongjiway.error.CoreException
+import com.myongjiway.core.domain.error.CoreErrorType
+import com.myongjiway.core.domain.notice.NoticeRepository
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
@@ -18,21 +18,28 @@ class NoticeDeleterTest :
     FeatureSpec({
 
         lateinit var noticeRepository: NoticeRepository
-        lateinit var noticeService: NoticeService
+        lateinit var noticeService: com.myongjiway.core.domain.notice.NoticeService
 
         beforeTest {
             noticeRepository = mockk()
-            noticeService = NoticeService(mockk(), mockk(), NoticeDeleter(noticeRepository), mockk())
+            noticeService = com.myongjiway.core.domain.notice.NoticeService(
+                mockk(),
+                mockk(),
+                com.myongjiway.core.domain.notice.NoticeDeleter(noticeRepository),
+                mockk(),
+            )
         }
 
         feature("공지사항 삭제 (권한이 있다고 가정 없다면 Controller 에서 예외 처리") {
             scenario("관리자가 존재하지 않는 공지사항을 삭제하려고 시도할 때") {
                 // Given
                 val noticeId = 1000L
-                every { noticeRepository.delete(any()) } throws CoreException(CoreErrorType.NOT_FOUND_DATA)
+                every { noticeRepository.delete(any()) } throws com.myongjiway.core.domain.error.CoreException(
+                    CoreErrorType.NOT_FOUND_DATA,
+                )
 
                 // When
-                val exception = shouldThrow<CoreException> {
+                val exception = shouldThrow<com.myongjiway.core.domain.error.CoreException> {
                     noticeService.deleteNotice(noticeId)
                 }
 
@@ -77,7 +84,9 @@ class NoticeDeleterTest :
 
             scenario("여러 스레드가 동시에 동일한 공지사항을 삭제할 때 하나는 성공하고 하나는 실패하는 경우") {
                 // Given
-                every { noticeRepository.delete(any()) } just runs andThenThrows CoreException(CoreErrorType.NOT_FOUND_DATA)
+                every { noticeRepository.delete(any()) } just runs andThenThrows com.myongjiway.core.domain.error.CoreException(
+                    CoreErrorType.NOT_FOUND_DATA,
+                )
 
                 val deleteId = 1L
 

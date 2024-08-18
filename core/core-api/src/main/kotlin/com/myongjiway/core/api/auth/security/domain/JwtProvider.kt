@@ -6,7 +6,6 @@ import com.myongjiway.core.domain.token.JwtProperty
 import com.myongjiway.core.domain.token.TokenValidator
 import com.myongjiway.core.domain.user.UserRepository
 import io.jsonwebtoken.ExpiredJwtException
-import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.MalformedJwtException
 import io.jsonwebtoken.UnsupportedJwtException
 import io.jsonwebtoken.security.Keys
@@ -17,6 +16,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.stereotype.Component
 import java.lang.IllegalArgumentException
+import java.security.SignatureException
 
 @Component
 class JwtProvider(
@@ -37,6 +37,9 @@ class JwtProvider(
         } catch (e: MalformedJwtException) {
             servletRequest.setAttribute("exception", "MalformedJwtException")
             logger.info("잘못된 JWT 서명입니다.")
+        } catch (e: SignatureException) {
+            servletRequest.setAttribute("exception", "MalformedJwtException")
+            logger.info("잘못된 JWT 서명입니다.")
         } catch (e: ExpiredJwtException) {
             servletRequest.setAttribute("exception", "ExpiredJwtException")
             logger.info("만료된 JWT 토큰입니다.")
@@ -52,8 +55,10 @@ class JwtProvider(
 
     fun getAuthentication(token: String?): Authentication {
         val userId = try {
-            Jwts.parser().verifyWith(Keys.hmacShaKeyFor(jwtProperty.accessToken.secret.toByteArray())).build()
-                .parseSignedClaims(token).payload.subject.toLong()
+            tokenValidator.validateWithSecretKey(
+                Keys.hmacShaKeyFor(jwtProperty.accessToken.secret.toByteArray()),
+                token!!,
+            ).subject.toLong()
         } catch (e: Exception) {
             throw CoreApiException(ErrorType.INVALID_TOKEN_ERROR)
         }

@@ -21,6 +21,10 @@ class JwtAuthenticationEntryPoint : AuthenticationEntryPoint {
                 setResponse(response, ErrorType.NOT_EXIST_USER_ERROR)
             }
 
+            "SignatureException" -> {
+                setResponse(response, ErrorType.INVALID_TOKEN_ERROR)
+            }
+
             "ExpiredJwtException" -> {
                 setResponse(response, ErrorType.EXPIRED_JWT_ERROR)
             }

@@ -8,6 +8,7 @@ import io.jsonwebtoken.UnsupportedJwtException
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import java.security.PublicKey
+import java.security.SignatureException
 import javax.crypto.SecretKey
 
 @Component
@@ -28,7 +29,7 @@ class TokenValidator {
 
     private fun handleJwtException(e: Exception): Nothing {
         when (e) {
-            is SecurityException, is MalformedJwtException -> {
+            is SecurityException, is MalformedJwtException, is SignatureException -> {
                 logger.info("잘못된 JWT 서명입니다.")
                 throw e
             }

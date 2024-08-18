@@ -2,7 +2,7 @@
 
 package com.myongjiway.core.api.controller.v1.token
 
-import com.myongjiway.core.api.auth.security.domain.JwtValidator
+import com.myongjiway.core.api.auth.security.domain.JwtProvider
 import com.myongjiway.core.api.support.error.CoreApiException
 import com.myongjiway.core.api.support.error.ErrorType
 import com.myongjiway.core.domain.token.JwtProperty
@@ -27,13 +27,13 @@ class JwtProviderTest :
         {
             lateinit var jwtProperty: JwtProperty
             lateinit var userRepository: UserRepository
-            lateinit var sut: JwtValidator
+            lateinit var sut: JwtProvider
             val userId = "1234"
 
             beforeTest {
                 jwtProperty = mockk()
                 userRepository = mockk()
-                sut = JwtValidator(jwtProperty, userRepository)
+                sut = JwtProvider(jwtProperty, userRepository)
 
                 every { jwtProperty.accessToken.secret } returns "lnp1ISIafo9E+U+xZ4xr0kaRGD5uNVCT1tiJ8gXmqWvp32L7JoXC9EjAy0z2F6NVSwrKLxbCkpzT+DZJazy3Pg=="
                 every { jwtProperty.accessToken.expiration } returns 1000

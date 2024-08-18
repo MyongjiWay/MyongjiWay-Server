@@ -3,6 +3,7 @@ package com.myongjiway.core.api.auth.security.domain
 import com.myongjiway.core.api.support.error.CoreApiException
 import com.myongjiway.core.api.support.error.ErrorType
 import com.myongjiway.core.domain.token.JwtProperty
+import com.myongjiway.core.domain.token.TokenValidator
 import com.myongjiway.core.domain.user.UserRepository
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
@@ -16,20 +17,20 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.stereotype.Component
 import java.lang.IllegalArgumentException
-import java.util.Date
 
 @Component
-class JwtValidator(
+class JwtProvider(
     private val jwtProperty: JwtProperty,
+    private val tokenValidator: TokenValidator,
     private val userRepository: UserRepository,
 ) {
     fun validateAccessTokenFromRequest(servletRequest: ServletRequest, token: String?): Boolean {
         try {
-            val claims =
-                Jwts.parser().verifyWith(Keys.hmacShaKeyFor(jwtProperty.accessToken.secret.toByteArray())).build()
-                    .parseSignedClaims(token).payload
-            val expirationDate = claims.expiration
-            return !expirationDate.before(Date())
+            tokenValidator.validateWithSecretKey(
+                Keys.hmacShaKeyFor(jwtProperty.accessToken.secret.toByteArray()),
+                token!!,
+            )
+            return true
         } catch (e: SecurityException) {
             servletRequest.setAttribute("exception", "MalformedJwtException")
             logger.info("잘못된 JWT 서명입니다.")

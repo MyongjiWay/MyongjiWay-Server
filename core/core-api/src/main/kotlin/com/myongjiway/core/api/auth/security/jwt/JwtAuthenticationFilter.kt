@@ -26,7 +26,7 @@ class JwtAuthenticationFilter(
         if (!jwt.isNullOrBlank() && jwtValidator.validateAccessTokenFromRequest(servletRequest, jwt)) {
             val authentication = jwtValidator.getAuthentication(jwt)
             SecurityContextHolder.getContext().authentication = authentication
-            Companion.logger.info("Security Context에 '${authentication.name}' 인증 정보를 저장했습니다. uri: $requestURI")
+            Companion.logger.info("${authentication.name} 해당하는 유저가 $requestURI 경로로 접근했습니다.")
         }
 
         filterChain.doFilter(servletRequest, servletResponse)

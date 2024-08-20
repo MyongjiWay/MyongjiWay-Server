@@ -2,6 +2,7 @@ package com.myongjiway.core.api.support.logging
 
 import jakarta.servlet.http.HttpServletRequest
 import org.aspectj.lang.JoinPoint
+import org.aspectj.lang.annotation.After
 import org.aspectj.lang.annotation.Aspect
 import org.aspectj.lang.annotation.Before
 import org.aspectj.lang.annotation.Pointcut
@@ -40,6 +41,11 @@ class RequestLoggingAspect {
         }
 
         logger.info("Request received for method: ${joinPoint.signature.name}")
+    }
+
+    @After("coreApiControllerMethods()")
+    fun clearMDC() {
+        MDC.clear()
     }
 
     private fun getCurrentHttpRequest(): HttpServletRequest =

@@ -38,7 +38,7 @@
                         "class": "%class",
                         "method": "%method",
                         "line": "%line",
-                        "exception": "%ex{root}",
+                        "exception": "%ex{short}",
                         "message": "%message",
                         "api": "%X{api:-}",
                         "userId": "%X{userId:-}",

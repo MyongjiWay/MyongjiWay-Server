@@ -13,7 +13,7 @@
     <!-- 에러 로그 파일 출력 앱펜더 -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>WARN</level>
+            <level>ERROR</level>
         </filter>
 
         <file>logs/error.log</file>
@@ -33,16 +33,10 @@
                         {
                         "timestamp": "%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}",
                         "level": "%level",
-                        "logger": "%logger",
-                        "thread": "%thread",
-                        "class": "%class",
-                        "method": "%method",
-                        "line": "%line",
                         "exception": "%ex{short}",
+                        "exceptionFull": "%X{exceptionFull:-}",
                         "message": "%message",
-                        "api": "%X{api:-}",
                         "userId": "%X{userId:-}",
-                        "requestId": "%X{requestId:-}",
                         "status": "%X{status:-}"
                         }
                     </pattern>
@@ -104,6 +98,7 @@
                         {
                         "timestamp": "%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}",
                         "level": "%level",
+                        "userId": "%X{userId:-}",
                         "message": "%message"
                         }
                     </pattern>
@@ -122,6 +117,11 @@
         <appender-ref ref="AUTHENTICATION"/>
     </logger>
 
+    <!-- 에러 로거 -->
+    <logger name="ErrorLog" level="ERROR" additivity="false">
+        <appender-ref ref="FILE"/>
+    </logger>
+
     <!-- Spring 프레임워크 로거 -->
     <logger name="org.springframework" level="INFO" additivity="false">
         <appender-ref ref="STDOUT"/>
@@ -135,6 +135,6 @@
     <!-- 루트 로거 -->
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
-        <appender-ref ref="FILE"/>
     </root>
+
 </configuration>

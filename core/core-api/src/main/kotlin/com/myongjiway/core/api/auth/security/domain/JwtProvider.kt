@@ -5,9 +5,6 @@ import com.myongjiway.core.api.support.error.ErrorType
 import com.myongjiway.core.domain.token.JwtProperty
 import com.myongjiway.core.domain.token.TokenValidator
 import com.myongjiway.core.domain.user.UserRepository
-import io.jsonwebtoken.ExpiredJwtException
-import io.jsonwebtoken.MalformedJwtException
-import io.jsonwebtoken.UnsupportedJwtException
 import io.jsonwebtoken.security.Keys
 import jakarta.servlet.ServletRequest
 import org.slf4j.LoggerFactory
@@ -15,8 +12,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.stereotype.Component
-import java.lang.IllegalArgumentException
-import java.security.SignatureException
 
 @Component
 class JwtProvider(
@@ -31,24 +26,8 @@ class JwtProvider(
                 token!!,
             )
             return true
-        } catch (e: SecurityException) {
-            servletRequest.setAttribute("exception", "MalformedJwtException")
-            logger.info("잘못된 JWT 서명입니다.")
-        } catch (e: MalformedJwtException) {
-            servletRequest.setAttribute("exception", "MalformedJwtException")
-            logger.info("잘못된 JWT 서명입니다.")
-        } catch (e: SignatureException) {
-            servletRequest.setAttribute("exception", "MalformedJwtException")
-            logger.info("잘못된 JWT 서명입니다.")
-        } catch (e: ExpiredJwtException) {
-            servletRequest.setAttribute("exception", "ExpiredJwtException")
-            logger.info("만료된 JWT 토큰입니다.")
-        } catch (e: UnsupportedJwtException) {
-            servletRequest.setAttribute("exception", "UnsupportedJwtException")
-            logger.info("지원되지 않는 JWT 토큰입니다.")
-        } catch (e: IllegalArgumentException) {
-            servletRequest.setAttribute("exception", "IllegalArgumentException")
-            logger.info("JWT 토큰이 잘못되었습니다.")
+        } catch (e: Exception) {
+            servletRequest.setAttribute("exception", e.javaClass.simpleName)
         }
         return false
     }

@@ -12,11 +12,20 @@
 
     <!-- 에러 로그 파일 출력 앱펜더 -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
+
         <file>logs/error.log</file>
+        <append>false</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>logs/error.%d{yyyy-MM-dd}.log</fileNamePattern>
-            <maxHistory>30</maxHistory>
+            <maxHistory>7</maxHistory> <!-- 최대 보관 일수 -->
+            <totalSizeCap>300MB</totalSizeCap> <!-- 총 로그 파일 크기 제한 -->
         </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>50MB</maxFileSize> <!-- 파일 크기가 50MB 이상일 경우 새로운 파일 생성 -->
+        </triggeringPolicy>
         <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
             <providers>
                 <pattern>
@@ -29,7 +38,7 @@
                         "class": "%class",
                         "method": "%method",
                         "line": "%line",
-                        "exception": "%ex{full}",
+                        "exception": "%ex{root}",
                         "message": "%message",
                         "api": "%X{api:-}",
                         "userId": "%X{userId:-}",
@@ -45,10 +54,15 @@
     <!-- 요청 로그 파일 출력 앱펜더 -->
     <appender name="REQUEST_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>logs/request.log</file>
+        <append>false</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>logs/request.%d{yyyy-MM-dd}.log</fileNamePattern>
-            <maxHistory>30</maxHistory>
+            <maxHistory>7</maxHistory>
+            <totalSizeCap>300MB</totalSizeCap>
         </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>50MB</maxFileSize>
+        </triggeringPolicy>
         <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
             <providers>
                 <pattern>
@@ -57,7 +71,6 @@
                         "timestamp": "%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}",
                         "level": "%level",
                         "method": "%X{method:-}",
-                        "api": "%X{api:-}",
                         "requestUri": "%X{requestUri:-}",
                         "sourceIp": "%X{sourceIp:-}",
                         "referer": "%X{referer:-}",
@@ -75,10 +88,15 @@
     <!-- 인증 로그 파일 출력 앱펜더 -->
     <appender name="AUTHENTICATION" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>logs/authentication.log</file>
+        <append>false</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>logs/authentication.%d{yyyy-MM-dd}.log</fileNamePattern>
-            <maxHistory>30</maxHistory>
+            <maxHistory>7</maxHistory>
+            <totalSizeCap>300MB</totalSizeCap>
         </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>50MB</maxFileSize>
+        </triggeringPolicy>
         <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
             <providers>
                 <pattern>
@@ -86,10 +104,6 @@
                         {
                         "timestamp": "%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}",
                         "level": "%level",
-                        "userId": "%X{userId:-}",
-                        "api": "%X{api:-}",
-                        "sourceIp": "%X{sourceIp:-}",
-                        "requestId": "%X{requestId:-}",
                         "message": "%message"
                         }
                     </pattern>
@@ -124,3 +138,4 @@
         <appender-ref ref="FILE"/>
     </root>
 </configuration>
+

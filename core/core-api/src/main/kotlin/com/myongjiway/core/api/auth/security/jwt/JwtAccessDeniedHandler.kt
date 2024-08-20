@@ -4,6 +4,7 @@ import com.myongjiway.core.api.support.error.ErrorType
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import net.minidev.json.JSONObject
+import org.slf4j.LoggerFactory
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.web.access.AccessDeniedHandler
 import org.springframework.stereotype.Component
@@ -24,6 +25,13 @@ class JwtAccessDeniedHandler : AccessDeniedHandler {
             put("message", errorCode.message)
             put("isSuccess", false)
         }
+
+        logger.error("접근 권한이 없는 토큰으로 요청했습니다. : {}", accessDeniedException.message, accessDeniedException)
+
         response.writer.print(json)
+    }
+
+    companion object {
+        private val logger = LoggerFactory.getLogger("AuthenticationLog")
     }
 }

@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import net.minidev.json.JSONObject
 import org.slf4j.LoggerFactory
+import org.slf4j.MDC
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.web.AuthenticationEntryPoint
 import org.springframework.stereotype.Component
@@ -17,6 +18,7 @@ class JwtAuthenticationEntryPoint : AuthenticationEntryPoint {
         authException: AuthenticationException,
     ) {
         val exception = request.getAttribute("exception") as? String
+        MDC.put("userId", "anonymous")
         when (exception) {
             "NotExistUser" -> {
                 setResponse(response, ErrorType.NOT_EXIST_USER_ERROR)

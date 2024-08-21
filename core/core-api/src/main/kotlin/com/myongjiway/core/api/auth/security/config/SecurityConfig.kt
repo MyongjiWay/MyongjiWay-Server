@@ -57,7 +57,7 @@ internal class SecurityConfig(
                     AntPathRequestMatcher("/favicon.ico"),
                     AntPathRequestMatcher("/error"),
                     AntPathRequestMatcher("/"),
-                    AntPathRequestMatcher("/h2-console"),
+                    AntPathRequestMatcher("/h2-console/**"),
                     AntPathRequestMatcher("/docs/**"),
                     AntPathRequestMatcher("/actuator/prometheus"),
                 ).permitAll()

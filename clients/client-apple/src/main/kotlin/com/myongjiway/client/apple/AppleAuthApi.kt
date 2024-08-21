@@ -7,10 +7,10 @@ import org.springframework.web.service.annotation.HttpExchange
 
 @Component
 @HttpExchange
-interface AppleApi {
+interface AppleAuthApi {
 
     @GetExchange(
-        url = "/auth/keys",
+        url = "/keys",
     )
     fun getPublicKey(): ApplePublicKeyResult
 }

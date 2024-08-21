@@ -32,7 +32,7 @@ class TokenReaderTest :
                     )
 
                     // when
-                    val refreshToken = sut.findByToken(token)
+                    val refreshToken = sut.find(token)
 
                     // then
                     refreshToken?.token shouldBe token
@@ -44,7 +44,7 @@ class TokenReaderTest :
                     every { tokenRepository.find("token") } returns null
 
                     // when
-                    val refreshToken = sut.findByToken("token")
+                    val refreshToken = sut.find("token")
 
                     // then
                     refreshToken shouldBe null

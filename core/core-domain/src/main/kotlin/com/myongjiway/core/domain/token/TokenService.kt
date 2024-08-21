@@ -1,6 +1,5 @@
 package com.myongjiway.core.domain.token
 
-import com.myongjiway.core.domain.error.CoreErrorType
 import com.myongjiway.core.domain.user.UserReader
 import org.springframework.stereotype.Service
 
@@ -13,11 +12,9 @@ class TokenService(
     private val tokenProcessor: TokenProcessor,
 ) {
     fun refresh(refreshData: RefreshData): TokenResult {
-        var refreshToken = tokenReader.findByToken(refreshData.refreshToken)
-            ?: throw com.myongjiway.core.domain.error.CoreException(CoreErrorType.UNAUTHORIZED_TOKEN)
+        var refreshToken = tokenReader.find(refreshData.refreshToken)
 
         val user = userReader.find(refreshToken.userId.toLong())
-            ?: throw com.myongjiway.core.domain.error.CoreException(CoreErrorType.USER_NOT_FOUND)
 
         if (isExpired(refreshToken)) {
             refreshToken = tokenGenerator.generateRefreshTokenByUserId(user.id.toString())
@@ -30,8 +27,7 @@ class TokenService(
 
     fun delete(refreshToken: String) {
         val findRefreshToken = (
-            tokenReader.findByToken(refreshToken)
-                ?: throw com.myongjiway.core.domain.error.CoreException(CoreErrorType.NOT_FOUND_TOKEN)
+            tokenReader.find(refreshToken)
             )
 
         tokenProcessor.deleteToken(findRefreshToken.token)

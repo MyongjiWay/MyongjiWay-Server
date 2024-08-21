@@ -59,7 +59,7 @@ class TokenServiceTest :
                 scenario("RefreshToken의 expiration이 지나지 않았다면 AccessToken을 갱신한다.") {
                     // given
                     val expiration = System.currentTimeMillis() + 100000
-                    every { tokenReader.findByToken(any()) } returns Token(
+                    every { tokenReader.find(any()) } returns Token(
                         "1000",
                         "refreshToken",
                         expiration,
@@ -90,7 +90,7 @@ class TokenServiceTest :
                     // given
                     val expiration = System.currentTimeMillis() - 100000
 
-                    every { tokenReader.findByToken(any()) } returns Token(
+                    every { tokenReader.find(any()) } returns Token(
                         "1000",
                         "refreshToken",
                         expiration,
@@ -121,7 +121,7 @@ class TokenServiceTest :
 
                 scenario("RefreshToken이 없다면 UNAUTHORIZED_TOKEN 에러를 반환한다.") {
                     // given
-                    every { tokenReader.findByToken(any()) } returns null
+                    every { tokenReader.find(any()) } returns null
 
                     // when
                     val actual = runCatching { sut.refresh(RefreshData("refreshToken")) }
@@ -133,7 +133,7 @@ class TokenServiceTest :
                 scenario("User가 없다면 USER_NOT_FOUND 에러를 반환한다.") {
                     // given
                     val expiration = System.currentTimeMillis() - 10000
-                    every { tokenReader.findByToken(any()) } returns Token(
+                    every { tokenReader.find(any()) } returns Token(
                         "1000",
                         "refreshToken",
                         expiration,
@@ -153,7 +153,7 @@ class TokenServiceTest :
             feature("토큰 삭제") {
                 scenario("RefreshToken 삭제에 성공한다.") {
                     // given
-                    every { tokenReader.findByToken(any()) } returns Token(
+                    every { tokenReader.find(any()) } returns Token(
                         "1000",
                         "refreshToken",
                         10000,
@@ -165,19 +165,19 @@ class TokenServiceTest :
                     sut.delete("refreshToken")
 
                     // then
-                    verify(exactly = 1) { tokenReader.findByToken("refreshToken") }
+                    verify(exactly = 1) { tokenReader.find("refreshToken") }
                     verify(exactly = 1) { tokenProcessor.deleteToken("refreshToken") }
                 }
 
                 scenario("RefreshToken이 존재하지 않는다면 NOT_FOUND_TOKEN 에러를 반환한다.") {
                     // given
-                    every { tokenReader.findByToken(any()) } returns null
+                    every { tokenReader.find(any()) } returns null
 
                     // when
                     val actual = runCatching { sut.delete("refreshToken") }
 
                     // then
-                    actual.exceptionOrNull() shouldBe CoreException(CoreErrorType.NOT_FOUND_TOKEN)
+                    actual.exceptionOrNull() shouldBe CoreException(CoreErrorType.TOKEN_NOT_FOUND)
                 }
             }
         },

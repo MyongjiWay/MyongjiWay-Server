@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class AppleClient internal constructor(
-    private val appleApi: AppleApi,
+    private val appleAuthApi: AppleAuthApi,
 ) {
-    fun getPublicKey(): ApplePublicKeyResult = appleApi.getPublicKey()
+    fun getPublicKey(): ApplePublicKeyResult = appleAuthApi.getPublicKey()
 }

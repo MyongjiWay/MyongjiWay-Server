@@ -21,11 +21,18 @@ class JwtAccessDeniedHandler : AccessDeniedHandler {
         val errorCode = ErrorType.NOT_ALLOWED_ACCESS_ERROR
         response.contentType = "application/json;charset=UTF-8"
         response.characterEncoding = "UTF-8"
-        response.status = HttpServletResponse.SC_UNAUTHORIZED
+        response.status = errorCode.status.value()
         val json = JSONObject().apply {
-            put("code", errorCode.code)
-            put("message", errorCode.message)
-            put("isSuccess", false)
+            put("result", "ERROR")
+            put("data", null) // Always null
+            put(
+                "error",
+                JSONObject().apply {
+                    put("code", errorCode.code)
+                    put("message", errorCode.message)
+                    put("data", null) // No additional data in this context
+                },
+            )
         }
 
         val authentication = SecurityContextHolder.getContext().authentication

@@ -1,10 +1,9 @@
 package com.myongjiway.core.api.auth.security.domain
 
-import com.myongjiway.core.api.support.error.CoreApiException
-import com.myongjiway.core.api.support.error.ErrorType
 import com.myongjiway.core.domain.token.JwtProperty
 import com.myongjiway.core.domain.token.TokenValidator
-import com.myongjiway.core.domain.user.UserRepository
+import com.myongjiway.core.domain.user.User
+import com.myongjiway.core.domain.user.UserReader
 import io.jsonwebtoken.security.Keys
 import jakarta.servlet.ServletRequest
 import org.slf4j.LoggerFactory
@@ -17,14 +16,14 @@ import org.springframework.stereotype.Component
 class JwtProvider(
     private val jwtProperty: JwtProperty,
     private val tokenValidator: TokenValidator,
-    private val userRepository: UserRepository,
+    private val userReader: UserReader,
 ) {
     fun validateAccessTokenFromRequest(servletRequest: ServletRequest, token: String?): Boolean {
         try {
             tokenValidator.validateWithSecretKey(
                 Keys.hmacShaKeyFor(jwtProperty.accessToken.secret.toByteArray()),
                 token!!,
-            )
+            ).subject.toLong()
             return true
         } catch (e: Exception) {
             servletRequest.setAttribute("exception", e.javaClass.simpleName)
@@ -32,16 +31,18 @@ class JwtProvider(
         return false
     }
 
-    fun getAuthentication(token: String?): Authentication {
-        val userId = try {
-            tokenValidator.validateWithSecretKey(
-                Keys.hmacShaKeyFor(jwtProperty.accessToken.secret.toByteArray()),
-                token!!,
-            ).subject.toLong()
+    fun getAuthentication(servletRequest: ServletRequest, token: String?): Authentication {
+        var user: User? = null
+        try {
+            val userId =
+                tokenValidator.validateWithSecretKey(
+                    Keys.hmacShaKeyFor(jwtProperty.accessToken.secret.toByteArray()),
+                    token!!,
+                ).subject.toLong()
+            user = userReader.find(userId)
         } catch (e: Exception) {
-            throw CoreApiException(ErrorType.INVALID_TOKEN_ERROR)
+            servletRequest.setAttribute("exception", e.javaClass.simpleName)
         }
-        val user = userRepository.findUserById(userId)
         return UsernamePasswordAuthenticationToken(user, "", listOf(GrantedAuthority { user?.role?.value }))
     }
 

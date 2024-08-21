@@ -23,6 +23,7 @@ class JwtAuthenticationEntryPoint : AuthenticationEntryPoint {
             "ExpiredJwtException" -> ErrorType.EXPIRED_JWT_ERROR
             "MalformedJwtException" -> ErrorType.INVALID_TOKEN_ERROR
             "HiJackException" -> ErrorType.HIJACK_JWT_TOKEN_ERROR
+            "NoSuchElementException" -> ErrorType.NOT_EXIST_USER_ERROR
             else -> ErrorType.UNAUTHORIZED_ERROR
         }
         val apiException = CoreApiException(errorType)

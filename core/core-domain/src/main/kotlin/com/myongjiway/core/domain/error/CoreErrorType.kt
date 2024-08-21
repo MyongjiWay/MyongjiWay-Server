@@ -2,7 +2,7 @@ package com.myongjiway.core.domain.error
 
 enum class CoreErrorType(
     val kind: CoreErrorKind,
-    val code: com.myongjiway.core.domain.error.CoreErrorCode,
+    val code: CoreErrorCode,
     val message: String,
     val level: CoreErrorLevel,
 ) {

@@ -6,7 +6,6 @@ import com.myongjiway.core.domain.user.User
 import com.myongjiway.core.domain.user.UserReader
 import io.jsonwebtoken.security.Keys
 import jakarta.servlet.ServletRequest
-import org.slf4j.LoggerFactory
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
@@ -44,9 +43,5 @@ class JwtProvider(
             servletRequest.setAttribute("exception", e.javaClass.simpleName)
         }
         return UsernamePasswordAuthenticationToken(user, "", listOf(GrantedAuthority { user?.role?.value }))
-    }
-
-    companion object {
-        private val logger = LoggerFactory.getLogger("AuthenticationLog")
     }
 }

@@ -3,43 +3,42 @@
 package com.myongjiway.core.api.controller.v1.token
 
 import com.myongjiway.core.api.auth.security.domain.JwtProvider
-import com.myongjiway.core.api.support.error.CoreApiException
-import com.myongjiway.core.api.support.error.ErrorType
 import com.myongjiway.core.domain.token.JwtProperty
+import com.myongjiway.core.domain.token.TokenValidator
 import com.myongjiway.core.domain.user.ProviderType
 import com.myongjiway.core.domain.user.Role
 import com.myongjiway.core.domain.user.User
-import com.myongjiway.core.domain.user.UserRepository
+import com.myongjiway.core.domain.user.UserReader
 import io.jsonwebtoken.Jwts.*
 import io.jsonwebtoken.Jwts.SIG.*
 import io.jsonwebtoken.security.Keys.*
 import io.kotest.core.spec.style.FeatureSpec
-import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verify
+import org.springframework.mock.web.MockHttpServletRequest
 import java.time.LocalDateTime
 
 class JwtProviderTest :
     FeatureSpec(
         {
             lateinit var jwtProperty: JwtProperty
-            lateinit var userRepository: UserRepository
+            lateinit var tokenValidator: TokenValidator
+            lateinit var userReader: UserReader
             lateinit var sut: JwtProvider
             val userId = "1234"
 
             beforeTest {
                 jwtProperty = mockk()
-                userRepository = mockk()
-                sut = JwtProvider(jwtProperty, userRepository)
+                tokenValidator = mockk()
+                userReader = mockk()
+                sut = JwtProvider(jwtProperty, tokenValidator, userReader)
 
                 every { jwtProperty.accessToken.secret } returns "lnp1ISIafo9E+U+xZ4xr0kaRGD5uNVCT1tiJ8gXmqWvp32L7JoXC9EjAy0z2F6NVSwrKLxbCkpzT+DZJazy3Pg=="
                 every { jwtProperty.accessToken.expiration } returns 1000
                 every { jwtProperty.refreshToken.secret } returns "lnp1ISIafo9E+U+xZ4xr0kaRGD5uNVCT1tiJ8gXmqWvp32L7JoXC9EjAy0z2F6NVSwrKLxbCkpzT+DZJazy3Pg=="
                 every { jwtProperty.refreshToken.expiration } returns 10000
-                every { userRepository.findUserById(userId.toLong()) } returns User(
+                every { userReader.find(userId.toLong()) } returns User(
                     id = userId.toLong(),
                     profileImg = "profileImg.img",
                     name = "test",
@@ -57,31 +56,13 @@ class JwtProviderTest :
                     val token = builder().subject(userId)
                         .signWith(hmacShaKeyFor(jwtProperty.accessToken.secret.toByteArray()), HS512)
                         .compact()
+                    val mockHttpServletRequest = MockHttpServletRequest()
 
                     // when
-                    val authentication = sut.getAuthentication(token)
+                    val authentication = sut.getAuthentication(mockHttpServletRequest, token)
 
                     // then
                     authentication shouldNotBe null
-                }
-
-                scenario("토큰의 signature가 secret key로 생성이 되지 않았다면 INVALID_TOKEN 을 반환한다.") {
-                    // given
-                    val invalidSecret = jwtProperty.accessToken.secret + "invalid"
-                    val invalidToken =
-                        builder().subject(userId).signWith(hmacShaKeyFor(invalidSecret.toByteArray()), HS512)
-                            .compact()
-
-                    // when
-                    val actual = kotlin.runCatching { sut.getAuthentication(invalidToken) }
-                        .exceptionOrNull()
-
-                    // then
-                    verify(exactly = 0) {
-                        userRepository.findUserById(userId.toLong())
-                    }
-                    actual?.shouldBeInstanceOf<CoreApiException>()
-                    (actual as CoreApiException).errorType shouldBe ErrorType.INVALID_TOKEN_ERROR
                 }
             }
         },

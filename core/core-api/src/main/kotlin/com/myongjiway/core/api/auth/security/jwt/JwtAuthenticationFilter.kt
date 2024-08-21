@@ -5,6 +5,7 @@ import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.LoggerFactory
+import org.slf4j.MDC
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 import org.springframework.web.context.request.RequestContextHolder
@@ -26,6 +27,7 @@ class JwtAuthenticationFilter(
             val authentication = jwtProvider.getAuthentication(servletRequest, jwt)
             if (authentication.principal != null) {
                 SecurityContextHolder.getContext().authentication = authentication
+                MDC.put("userId", parseUserIdFromPrincipal(authentication.name.toString()))
                 Companion.logger.info("Security Context에 '${authentication.name}' 인증 정보를 저장했습니다. uri: $requestURI")
             }
         }
@@ -43,6 +45,12 @@ class JwtAuthenticationFilter(
                 null
             }
         }
+    }
+
+    private fun parseUserIdFromPrincipal(userString: String): String {
+        val idPattern = """id=(\d+)""".toRegex()
+        val matchResult = idPattern.find(userString)
+        return matchResult?.groupValues?.get(1) ?: "unknown"
     }
 
     companion object {

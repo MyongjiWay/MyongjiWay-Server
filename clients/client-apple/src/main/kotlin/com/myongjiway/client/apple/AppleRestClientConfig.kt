@@ -13,11 +13,11 @@ internal class AppleRestClientConfig {
     lateinit var url: String
 
     @Bean
-    fun publicKeyService(): AppleApi {
-        val restClient = RestClient.builder().baseUrl(url).build()
+    fun appleAuthService(): AppleAuthApi {
+        val restClient = RestClient.builder().baseUrl("$url/auth").build()
         val adapter = RestClientAdapter.create(restClient)
         val factory = HttpServiceProxyFactory.builderFor(adapter).build()
 
-        return factory.createClient(AppleApi::class.java)
+        return factory.createClient(AppleAuthApi::class.java)
     }
 }

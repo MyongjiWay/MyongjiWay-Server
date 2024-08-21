@@ -1,6 +1,5 @@
-package com.myongjiway.clientmqtt.util
+package com.myongjiway.client.mqtt.util
 
-import com.myongjiway.client.mqtt.util.PrivateKeyReader
 import java.io.BufferedInputStream
 import java.io.DataInputStream
 import java.io.File

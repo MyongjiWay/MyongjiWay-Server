@@ -64,13 +64,46 @@
                         {
                         "timestamp": "%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}",
                         "level": "%level",
+                        "requestId": "%X{requestId:-}",
+                        "userId": "%X{userId:-}",
+                        "sourceIp": "%X{sourceIp:-}",
+                        "host": "%X{host:-}",
                         "method": "%X{method:-}",
                         "requestUri": "%X{requestUri:-}",
-                        "sourceIp": "%X{sourceIp:-}",
                         "referer": "%X{referer:-}",
                         "userAgent": "%X{userAgent:-}",
-                        "userId": "%X{userId:-}",
+                        "xForwardedFor": "%X{xForwardedFor:-}",
+                        "xForwardedProto": "%X{xForwardedProto:-}",
+                        "message": "%message"
+                        }
+                    </pattern>
+                </pattern>
+            </providers>
+        </encoder>
+    </appender>
+
+    <!-- 응답 로그 파일 출력 앱펜더 -->
+    <appender name="RESPONSE_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/response.log</file>
+        <append>false</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/response.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>7</maxHistory>
+            <totalSizeCap>300MB</totalSizeCap>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>50MB</maxFileSize>
+        </triggeringPolicy>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <pattern>
+                    <pattern>
+                        {
+                        "timestamp": "%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}",
                         "requestId": "%X{requestId:-}",
+                        "method": "%X{method:-}",
+                        "requestUri": "%X{requestUri:-}",
+                        "responseTime": "%X{responseTime:-}",
                         "message": "%message"
                         }
                     </pattern>
@@ -110,6 +143,11 @@
     <!-- 요청 로거 -->
     <logger name="HttpRequestLog" level="INFO" additivity="false">
         <appender-ref ref="REQUEST_LOG"/>
+    </logger>
+
+    <!-- 응답 로거 -->
+    <logger name="HttpResponseLog" level="INFO" additivity="false">
+        <appender-ref ref="RESPONSE_LOG"/>
     </logger>
 
     <!-- 인증 로거 -->

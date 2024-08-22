@@ -19,7 +19,7 @@ class JwtProvider(
 ) {
     fun validateAccessTokenFromRequest(servletRequest: ServletRequest, token: String?): Boolean {
         try {
-            tokenValidator.validateWithSecretKey(
+            tokenValidator.validate(
                 Keys.hmacShaKeyFor(jwtProperty.accessToken.secret.toByteArray()),
                 token!!,
             ).subject.toLong()
@@ -34,7 +34,7 @@ class JwtProvider(
         var user: User? = null
         try {
             val userId =
-                tokenValidator.validateWithSecretKey(
+                tokenValidator.validate(
                     Keys.hmacShaKeyFor(jwtProperty.accessToken.secret.toByteArray()),
                     token!!,
                 ).subject.toLong()

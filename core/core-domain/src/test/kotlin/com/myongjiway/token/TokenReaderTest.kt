@@ -1,5 +1,7 @@
 package com.myongjiway.token
 
+import com.myongjiway.core.domain.error.CoreErrorType
+import com.myongjiway.core.domain.error.CoreException
 import com.myongjiway.core.domain.token.Token
 import com.myongjiway.core.domain.token.TokenReader
 import com.myongjiway.core.domain.token.TokenRepository
@@ -39,15 +41,15 @@ class TokenReaderTest :
                     refreshToken?.userId shouldBe "1000"
                 }
 
-                scenario("토큰이 존재하지 않으면 null을 반환한다.") {
+                scenario("토큰이 존재하지 않으면 TOKEN_NOT_FOUND 에러를 반환한다.") {
                     // given
-                    every { tokenRepository.find("token") } returns null
+                    every { tokenRepository.find("token") } throws CoreException(CoreErrorType.TOKEN_NOT_FOUND)
 
                     // when
-                    val refreshToken = sut.find("token")
+                    val actual = kotlin.runCatching { sut.find("token") }
 
                     // then
-                    refreshToken shouldBe null
+                    actual.exceptionOrNull() shouldBe CoreException(CoreErrorType.TOKEN_NOT_FOUND)
                 }
             }
         },

@@ -121,13 +121,13 @@ class TokenServiceTest :
 
                 scenario("RefreshToken이 없다면 UNAUTHORIZED_TOKEN 에러를 반환한다.") {
                     // given
-                    every { tokenReader.find(any()) } returns null
+                    every { tokenReader.find(any()) } throws CoreException(CoreErrorType.TOKEN_NOT_FOUND)
 
                     // when
                     val actual = runCatching { sut.refresh(RefreshData("refreshToken")) }
 
                     // then
-                    actual.exceptionOrNull() shouldBe CoreException(CoreErrorType.UNAUTHORIZED_TOKEN)
+                    actual.exceptionOrNull() shouldBe CoreException(CoreErrorType.TOKEN_NOT_FOUND)
                 }
 
                 scenario("User가 없다면 USER_NOT_FOUND 에러를 반환한다.") {
@@ -140,7 +140,7 @@ class TokenServiceTest :
                         TokenType.REFRESH,
                     )
 
-                    every { userReader.find(1000) } returns null
+                    every { userReader.find(1000) } throws CoreException(CoreErrorType.USER_NOT_FOUND)
 
                     // when
                     val actual = runCatching { sut.refresh(RefreshData("refreshToken")) }
@@ -171,7 +171,7 @@ class TokenServiceTest :
 
                 scenario("RefreshToken이 존재하지 않는다면 NOT_FOUND_TOKEN 에러를 반환한다.") {
                     // given
-                    every { tokenReader.find(any()) } returns null
+                    every { tokenReader.find(any()) } throws CoreException(CoreErrorType.TOKEN_NOT_FOUND)
 
                     // when
                     val actual = runCatching { sut.delete("refreshToken") }

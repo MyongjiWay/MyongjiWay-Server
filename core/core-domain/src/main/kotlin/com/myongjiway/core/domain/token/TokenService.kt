@@ -26,11 +26,8 @@ class TokenService(
     }
 
     fun delete(refreshToken: String) {
-        val findRefreshToken = (
-            tokenReader.find(refreshToken)
-            )
-
-        tokenProcessor.deleteToken(findRefreshToken.token)
+        val foundRefreshToken = tokenReader.find(refreshToken)
+        tokenProcessor.deleteToken(foundRefreshToken.token)
     }
 
     private fun isExpired(refreshToken: Token?): Boolean = refreshToken?.expiration!! <= System.currentTimeMillis()

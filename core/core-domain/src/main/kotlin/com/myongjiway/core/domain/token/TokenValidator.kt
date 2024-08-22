@@ -8,11 +8,14 @@ import javax.crypto.SecretKey
 
 @Component
 class TokenValidator {
-    fun validateWithPublicKey(key: PublicKey, token: String): Claims =
+    fun validate(key: PublicKey, token: String): Claims =
         validateToken { Jwts.parser().verifyWith(key).build().parseSignedClaims(token).payload }
 
-    fun validateWithSecretKey(key: SecretKey, token: String): Claims =
+    fun validate(key: SecretKey, token: String): Claims =
         validateToken { Jwts.parser().verifyWith(key).build().parseSignedClaims(token).payload }
+
+    fun validate(token: String): Claims =
+        validateToken { Jwts.parser().build().parseSignedClaims(token).payload }
 
     private inline fun validateToken(validation: () -> Claims): Claims = try {
         validation()

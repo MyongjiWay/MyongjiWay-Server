@@ -1,5 +1,6 @@
 package com.myongjiway.core.domain.token
 
+import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.Jwts.SIG.HS512
 import io.jsonwebtoken.security.Keys
@@ -9,6 +10,8 @@ import java.util.Date
 @Component
 class TokenGenerator(
     private val jwtProperty: JwtProperty,
+    private val tokenValidator: TokenValidator,
+    private val tokenAppender: TokenAppender,
 ) {
     fun generateAccessTokenByUserId(userId: String): Token {
         val (expiration, secret) = getExpirationAndSecret(TokenType.ACCESS)
@@ -35,6 +38,18 @@ class TokenGenerator(
             expiration = expirationDate,
             userId = userId,
         )
+    }
+
+    fun refresh(refreshToken: Token): Token {
+        val secret = getExpirationAndSecret(TokenType.REFRESH).second
+        try {
+            tokenValidator.validate(Keys.hmacShaKeyFor(secret.toByteArray()), refreshToken.token)
+        } catch (e: ExpiredJwtException) {
+            val newRefreshToken = generateRefreshTokenByUserId(refreshToken.userId)
+            tokenAppender.upsert(refreshToken.userId.toLong(), newRefreshToken.token, newRefreshToken.expiration)
+            return newRefreshToken
+        }
+        return refreshToken
     }
 
     private fun getExpirationAndSecret(tokenType: TokenType) = when (tokenType) {

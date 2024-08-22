@@ -17,7 +17,6 @@
         </filter>
 
         <file>logs/error.log</file>
-        <append>false</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>logs/error.%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>7</maxHistory> <!-- 최대 보관 일수 -->
@@ -48,7 +47,6 @@
     <!-- 요청 로그 파일 출력 앱펜더 -->
     <appender name="REQUEST_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>logs/request.log</file>
-        <append>false</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>logs/request.%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>7</maxHistory>
@@ -85,7 +83,6 @@
     <!-- 응답 로그 파일 출력 앱펜더 -->
     <appender name="RESPONSE_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>logs/response.log</file>
-        <append>false</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>logs/response.%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>7</maxHistory>
@@ -115,7 +112,6 @@
     <!-- 인증 로그 파일 출력 앱펜더 -->
     <appender name="AUTHENTICATION_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>logs/authentication.log</file>
-        <append>false</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>logs/authentication.%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>7</maxHistory>

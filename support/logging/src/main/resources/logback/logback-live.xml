@@ -128,7 +128,8 @@
                         "timestamp": "%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}",
                         "level": "%level",
                         "userId": "%X{userId:-}",
-                        "requestUri": "%X{requestUri:-}",
+                        "sourceIp": "%X{sourceIp:-}",
+                        "xForwarded-For": "%X{xForwardedFor:-}",
                         "message": "%message"
                         }
                     </pattern>

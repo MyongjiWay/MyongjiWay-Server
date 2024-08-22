@@ -68,7 +68,7 @@ class NoticeAdminControllerDocsTest : RestDocsTest() {
         given()
             .contentType(ContentType.JSON)
             .body(noticeRequest)
-            .put("/admin/api/v1/notices/{noticeId}", noticeId.toString())
+            .patch("/admin/api/v1/notices/{noticeId}", noticeId.toString())
             .then()
             .status(HttpStatus.OK)
             .apply(

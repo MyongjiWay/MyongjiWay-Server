@@ -1,4 +1,4 @@
-package com.myongjiway
+package com.myongjiway.core.domain
 
 import org.junit.jupiter.api.Tag
 import org.springframework.boot.test.context.SpringBootTest

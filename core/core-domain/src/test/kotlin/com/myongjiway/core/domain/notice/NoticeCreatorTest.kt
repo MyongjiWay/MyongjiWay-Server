@@ -1,9 +1,5 @@
-package com.myongjiway.notice
+package com.myongjiway.core.domain.notice
 
-import com.myongjiway.core.domain.notice.NoticeCreator
-import com.myongjiway.core.domain.notice.NoticeMetadata
-import com.myongjiway.core.domain.notice.NoticeRepository
-import com.myongjiway.core.domain.notice.NoticeService
 import io.kotest.core.spec.style.FeatureSpec
 import io.mockk.Runs
 import io.mockk.every

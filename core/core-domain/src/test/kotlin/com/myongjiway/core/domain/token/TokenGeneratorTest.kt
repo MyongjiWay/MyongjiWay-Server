@@ -1,11 +1,5 @@
-package com.myongjiway.token
+package com.myongjiway.core.domain.token
 
-import com.myongjiway.core.domain.token.JwtProperty
-import com.myongjiway.core.domain.token.Token
-import com.myongjiway.core.domain.token.TokenAppender
-import com.myongjiway.core.domain.token.TokenGenerator
-import com.myongjiway.core.domain.token.TokenType
-import com.myongjiway.core.domain.token.TokenValidator
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf

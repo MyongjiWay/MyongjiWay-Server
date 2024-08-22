@@ -1,10 +1,5 @@
-package com.myongjiway.notice
+package com.myongjiway.core.domain.notice
 
-import com.myongjiway.core.domain.notice.NoticeFinder
-import com.myongjiway.core.domain.notice.NoticeMetadata
-import com.myongjiway.core.domain.notice.NoticeRepository
-import com.myongjiway.core.domain.notice.NoticeService
-import com.myongjiway.core.domain.notice.NoticeView
 import com.myongjiway.core.domain.usernotice.UserNotice
 import com.myongjiway.core.domain.usernotice.UserNoticeRepository
 import io.kotest.core.spec.style.FeatureSpec

@@ -1,14 +1,7 @@
-package com.myongjiway.token
+package com.myongjiway.core.domain.token
 
 import com.myongjiway.core.domain.error.CoreErrorType
 import com.myongjiway.core.domain.error.CoreException
-import com.myongjiway.core.domain.token.RefreshData
-import com.myongjiway.core.domain.token.Token
-import com.myongjiway.core.domain.token.TokenGenerator
-import com.myongjiway.core.domain.token.TokenProcessor
-import com.myongjiway.core.domain.token.TokenReader
-import com.myongjiway.core.domain.token.TokenService
-import com.myongjiway.core.domain.token.TokenType
 import com.myongjiway.core.domain.user.ProviderType
 import com.myongjiway.core.domain.user.Role
 import com.myongjiway.core.domain.user.User

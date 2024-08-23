@@ -32,11 +32,11 @@
                         {
                         "timestamp": "%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}",
                         "level": "%level",
+                        "status": "%X{status:-}"
+                        "userId": "%X{userId:-}",
                         "exception": "%ex{short}",
                         "exceptionFull": "%X{exceptionFull:-}",
                         "message": "%message",
-                        "userId": "%X{userId:-}",
-                        "status": "%X{status:-}"
                         }
                     </pattern>
                 </pattern>
@@ -128,7 +128,7 @@
                         "level": "%level",
                         "userId": "%X{userId:-}",
                         "sourceIp": "%X{sourceIp:-}",
-                        "xForwarded-For": "%X{xForwardedFor:-}",
+                        "xForwardedFor": "%X{xForwardedFor:-}",
                         "message": "%message"
                         }
                     </pattern>

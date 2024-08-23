@@ -137,6 +137,41 @@
         </encoder>
     </appender>
 
+    <!-- 데이터베이스 로그 파일 출력 앱펜더 -->
+    <appender name="DATABASE_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/query.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/query.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>7</maxHistory>
+            <totalSizeCap>300MB</totalSizeCap>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>50MB</maxFileSize>
+        </triggeringPolicy>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <pattern>
+                    <pattern>
+                        {
+                        "timestamp": "%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}",
+                        "requestId": "%X{requestId:-}",
+                        "userId": "%X{userId:-anonymous}",
+                        "method": "%X{method:-}",
+                        "requestUri": "%X{requestUri:-}",
+                        "query": "%msg",
+                        "executionTime": "%X{executionTime:-}"
+                        }
+                    </pattern>
+                </pattern>
+            </providers>
+        </encoder>
+    </appender>
+
+    <!-- 에러 로거 -->
+    <logger name="ErrorLog" level="ERROR" additivity="false">
+        <appender-ref ref="ERROR_LOG"/>
+    </logger>
+
     <!-- 요청 로거 -->
     <logger name="HttpRequestLog" level="INFO" additivity="false">
         <appender-ref ref="REQUEST_LOG"/>
@@ -152,9 +187,9 @@
         <appender-ref ref="AUTHENTICATION_LOG"/>
     </logger>
 
-    <!-- 에러 로거 -->
-    <logger name="ErrorLog" level="ERROR" additivity="false">
-        <appender-ref ref="ERROR_LOG"/>
+    <!-- 데이터베이스 로거 -->
+    <logger name="DatabaseLog" level="INFO" additivity="false">
+        <appender-ref ref="DATABASE_LOG"/>
     </logger>
 
     <!-- Spring 프레임워크 로거 -->

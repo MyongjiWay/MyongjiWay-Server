@@ -16,7 +16,7 @@ import java.util.UUID
 
 @Aspect
 @Component
-class RequestLoggingAspect {
+class RequestResponseLoggingAspect {
     // core-api 모듈의 모든 컨트롤러 메서드에 적용
     @Pointcut("execution(* com.myongjiway.core.api..controller..*(..))")
     fun coreApiControllerMethods() {}

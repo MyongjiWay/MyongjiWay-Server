@@ -97,6 +97,7 @@
                         "timestamp": "%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}",
                         "method": "%X{method:-}",
                         "requestUri": "%X{requestUri:-}",
+                        "userId": "%X{userId:-}",
                         "requestId": "%X{requestId:-}",
                         "responseTime": "%X{responseTime:-}",
                         "message": "%message"

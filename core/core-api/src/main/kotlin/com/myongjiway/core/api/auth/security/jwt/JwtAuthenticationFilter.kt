@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component
 import org.springframework.web.context.request.RequestContextHolder
 import org.springframework.web.context.request.ServletRequestAttributes
 import org.springframework.web.filter.OncePerRequestFilter
-import java.util.UUID
 
 @Component
 class JwtAuthenticationFilter(
@@ -28,7 +27,7 @@ class JwtAuthenticationFilter(
             val authentication = jwtProvider.getAuthentication(servletRequest, jwt)
             if (authentication.principal != null) {
                 SecurityContextHolder.getContext().authentication = authentication
-                setMDC(parseUserIdFromPrincipal(authentication.name.toString()), servletRequest)
+                MDC.put("userId", parseUserIdFromPrincipal(authentication.name.toString()))
                 Companion.logger.info("Security Context에 '${authentication.name}' 인증 정보를 저장했습니다. uri: $requestURI")
             }
         }
@@ -46,18 +45,6 @@ class JwtAuthenticationFilter(
                 null
             }
         }
-    }
-
-    private fun setMDC(userId: String, request: HttpServletRequest) {
-        MDC.put("userId", userId)
-        MDC.put("method", request.method)
-        MDC.put("requestUri", request.requestURI)
-        MDC.put("sourceIp", request.getHeader("X-Real-IP") ?: request.remoteAddr)
-        MDC.put("userAgent", request.getHeader("User-Agent"))
-        MDC.put("xForwardedFor", request.getHeader("X-Forwarded-For"))
-        MDC.put("xForwardedProto", request.getHeader("X-Forwarded-Proto"))
-        MDC.put("requestId", UUID.randomUUID().toString())
-        MDC.put("startTime", System.nanoTime().toString())
     }
 
     private fun parseUserIdFromPrincipal(userString: String): String {

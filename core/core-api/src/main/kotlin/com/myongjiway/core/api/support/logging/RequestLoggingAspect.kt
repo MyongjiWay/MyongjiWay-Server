@@ -1,5 +1,6 @@
 package com.myongjiway.core.api.support.logging
 
+import jakarta.servlet.http.HttpServletRequest
 import org.aspectj.lang.JoinPoint
 import org.aspectj.lang.annotation.After
 import org.aspectj.lang.annotation.AfterReturning
@@ -9,6 +10,9 @@ import org.aspectj.lang.annotation.Pointcut
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import org.springframework.stereotype.Component
+import org.springframework.web.context.request.RequestContextHolder
+import org.springframework.web.context.request.ServletRequestAttributes
+import java.util.UUID
 
 @Aspect
 @Component
@@ -20,6 +24,7 @@ class RequestLoggingAspect {
     // 요청 전 로깅
     @Before("coreApiControllerMethods()")
     fun logRequest(joinPoint: JoinPoint) {
+        setMDC()
         requestLogger.info("Request received for method: ${joinPoint.signature.name}")
     }
 
@@ -35,6 +40,21 @@ class RequestLoggingAspect {
     fun clearMDC() {
         MDC.clear()
     }
+
+    private fun setMDC() {
+        val request = getCurrentHttpRequest()
+        MDC.put("method", request.method)
+        MDC.put("requestUri", request.requestURI)
+        MDC.put("sourceIp", request.getHeader("X-Real-IP") ?: request.remoteAddr)
+        MDC.put("userAgent", request.getHeader("User-Agent"))
+        MDC.put("xForwardedFor", request.getHeader("X-Forwarded-For"))
+        MDC.put("xForwardedProto", request.getHeader("X-Forwarded-Proto"))
+        MDC.put("requestId", UUID.randomUUID().toString())
+        MDC.put("startTime", System.nanoTime().toString())
+    }
+
+    private fun getCurrentHttpRequest(): HttpServletRequest =
+        (RequestContextHolder.currentRequestAttributes() as ServletRequestAttributes).request
 
     companion object {
         private val requestLogger = LoggerFactory.getLogger("HttpRequestLog")

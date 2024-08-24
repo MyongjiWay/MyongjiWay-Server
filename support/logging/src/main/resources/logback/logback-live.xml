@@ -32,11 +32,11 @@
                         {
                         "timestamp": "%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}",
                         "level": "%level",
-                        "status": "%X{status:-}"
-                        "userId": "%X{userId:-}",
                         "exception": "%ex{short}",
                         "exceptionFull": "%X{exceptionFull:-}",
                         "message": "%message",
+                        "userId": "%X{userId:-}",
+                        "status": "%X{status:-}"
                         }
                     </pattern>
                 </pattern>
@@ -128,7 +128,7 @@
                         "level": "%level",
                         "userId": "%X{userId:-}",
                         "sourceIp": "%X{sourceIp:-}",
-                        "xForwardedFor": "%X{xForwardedFor:-}",
+                        "xForwarded-For": "%X{xForwardedFor:-}",
                         "message": "%message"
                         }
                     </pattern>
@@ -142,7 +142,7 @@
         <file>logs/query.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>logs/query.%d{yyyy-MM-dd}.log</fileNamePattern>
-            <maxHistory>7</maxHistory>
+            <maxHistory>2</maxHistory>
             <totalSizeCap>300MB</totalSizeCap>
         </rollingPolicy>
         <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
@@ -155,10 +155,11 @@
                         {
                         "timestamp": "%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}",
                         "requestId": "%X{requestId:-}",
-                        "userId": "%X{userId:-anonymous}",
+                        "userId": "%X{userId:-}",
+                        "class": "%X{class:-}",
                         "method": "%X{method:-}",
                         "requestUri": "%X{requestUri:-}",
-                        "query": "%msg",
+                        "query": "%X{query:-}",
                         "executionTime": "%X{executionTime:-}"
                         }
                     </pattern>

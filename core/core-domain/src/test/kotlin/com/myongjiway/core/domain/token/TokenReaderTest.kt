@@ -1,9 +1,7 @@
-package com.myongjiway.token
+package com.myongjiway.core.domain.token
 
-import com.myongjiway.core.domain.token.Token
-import com.myongjiway.core.domain.token.TokenReader
-import com.myongjiway.core.domain.token.TokenRepository
-import com.myongjiway.core.domain.token.TokenType
+import com.myongjiway.core.domain.error.CoreErrorType
+import com.myongjiway.core.domain.error.CoreException
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -32,22 +30,22 @@ class TokenReaderTest :
                     )
 
                     // when
-                    val refreshToken = sut.findByToken(token)
+                    val refreshToken = sut.find(token)
 
                     // then
                     refreshToken?.token shouldBe token
                     refreshToken?.userId shouldBe "1000"
                 }
 
-                scenario("토큰이 존재하지 않으면 null을 반환한다.") {
+                scenario("토큰이 존재하지 않으면 TOKEN_NOT_FOUND 에러를 반환한다.") {
                     // given
-                    every { tokenRepository.find("token") } returns null
+                    every { tokenRepository.find("token") } throws CoreException(CoreErrorType.TOKEN_NOT_FOUND)
 
                     // when
-                    val refreshToken = sut.findByToken("token")
+                    val actual = kotlin.runCatching { sut.find("token") }
 
                     // then
-                    refreshToken shouldBe null
+                    actual.exceptionOrNull() shouldBe CoreException(CoreErrorType.TOKEN_NOT_FOUND)
                 }
             }
         },

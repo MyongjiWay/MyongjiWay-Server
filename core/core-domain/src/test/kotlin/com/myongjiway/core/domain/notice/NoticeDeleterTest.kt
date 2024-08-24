@@ -1,7 +1,6 @@
-package com.myongjiway.notice
+package com.myongjiway.core.domain.notice
 
 import com.myongjiway.core.domain.error.CoreErrorType
-import com.myongjiway.core.domain.notice.NoticeRepository
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe

@@ -1,15 +1,7 @@
-package com.myongjiway.token
+package com.myongjiway.core.domain.token
 
 import com.myongjiway.core.domain.error.CoreErrorType
 import com.myongjiway.core.domain.error.CoreException
-import com.myongjiway.core.domain.token.RefreshData
-import com.myongjiway.core.domain.token.Token
-import com.myongjiway.core.domain.token.TokenAppender
-import com.myongjiway.core.domain.token.TokenGenerator
-import com.myongjiway.core.domain.token.TokenProcessor
-import com.myongjiway.core.domain.token.TokenReader
-import com.myongjiway.core.domain.token.TokenService
-import com.myongjiway.core.domain.token.TokenType
 import com.myongjiway.core.domain.user.ProviderType
 import com.myongjiway.core.domain.user.Role
 import com.myongjiway.core.domain.user.User
@@ -24,7 +16,6 @@ class TokenServiceTest :
     FeatureSpec(
         {
             lateinit var tokenReader: TokenReader
-            lateinit var tokenAppender: TokenAppender
             lateinit var tokenGenerator: TokenGenerator
             lateinit var userReader: UserReader
             lateinit var tokenProcessor: TokenProcessor
@@ -32,11 +23,10 @@ class TokenServiceTest :
 
             beforeTest {
                 tokenReader = mockk()
-                tokenAppender = mockk()
                 tokenGenerator = mockk()
                 userReader = mockk()
                 tokenProcessor = mockk()
-                sut = TokenService(tokenAppender, tokenGenerator, tokenReader, userReader, tokenProcessor)
+                sut = TokenService(tokenGenerator, tokenReader, userReader, tokenProcessor)
 
                 every { tokenGenerator.generateAccessTokenByUserId(any()) } returns Token(
                     "1000",
@@ -44,22 +34,13 @@ class TokenServiceTest :
                     1000,
                     TokenType.ACCESS,
                 )
-
-                every { tokenGenerator.generateRefreshTokenByUserId(any()) } returns Token(
-                    "1000",
-                    "newRefreshToken",
-                    10000,
-                    TokenType.REFRESH,
-                )
-
-                every { tokenAppender.upsert(any(), any(), any()) } returns 1
             }
 
             feature("토큰 갱신") {
                 scenario("RefreshToken의 expiration이 지나지 않았다면 AccessToken을 갱신한다.") {
                     // given
                     val expiration = System.currentTimeMillis() + 100000
-                    every { tokenReader.findByToken(any()) } returns Token(
+                    every { tokenReader.find(any()) } returns Token(
                         "1000",
                         "refreshToken",
                         expiration,
@@ -75,6 +56,13 @@ class TokenServiceTest :
                         Role.USER,
                         mockk(),
                         mockk(),
+                    )
+
+                    every { tokenGenerator.refresh(any()) } returns Token(
+                        "1000",
+                        "refreshToken",
+                        expiration,
+                        TokenType.REFRESH,
                     )
 
                     // when
@@ -83,14 +71,19 @@ class TokenServiceTest :
                     // then
                     verify(exactly = 0) { tokenGenerator.generateRefreshTokenByUserId(any()) }
                     verify(exactly = 1) { tokenGenerator.generateAccessTokenByUserId(any()) }
-                    verify(exactly = 0) { tokenAppender.upsert(any(), any(), any()) }
                 }
 
                 scenario("RefreshToken의 expiration이 지났다면 RefreshToken과 AccessToken을 같이 갱신한다.") {
                     // given
                     val expiration = System.currentTimeMillis() - 100000
+                    every { tokenGenerator.refresh(any()) } returns Token(
+                        "1000",
+                        "newRefreshToken",
+                        10000,
+                        TokenType.REFRESH,
+                    )
 
-                    every { tokenReader.findByToken(any()) } returns Token(
+                    every { tokenReader.find(any()) } returns Token(
                         "1000",
                         "refreshToken",
                         expiration,
@@ -108,39 +101,36 @@ class TokenServiceTest :
                         mockk(),
                     )
 
-                    every { tokenAppender.upsert(any(), any(), any()) } returns 1
-
                     // when
-                    sut.refresh(RefreshData("refreshToken"))
+                    val actual = sut.refresh(RefreshData("refreshToken"))
 
                     // then
-                    verify(exactly = 1) { tokenGenerator.generateRefreshTokenByUserId(any()) }
                     verify(exactly = 1) { tokenGenerator.generateAccessTokenByUserId(any()) }
-                    verify(exactly = 1) { tokenAppender.upsert(any(), any(), any()) }
+                    actual.refreshToken shouldBe "newRefreshToken"
                 }
 
                 scenario("RefreshToken이 없다면 UNAUTHORIZED_TOKEN 에러를 반환한다.") {
                     // given
-                    every { tokenReader.findByToken(any()) } returns null
+                    every { tokenReader.find(any()) } throws CoreException(CoreErrorType.TOKEN_NOT_FOUND)
 
                     // when
                     val actual = runCatching { sut.refresh(RefreshData("refreshToken")) }
 
                     // then
-                    actual.exceptionOrNull() shouldBe CoreException(CoreErrorType.UNAUTHORIZED_TOKEN)
+                    actual.exceptionOrNull() shouldBe CoreException(CoreErrorType.TOKEN_NOT_FOUND)
                 }
 
                 scenario("User가 없다면 USER_NOT_FOUND 에러를 반환한다.") {
                     // given
                     val expiration = System.currentTimeMillis() - 10000
-                    every { tokenReader.findByToken(any()) } returns Token(
+                    every { tokenReader.find(any()) } returns Token(
                         "1000",
                         "refreshToken",
                         expiration,
                         TokenType.REFRESH,
                     )
 
-                    every { userReader.find(1000) } returns null
+                    every { userReader.find(1000) } throws CoreException(CoreErrorType.USER_NOT_FOUND)
 
                     // when
                     val actual = runCatching { sut.refresh(RefreshData("refreshToken")) }
@@ -153,7 +143,7 @@ class TokenServiceTest :
             feature("토큰 삭제") {
                 scenario("RefreshToken 삭제에 성공한다.") {
                     // given
-                    every { tokenReader.findByToken(any()) } returns Token(
+                    every { tokenReader.find(any()) } returns Token(
                         "1000",
                         "refreshToken",
                         10000,
@@ -165,19 +155,19 @@ class TokenServiceTest :
                     sut.delete("refreshToken")
 
                     // then
-                    verify(exactly = 1) { tokenReader.findByToken("refreshToken") }
+                    verify(exactly = 1) { tokenReader.find("refreshToken") }
                     verify(exactly = 1) { tokenProcessor.deleteToken("refreshToken") }
                 }
 
                 scenario("RefreshToken이 존재하지 않는다면 NOT_FOUND_TOKEN 에러를 반환한다.") {
                     // given
-                    every { tokenReader.findByToken(any()) } returns null
+                    every { tokenReader.find(any()) } throws CoreException(CoreErrorType.TOKEN_NOT_FOUND)
 
                     // when
                     val actual = runCatching { sut.delete("refreshToken") }
 
                     // then
-                    actual.exceptionOrNull() shouldBe CoreException(CoreErrorType.NOT_FOUND_TOKEN)
+                    actual.exceptionOrNull() shouldBe CoreException(CoreErrorType.TOKEN_NOT_FOUND)
                 }
             }
         },

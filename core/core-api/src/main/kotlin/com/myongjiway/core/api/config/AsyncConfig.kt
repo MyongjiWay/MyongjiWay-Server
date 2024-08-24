@@ -2,6 +2,7 @@ package com.myongjiway.core.api.config
 
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler
 import org.springframework.context.annotation.Configuration
+import org.springframework.core.task.TaskDecorator
 import org.springframework.scheduling.annotation.AsyncConfigurer
 import org.springframework.scheduling.annotation.EnableAsync
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
@@ -9,7 +10,9 @@ import java.util.concurrent.Executor
 
 @Configuration
 @EnableAsync
-class AsyncConfig : AsyncConfigurer {
+class AsyncConfig(
+    private val mdcTaskDecorator: TaskDecorator,
+) : AsyncConfigurer {
     override fun getAsyncExecutor(): Executor {
         val executor = ThreadPoolTaskExecutor()
         executor.corePoolSize = 10
@@ -17,11 +20,10 @@ class AsyncConfig : AsyncConfigurer {
         executor.queueCapacity = 10000
         executor.setWaitForTasksToCompleteOnShutdown(true)
         executor.setAwaitTerminationSeconds(10)
+        executor.setTaskDecorator(mdcTaskDecorator)
         executor.initialize()
         return executor
     }
 
-    override fun getAsyncUncaughtExceptionHandler(): AsyncUncaughtExceptionHandler {
-        return AsyncExceptionHandler()
-    }
+    override fun getAsyncUncaughtExceptionHandler(): AsyncUncaughtExceptionHandler = AsyncExceptionHandler()
 }

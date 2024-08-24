@@ -11,13 +11,12 @@
     </appender>
 
     <!-- 에러 로그 파일 출력 앱펜더 -->
-    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender name="ERROR_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>ERROR</level>
         </filter>
 
         <file>logs/error.log</file>
-        <append>false</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>logs/error.%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>7</maxHistory> <!-- 최대 보관 일수 -->
@@ -48,7 +47,6 @@
     <!-- 요청 로그 파일 출력 앱펜더 -->
     <appender name="REQUEST_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>logs/request.log</file>
-        <append>false</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>logs/request.%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>7</maxHistory>
@@ -67,10 +65,8 @@
                         "requestId": "%X{requestId:-}",
                         "userId": "%X{userId:-}",
                         "sourceIp": "%X{sourceIp:-}",
-                        "host": "%X{host:-}",
                         "method": "%X{method:-}",
                         "requestUri": "%X{requestUri:-}",
-                        "referer": "%X{referer:-}",
                         "userAgent": "%X{userAgent:-}",
                         "xForwardedFor": "%X{xForwardedFor:-}",
                         "xForwardedProto": "%X{xForwardedProto:-}",
@@ -85,7 +81,6 @@
     <!-- 응답 로그 파일 출력 앱펜더 -->
     <appender name="RESPONSE_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>logs/response.log</file>
-        <append>false</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>logs/response.%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>7</maxHistory>
@@ -100,9 +95,10 @@
                     <pattern>
                         {
                         "timestamp": "%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}",
-                        "requestId": "%X{requestId:-}",
                         "method": "%X{method:-}",
                         "requestUri": "%X{requestUri:-}",
+                        "userId": "%X{userId:-}",
+                        "requestId": "%X{requestId:-}",
                         "responseTime": "%X{responseTime:-}",
                         "message": "%message"
                         }
@@ -113,9 +109,8 @@
     </appender>
 
     <!-- 인증 로그 파일 출력 앱펜더 -->
-    <appender name="AUTHENTICATION" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender name="AUTHENTICATION_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>logs/authentication.log</file>
-        <append>false</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>logs/authentication.%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>7</maxHistory>
@@ -132,6 +127,8 @@
                         "timestamp": "%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}",
                         "level": "%level",
                         "userId": "%X{userId:-}",
+                        "sourceIp": "%X{sourceIp:-}",
+                        "xForwarded-For": "%X{xForwardedFor:-}",
                         "message": "%message"
                         }
                     </pattern>
@@ -139,6 +136,42 @@
             </providers>
         </encoder>
     </appender>
+
+    <!-- 데이터베이스 로그 파일 출력 앱펜더 -->
+    <appender name="DATABASE_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/query.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/query.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>3</maxHistory>
+            <totalSizeCap>300MB</totalSizeCap>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>50MB</maxFileSize>
+        </triggeringPolicy>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <pattern>
+                    <pattern>
+                        {
+                        "timestamp": "%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}",
+                        "requestId": "%X{requestId:-}",
+                        "userId": "%X{userId:-}",
+                        "class": "%X{class:-}",
+                        "method": "%X{method:-}",
+                        "requestUri": "%X{requestUri:-}",
+                        "query": "%X{query:-}",
+                        "executionTime": "%X{executionTime:-}"
+                        }
+                    </pattern>
+                </pattern>
+            </providers>
+        </encoder>
+    </appender>
+
+    <!-- 에러 로거 -->
+    <logger name="ErrorLog" level="ERROR" additivity="false">
+        <appender-ref ref="ERROR_LOG"/>
+    </logger>
 
     <!-- 요청 로거 -->
     <logger name="HttpRequestLog" level="INFO" additivity="false">
@@ -152,12 +185,12 @@
 
     <!-- 인증 로거 -->
     <logger name="AuthenticationLog" level="INFO" additivity="false">
-        <appender-ref ref="AUTHENTICATION"/>
+        <appender-ref ref="AUTHENTICATION_LOG"/>
     </logger>
 
-    <!-- 에러 로거 -->
-    <logger name="ErrorLog" level="ERROR" additivity="false">
-        <appender-ref ref="FILE"/>
+    <!-- 데이터베이스 로거 -->
+    <logger name="DatabaseLog" level="INFO" additivity="false">
+        <appender-ref ref="DATABASE_LOG"/>
     </logger>
 
     <!-- Spring 프레임워크 로거 -->

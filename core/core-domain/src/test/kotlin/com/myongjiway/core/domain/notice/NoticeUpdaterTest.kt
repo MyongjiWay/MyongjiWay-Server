@@ -1,10 +1,5 @@
-package com.myongjiway.notice
+package com.myongjiway.core.domain.notice
 
-import com.myongjiway.core.domain.notice.NoticeMetadata
-import com.myongjiway.core.domain.notice.NoticeRepository
-import com.myongjiway.core.domain.notice.NoticeService
-import com.myongjiway.core.domain.notice.NoticeUpdater
-import com.myongjiway.core.domain.notice.NoticeView
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe

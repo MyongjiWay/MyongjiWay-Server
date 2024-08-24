@@ -1,4 +1,4 @@
-package com.myongjiway
+package com.myongjiway.core.domain
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan

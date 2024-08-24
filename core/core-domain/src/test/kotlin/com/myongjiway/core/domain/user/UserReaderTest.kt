@@ -1,16 +1,13 @@
-package com.myongjiway.user
+package com.myongjiway.core.domain.user
 
-import com.myongjiway.core.domain.user.ProviderType
-import com.myongjiway.core.domain.user.Role
-import com.myongjiway.core.domain.user.User
-import com.myongjiway.core.domain.user.UserReader
-import com.myongjiway.core.domain.user.UserRepository
+import com.myongjiway.core.domain.error.CoreErrorType
+import com.myongjiway.core.domain.error.CoreException
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 
-class UserFinderTest :
+class UserReaderTest :
     FeatureSpec(
         {
             lateinit var sut: UserReader
@@ -43,16 +40,15 @@ class UserFinderTest :
                     // then
                     actual shouldBe user
                 }
-                scenario("유저 ID 조회시 유저가 없으면 null을 반환한다") {
+                scenario("유저 ID 조회시 유저가 없으면 USER_NOT_FOUND 에러를 반환한다") {
                     // given
                     every { userRepository.findUserById(1000L) } returns null
 
                     // when
-                    val actual = kotlin.runCatching { sut.find(1000) }
-                        .exceptionOrNull()
+                    val actual = kotlin.runCatching { sut.find(1000) }.exceptionOrNull()
 
                     // then
-                    actual shouldBe null
+                    actual shouldBe CoreException(CoreErrorType.USER_NOT_FOUND)
                 }
                 scenario("유저 Provider ID로 유저를 조회한다") {
                     // given
@@ -69,11 +65,10 @@ class UserFinderTest :
                     every { userRepository.findUserByProviderId("1234") } returns null
 
                     // when
-                    val actual = kotlin.runCatching { sut.find("1234") }
-                        .exceptionOrNull()
+                    val actual = kotlin.runCatching { sut.find("1234") }.exceptionOrNull()
 
                     // then
-                    actual shouldBe null
+                    actual shouldBe CoreException(CoreErrorType.USER_NOT_FOUND)
                 }
             }
         },

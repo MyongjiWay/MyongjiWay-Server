@@ -1,18 +1,17 @@
-package com.myongjiway.token
+package com.myongjiway.core.domain.token
 
-import com.myongjiway.core.domain.token.JwtProperty
-import com.myongjiway.core.domain.token.Token
-import com.myongjiway.core.domain.token.TokenGenerator
-import com.myongjiway.core.domain.token.TokenType
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
+import io.mockk.mockk
 import java.util.Date
 
 class TokenGeneratorTest :
     FeatureSpec(
         {
             lateinit var jwtProperty: JwtProperty
+            lateinit var tokenValidator: TokenValidator
+            lateinit var tokenAppender: TokenAppender
             lateinit var sut: TokenGenerator
             val userId = "1234"
 
@@ -20,14 +19,18 @@ class TokenGeneratorTest :
                 jwtProperty = JwtProperty().apply {
                     accessToken = JwtProperty.TokenProperties().apply {
                         expiration = 10000
-                        secret = "lnp1ISIafo9E+U+xZ4xr0kaRGD5uNVCT1tiJ8gXmqWvp32L7JoXC9EjAy0z2F6NVSwrKLxbCkpzT+DZJazy3Pg=="
+                        secret =
+                            "lnp1ISIafo9E+U+xZ4xr0kaRGD5uNVCT1tiJ8gXmqWvp32L7JoXC9EjAy0z2F6NVSwrKLxbCkpzT+DZJazy3Pg=="
                     }
                     refreshToken = JwtProperty.TokenProperties().apply {
                         expiration = 1000000
-                        secret = "lnp1ISIafo9E+U+xZ4xr0kaRGD5uNVCT1tiJ8gXmqWvp32L7JoXC9EjAy0z2F6NVSwrKLxbCkpzT+DZJazy3Pg=="
+                        secret =
+                            "lnp1ISIafo9E+U+xZ4xr0kaRGD5uNVCT1tiJ8gXmqWvp32L7JoXC9EjAy0z2F6NVSwrKLxbCkpzT+DZJazy3Pg=="
                     }
                 }
-                sut = TokenGenerator(jwtProperty)
+                tokenAppender = mockk()
+                tokenValidator = mockk()
+                sut = TokenGenerator(jwtProperty, tokenValidator, tokenAppender)
             }
 
             feature("토큰 생성") {

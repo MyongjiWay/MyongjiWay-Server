@@ -33,7 +33,7 @@ class UserCoreRepositoryTest :
             feature("유저 조회") {
                 scenario("유저 ID로 유저를 조회한다") {
                     // given
-                    every { userJpaRepository.findById(1000L) } returns Optional.of(userEntity)
+                    every { userJpaRepository.findByIdAndIsDeleted(1000L, false) } returns userEntity
 
                     // when
                     val actual = sut.findUserById(1000L)
@@ -55,7 +55,7 @@ class UserCoreRepositoryTest :
                 scenario("Provider ID로 유저를 조회한다.") {
                     // given
                     val providerId = "providerId"
-                    every { userJpaRepository.findByProviderId(any()) } returns userEntity
+                    every { userJpaRepository.findByProviderIdAndIsDeleted(any(), false) } returns userEntity
 
                     // when
                     val actual = sut.findUserByProviderId(providerId)
@@ -66,7 +66,7 @@ class UserCoreRepositoryTest :
                 scenario("Provider ID 조회시 유저가 없으면 null을 반환한다") {
                     // given
                     val providerId = "12345678"
-                    every { userJpaRepository.findByProviderId(any()) } returns null
+                    every { userJpaRepository.findByProviderIdAndIsDeleted(any(), false) } returns null
 
                     // when
                     val actual = sut.findUserByProviderId(providerId)
@@ -101,7 +101,7 @@ class UserCoreRepositoryTest :
                     val profileImg = "newImg.url"
                     val name = "newTest"
                     val role = Role.ADMIN
-                    every { userJpaRepository.findByProviderId(providerId) } returns userEntity
+                    every { userJpaRepository.findByProviderIdAndIsDeleted(providerId, false) } returns userEntity
 
                     // when
                     val actual = sut.modify(providerId, profileImg, name, role)
@@ -115,7 +115,7 @@ class UserCoreRepositoryTest :
                     val profileImg = "newImg.url"
                     val name = "newTest"
                     val role = Role.ADMIN
-                    every { userJpaRepository.findByProviderId(providerId) } returns null
+                    every { userJpaRepository.findByProviderIdAndIsDeleted(providerId, false) } returns null
 
                     // when
                     val actual = kotlin.runCatching { sut.modify(providerId, profileImg, name, role) }
@@ -134,7 +134,7 @@ class UserCoreRepositoryTest :
                     val name = "test"
                     val providerType = ProviderType.KAKAO
                     val role = Role.USER
-                    every { userJpaRepository.findByProviderId(providerId) } returns null
+                    every { userJpaRepository.findByProviderIdAndIsDeleted(providerId, false) } returns null
                     every { userJpaRepository.save(any()) } returns userEntity
 
                     // when
@@ -150,7 +150,7 @@ class UserCoreRepositoryTest :
                     val name = "newTest"
                     val providerType = ProviderType.KAKAO
                     val role = Role.USER
-                    every { userJpaRepository.findByProviderId(providerId) } returns userEntity
+                    every { userJpaRepository.findByProviderIdAndIsDeleted(providerId, false) } returns userEntity
 
                     // when
                     val actual = sut.upsert(providerId, profileImg, name, providerType, role)
@@ -164,7 +164,7 @@ class UserCoreRepositoryTest :
                 scenario("유저를 비활성화에 성공한다.") {
                     // given
                     val providerId = "123123123"
-                    every { userJpaRepository.findByProviderId(providerId) } returns userEntity
+                    every { userJpaRepository.findByProviderIdAndIsDeleted(providerId, false) } returns userEntity
 
                     // when
                     val actual = sut.inactive(providerId)

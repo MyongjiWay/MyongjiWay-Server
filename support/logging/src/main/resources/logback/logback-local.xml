@@ -10,40 +10,6 @@
         </encoder>
     </appender>
 
-    <!-- 에러 로그 파일 출력 앱펜더 -->
-    <appender name="ERROR_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>ERROR</level>
-        </filter>
-
-        <file>logs/error.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logs/error.%d{yyyy-MM-dd}.log</fileNamePattern>
-            <maxHistory>7</maxHistory> <!-- 최대 보관 일수 -->
-            <totalSizeCap>300MB</totalSizeCap> <!-- 총 로그 파일 크기 제한 -->
-        </rollingPolicy>
-        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-            <maxFileSize>50MB</maxFileSize> <!-- 파일 크기가 50MB 이상일 경우 새로운 파일 생성 -->
-        </triggeringPolicy>
-        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
-            <providers>
-                <pattern>
-                    <pattern>
-                        {
-                        "timestamp": "%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}",
-                        "level": "%level",
-                        "exception": "%ex{short}",
-                        "exceptionFull": "%X{exceptionFull:-}",
-                        "message": "%message",
-                        "userId": "%X{userId:-}",
-                        "status": "%X{status:-}"
-                        }
-                    </pattern>
-                </pattern>
-            </providers>
-        </encoder>
-    </appender>
-
     <!-- 요청 로그 파일 출력 앱펜더 -->
     <appender name="REQUEST_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>logs/request.log</file>
@@ -61,12 +27,11 @@
                     <pattern>
                         {
                         "timestamp": "%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}",
-                        "level": "%level",
                         "requestId": "%X{requestId:-}",
                         "userId": "%X{userId:-}",
-                        "sourceIp": "%X{sourceIp:-}",
                         "method": "%X{method:-}",
                         "requestUri": "%X{requestUri:-}",
+                        "sourceIp": "%X{sourceIp:-}",
                         "userAgent": "%X{userAgent:-}",
                         "xForwardedFor": "%X{xForwardedFor:-}",
                         "xForwardedProto": "%X{xForwardedProto:-}",
@@ -95,11 +60,47 @@
                     <pattern>
                         {
                         "timestamp": "%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}",
+                        "requestId": "%X{requestId:-}",
+                        "userId": "%X{userId:-}",
                         "method": "%X{method:-}",
                         "requestUri": "%X{requestUri:-}",
-                        "userId": "%X{userId:-}",
-                        "requestId": "%X{requestId:-}",
                         "responseTime": "%X{responseTime:-}",
+                        "message": "%message"
+                        }
+                    </pattern>
+                </pattern>
+            </providers>
+        </encoder>
+    </appender>
+
+    <!-- 에러 로그 파일 출력 앱펜더 -->
+    <appender name="ERROR_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+
+        <file>logs/error.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/error.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>7</maxHistory> <!-- 최대 보관 일수 -->
+            <totalSizeCap>300MB</totalSizeCap> <!-- 총 로그 파일 크기 제한 -->
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>50MB</maxFileSize> <!-- 파일 크기가 50MB 이상일 경우 새로운 파일 생성 -->
+        </triggeringPolicy>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <pattern>
+                    <pattern>
+                        {
+                        "timestamp": "%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}",
+                        "requestId": "%X{requestId:-}",
+                        "userId": "%X{userId:-}",
+                        "method": "%X{method:-}",
+                        "requestUri": "%X{requestUri:-}",
+                        "status": "%X{status:-}",
+                        "exception": "%ex{short}",
+                        "exceptionFull": "%X{exceptionFull:-}",
                         "message": "%message"
                         }
                     </pattern>
@@ -142,7 +143,7 @@
         <file>logs/query.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>logs/query.%d{yyyy-MM-dd}.log</fileNamePattern>
-            <maxHistory>3</maxHistory>
+            <maxHistory>2</maxHistory>
             <totalSizeCap>300MB</totalSizeCap>
         </rollingPolicy>
         <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
@@ -156,9 +157,9 @@
                         "timestamp": "%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}",
                         "requestId": "%X{requestId:-}",
                         "userId": "%X{userId:-}",
-                        "class": "%X{class:-}",
                         "method": "%X{method:-}",
                         "requestUri": "%X{requestUri:-}",
+                        "class": "%X{class:-}",
                         "query": "%X{query:-}",
                         "executionTime": "%X{executionTime:-}"
                         }
@@ -168,11 +169,6 @@
         </encoder>
     </appender>
 
-    <!-- 에러 로거 -->
-    <logger name="ErrorLog" level="ERROR" additivity="false">
-        <appender-ref ref="ERROR_LOG"/>
-    </logger>
-
     <!-- 요청 로거 -->
     <logger name="HttpRequestLog" level="INFO" additivity="false">
         <appender-ref ref="REQUEST_LOG"/>
@@ -181,6 +177,11 @@
     <!-- 응답 로거 -->
     <logger name="HttpResponseLog" level="INFO" additivity="false">
         <appender-ref ref="RESPONSE_LOG"/>
+    </logger>
+
+    <!-- 에러 로거 -->
+    <logger name="ErrorLog" level="ERROR" additivity="false">
+        <appender-ref ref="ERROR_LOG"/>
     </logger>
 
     <!-- 인증 로거 -->
@@ -207,5 +208,4 @@
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
     </root>
-
 </configuration>

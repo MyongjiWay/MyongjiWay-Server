@@ -98,10 +98,10 @@
                         "userId": "%X{userId:-}",
                         "method": "%X{method:-}",
                         "requestUri": "%X{requestUri:-}",
-                        "status": "%X{status:-}"
+                        "status": "%X{status:-}",
                         "exception": "%ex{short}",
                         "exceptionFull": "%X{exceptionFull:-}",
-                        "message": "%message",
+                        "message": "%message"
                         }
                     </pattern>
                 </pattern>
@@ -208,5 +208,4 @@
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
     </root>
-
 </configuration>

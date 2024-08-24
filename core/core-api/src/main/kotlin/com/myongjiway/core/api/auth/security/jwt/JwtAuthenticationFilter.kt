@@ -27,12 +27,18 @@ class JwtAuthenticationFilter(
             val authentication = jwtProvider.getAuthentication(servletRequest, jwt)
             if (authentication.principal != null) {
                 SecurityContextHolder.getContext().authentication = authentication
-                MDC.put("userId", parseUserIdFromPrincipal(authentication.name.toString()))
+                setMDC(servletRequest, parseUserIdFromPrincipal(authentication.principal.toString()))
                 Companion.logger.info("Security Context에 '${authentication.name}' 인증 정보를 저장했습니다. uri: $requestURI")
             }
         }
 
         filterChain.doFilter(servletRequest, servletResponse)
+    }
+
+    private fun setMDC(request: HttpServletRequest, userId: String) {
+        MDC.put("userId", userId)
+        MDC.put("sourceIp", request.getHeader("X-Real-IP") ?: request.remoteAddr)
+        MDC.put("xForwardedFor", request.getHeader("X-Forwarded-For"))
     }
 
     private fun getJwt(): String? {

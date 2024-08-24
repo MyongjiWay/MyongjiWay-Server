@@ -1,8 +1,8 @@
-package com.myongjiway.core.api.auth.security.config
+package com.myongjiway.web.security.config
 
-import com.myongjiway.core.api.auth.security.jwt.JwtAccessDeniedHandler
-import com.myongjiway.core.api.auth.security.jwt.JwtAuthenticationEntryPoint
-import com.myongjiway.core.api.auth.security.jwt.JwtAuthenticationFilter
+import com.myongjiway.web.security.jwt.JwtAccessDeniedHandler
+import com.myongjiway.web.security.jwt.JwtAuthenticationEntryPoint
+import com.myongjiway.web.security.jwt.JwtAuthenticationFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.Customizer

@@ -1,4 +1,4 @@
-package com.myongjiway.core.api.auth.security.domain
+package com.myongjiway.core.domain.auth
 
 import com.myongjiway.core.domain.token.RefreshData
 import com.myongjiway.core.domain.token.TokenAppender

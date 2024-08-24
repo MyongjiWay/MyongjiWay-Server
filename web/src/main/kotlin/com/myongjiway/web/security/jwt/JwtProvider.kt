@@ -1,4 +1,4 @@
-package com.myongjiway.core.api.auth.security.domain
+package com.myongjiway.web.security.jwt
 
 import com.myongjiway.core.domain.token.JwtProperty
 import com.myongjiway.core.domain.token.TokenValidator

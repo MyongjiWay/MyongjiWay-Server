@@ -1,9 +1,7 @@
 @file:Suppress("ktlint:standard:no-wildcard-imports")
 
-package com.myongjiway.core.api.controller.v1.token
+package com.myongjiway.core.domain.auth
 
-import com.myongjiway.core.api.auth.security.domain.AuthService
-import com.myongjiway.core.api.auth.security.domain.KakaoLoginData
 import com.myongjiway.core.domain.token.Token
 import com.myongjiway.core.domain.token.TokenAppender
 import com.myongjiway.core.domain.token.TokenGenerator

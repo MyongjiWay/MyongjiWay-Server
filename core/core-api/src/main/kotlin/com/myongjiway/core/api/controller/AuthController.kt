@@ -1,9 +1,9 @@
-package com.myongjiway.core.api.auth.controller
+package com.myongjiway.core.api.controller
 
-import com.myongjiway.core.api.auth.controller.v1.request.KakaoLoginRequest
-import com.myongjiway.core.api.auth.security.domain.AuthService
+import com.myongjiway.core.api.controller.v1.request.KakaoLoginRequest
 import com.myongjiway.core.api.controller.v1.request.RefreshRequest
 import com.myongjiway.core.api.support.response.ApiResponse
+import com.myongjiway.core.domain.auth.AuthService
 import com.myongjiway.core.domain.token.RefreshData
 import com.myongjiway.core.domain.token.TokenService
 import jakarta.validation.Valid

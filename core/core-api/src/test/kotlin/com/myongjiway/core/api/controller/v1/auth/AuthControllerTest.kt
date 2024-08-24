@@ -1,9 +1,9 @@
 package com.myongjiway.core.api.controller.v1.auth
 
-import com.myongjiway.core.api.auth.controller.AuthController
-import com.myongjiway.core.api.auth.controller.v1.request.KakaoLoginRequest
-import com.myongjiway.core.api.auth.security.domain.AuthService
+import com.myongjiway.core.api.controller.AuthController
+import com.myongjiway.core.api.controller.v1.request.KakaoLoginRequest
 import com.myongjiway.core.api.controller.v1.request.RefreshRequest
+import com.myongjiway.core.domain.auth.AuthService
 import com.myongjiway.core.domain.token.TokenResult
 import com.myongjiway.core.domain.token.TokenService
 import com.myongjiway.test.api.RestDocsTest

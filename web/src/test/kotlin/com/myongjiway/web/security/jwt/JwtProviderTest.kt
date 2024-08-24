@@ -1,6 +1,6 @@
 @file:Suppress("ktlint:standard:no-wildcard-imports")
 
-package com.myongjiway.core.api.controller.v1.token
+package com.myongjiway.web.security.jwt
 
 import com.myongjiway.core.domain.token.JwtProperty
 import com.myongjiway.core.domain.token.TokenValidator
@@ -8,7 +8,6 @@ import com.myongjiway.core.domain.user.ProviderType
 import com.myongjiway.core.domain.user.Role
 import com.myongjiway.core.domain.user.User
 import com.myongjiway.core.domain.user.UserReader
-import com.myongjiway.web.security.jwt.JwtProvider
 import io.jsonwebtoken.Jwts.*
 import io.jsonwebtoken.Jwts.SIG.*
 import io.jsonwebtoken.security.Keys.*

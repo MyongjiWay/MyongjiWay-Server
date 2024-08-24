@@ -1,4 +1,4 @@
-package com.myongjiway.core.api.auth.controller
+package com.myongjiway.core.api.controller
 
 import com.myongjiway.core.api.support.response.ApiResponse
 import org.springframework.web.bind.annotation.GetMapping

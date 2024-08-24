@@ -1,6 +1,7 @@
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 dependencies {
+    implementation(project(":web"))
     implementation(project(":core:core-domain"))
     implementation(project(":support:monitoring"))
     implementation(project(":support:logging"))

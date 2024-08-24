@@ -1,6 +1,6 @@
-package com.myongjiway.core.api.auth.security.jwt
+package com.myongjiway.web.security.jwt
 
-import com.myongjiway.core.api.support.error.ErrorType
+import com.myongjiway.web.support.WebErrorType
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import net.minidev.json.JSONObject
@@ -16,7 +16,7 @@ class JwtAccessDeniedHandler : AccessDeniedHandler {
         response: HttpServletResponse,
         accessDeniedException: AccessDeniedException,
     ) {
-        val errorCode = ErrorType.NOT_ALLOWED_ACCESS_ERROR
+        val errorCode = WebErrorType.NOT_ALLOWED_ACCESS_ERROR
         response.contentType = "application/json;charset=UTF-8"
         response.characterEncoding = "UTF-8"
         response.status = errorCode.status.value()

@@ -2,8 +2,8 @@
 
 package com.myongjiway.core.api.controller.v1.token
 
-import com.myongjiway.core.api.auth.security.domain.AuthService
-import com.myongjiway.core.api.auth.security.domain.KakaoLoginData
+import com.myongjiway.core.domain.auth.AuthService
+import com.myongjiway.core.domain.auth.KakaoLoginData
 import com.myongjiway.core.domain.token.Token
 import com.myongjiway.core.domain.token.TokenAppender
 import com.myongjiway.core.domain.token.TokenGenerator

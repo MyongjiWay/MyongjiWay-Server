@@ -1,7 +1,7 @@
-package com.myongjiway.core.api.auth.security.config
+package com.myongjiway.web.security.config
 
-import com.myongjiway.core.api.auth.security.domain.JwtProvider
-import com.myongjiway.core.api.auth.security.jwt.JwtAuthenticationFilter
+import com.myongjiway.web.security.jwt.JwtAuthenticationFilter
+import com.myongjiway.web.security.jwt.JwtProvider
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter
 import org.springframework.security.config.annotation.web.builders.HttpSecurity

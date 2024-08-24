@@ -22,13 +22,13 @@ class JwtAccessDeniedHandler : AccessDeniedHandler {
         response.status = errorCode.status.value()
         val json = JSONObject().apply {
             put("result", "ERROR")
-            put("data", null) // Always null
+            put("data", null)
             put(
                 "error",
                 JSONObject().apply {
                     put("code", errorCode.code)
                     put("message", errorCode.message)
-                    put("data", null) // No additional data in this context
+                    put("data", null)
                 },
             )
         }

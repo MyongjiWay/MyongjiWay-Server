@@ -1,6 +1,7 @@
 package com.myongjiway.web.security.config
 
 import com.myongjiway.web.security.CustomAuthenticationProvider
+import com.myongjiway.web.security.CustomAuthenticationSuccessHandler
 import com.myongjiway.web.security.CustomUserDetailsService
 import com.myongjiway.web.security.jwt.JwtAccessDeniedHandler
 import com.myongjiway.web.security.jwt.JwtAuthenticationEntryPoint
@@ -28,14 +29,15 @@ internal class SecurityConfig(
     private val jwtAuthenticationFilter: JwtAuthenticationFilter,
     private val jwtAccessDeniedHandler: JwtAccessDeniedHandler,
     private val jwtAuthenticationEntryPoint: JwtAuthenticationEntryPoint,
-    private val customUserDetailsService: CustomUserDetailsService,
+    private val userDetailsService: CustomUserDetailsService,
+    private val authenticationSuccessHandler: CustomAuthenticationSuccessHandler,
 ) {
     @Bean
     fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
 
     @Bean
     fun authenticationProvider(): AuthenticationProvider {
-        val authenticationProvider = CustomAuthenticationProvider(customUserDetailsService, passwordEncoder())
+        val authenticationProvider = CustomAuthenticationProvider(userDetailsService, passwordEncoder())
         return authenticationProvider
     }
 
@@ -51,7 +53,8 @@ internal class SecurityConfig(
         .formLogin { form ->
             form.loginPage("/login")
                 .defaultSuccessUrl("/admin/home", true)
-                .failureUrl("/login?error=true")
+                .successHandler(authenticationSuccessHandler)
+                .failureUrl("/login-error=true")
                 .permitAll()
         }
         .headers { header -> header.frameOptions { frameOptions -> frameOptions.disable() } }

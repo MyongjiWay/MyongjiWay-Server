@@ -1,4 +1,4 @@
-package com.myongjiway.web.security
+package com.myongjiway.web.security.web
 
 import com.myongjiway.core.domain.user.ProviderType
 import com.myongjiway.core.domain.user.User

@@ -19,7 +19,6 @@ class JwtProvider(
 ) {
     fun validateAccessTokenFromRequest(servletRequest: ServletRequest, token: String?): Boolean {
         try {
-            println("validateAccessTokenFromRequest")
             tokenValidator.validate(
                 Keys.hmacShaKeyFor(jwtProperty.accessToken.secret.toByteArray()),
                 token!!,
@@ -33,7 +32,6 @@ class JwtProvider(
 
     fun getAuthentication(servletRequest: ServletRequest, token: String?): Authentication {
         var user: User? = null
-        println("getAuthentication")
         try {
             val userId =
                 tokenValidator.validate(
@@ -41,7 +39,6 @@ class JwtProvider(
                     token!!,
                 ).subject.toLong()
             user = userReader.find(userId)
-            println(user.role)
         } catch (e: Exception) {
             servletRequest.setAttribute("exception", e.javaClass.simpleName)
         }

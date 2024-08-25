@@ -1,4 +1,4 @@
-package com.myongjiway.web.security
+package com.myongjiway.web.security.web
 
 import com.myongjiway.core.domain.token.TokenGenerator
 import jakarta.servlet.http.Cookie

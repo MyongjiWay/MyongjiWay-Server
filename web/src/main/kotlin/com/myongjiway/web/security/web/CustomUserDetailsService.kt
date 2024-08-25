@@ -1,4 +1,4 @@
-package com.myongjiway.web.security
+package com.myongjiway.web.security.web
 
 import com.myongjiway.core.domain.user.UserReader
 import org.springframework.security.core.userdetails.UserDetails

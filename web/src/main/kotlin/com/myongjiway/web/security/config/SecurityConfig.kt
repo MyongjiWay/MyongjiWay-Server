@@ -1,11 +1,12 @@
 package com.myongjiway.web.security.config
 
-import com.myongjiway.web.security.CustomAuthenticationProvider
-import com.myongjiway.web.security.CustomAuthenticationSuccessHandler
-import com.myongjiway.web.security.CustomUserDetailsService
 import com.myongjiway.web.security.jwt.JwtAccessDeniedHandler
 import com.myongjiway.web.security.jwt.JwtAuthenticationEntryPoint
 import com.myongjiway.web.security.jwt.JwtAuthenticationFilter
+import com.myongjiway.web.security.web.CustomAuthenticationFailureHandler
+import com.myongjiway.web.security.web.CustomAuthenticationProvider
+import com.myongjiway.web.security.web.CustomAuthenticationSuccessHandler
+import com.myongjiway.web.security.web.CustomUserDetailsService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
@@ -31,6 +32,7 @@ internal class SecurityConfig(
     private val jwtAuthenticationEntryPoint: JwtAuthenticationEntryPoint,
     private val userDetailsService: CustomUserDetailsService,
     private val authenticationSuccessHandler: CustomAuthenticationSuccessHandler,
+    private val authenticationFailureHandler: CustomAuthenticationFailureHandler,
 ) {
     @Bean
     fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
@@ -52,9 +54,8 @@ internal class SecurityConfig(
         .authenticationProvider(authenticationProvider())
         .formLogin { form ->
             form.loginPage("/login")
-                .defaultSuccessUrl("/admin/home", true)
                 .successHandler(authenticationSuccessHandler)
-                .failureUrl("/login-error=true")
+                .failureHandler(authenticationFailureHandler)
                 .permitAll()
         }
         .headers { header -> header.frameOptions { frameOptions -> frameOptions.disable() } }
@@ -84,6 +85,8 @@ internal class SecurityConfig(
                     AntPathRequestMatcher("/h2-console/**"),
                     AntPathRequestMatcher("/docs/**"),
                     AntPathRequestMatcher("/actuator/prometheus"),
+                    AntPathRequestMatcher("/css/**"),
+                    AntPathRequestMatcher("/login/**"),
                 ).permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/v1/**").hasAnyRole("USER", "ADMIN")

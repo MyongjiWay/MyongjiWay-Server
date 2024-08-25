@@ -70,6 +70,26 @@ class UserReaderTest :
                     // then
                     actual shouldBe CoreException(CoreErrorType.USER_NOT_FOUND)
                 }
+                scenario("유저 name으로 유저를 조회한다") {
+                    // given
+                    every { userRepository.findUserByUsername("test") } returns user
+
+                    // when
+                    val actual = sut.findByUsername("test")
+
+                    // then
+                    actual shouldBe user
+                }
+                scenario("유저 name 조회시 유저가 없으면 null을 반환한다") {
+                    // given
+                    every { userRepository.findUserByUsername("test") } returns null
+
+                    // when
+                    val actual = kotlin.runCatching { sut.findByUsername("test") }.exceptionOrNull()
+
+                    // then
+                    actual shouldBe CoreException(CoreErrorType.USER_NOT_FOUND)
+                }
             }
         },
     )

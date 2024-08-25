@@ -1,11 +1,16 @@
 package com.myongjiway.web.security.config
 
+import com.myongjiway.web.security.CustomAuthenticationProvider
+import com.myongjiway.web.security.CustomUserDetailsService
 import com.myongjiway.web.security.jwt.JwtAccessDeniedHandler
 import com.myongjiway.web.security.jwt.JwtAuthenticationEntryPoint
 import com.myongjiway.web.security.jwt.JwtAuthenticationFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.authentication.AuthenticationProvider
 import org.springframework.security.config.Customizer
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer
@@ -23,16 +28,32 @@ internal class SecurityConfig(
     private val jwtAuthenticationFilter: JwtAuthenticationFilter,
     private val jwtAccessDeniedHandler: JwtAccessDeniedHandler,
     private val jwtAuthenticationEntryPoint: JwtAuthenticationEntryPoint,
+    private val customUserDetailsService: CustomUserDetailsService,
 ) {
-
     @Bean
     fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
+
+    @Bean
+    fun authenticationProvider(): AuthenticationProvider {
+        val authenticationProvider = CustomAuthenticationProvider(customUserDetailsService, passwordEncoder())
+        return authenticationProvider
+    }
+
+    @Bean
+    fun authenticationManager(authenticationConfiguration: AuthenticationConfiguration): AuthenticationManager =
+        authenticationConfiguration.authenticationManager
 
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain = http
         .httpBasic { basic -> basic.disable() }
         .csrf { csrf -> csrf.disable() }
-        .formLogin { form -> form.disable() }
+        .authenticationProvider(authenticationProvider())
+        .formLogin { form ->
+            form.loginPage("/login")
+                .defaultSuccessUrl("/admin/home", true)
+                .failureUrl("/login?error=true")
+                .permitAll()
+        }
         .headers { header -> header.frameOptions { frameOptions -> frameOptions.disable() } }
         .cors { cors -> cors.disable() }
         .sessionManagement { setSessionManagement() }

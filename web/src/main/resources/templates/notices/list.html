@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Notice List</title>
+</head>
+<body>
+<h1>Notice List</h1>
+<a th:href="@{/notices/new}">Create New Notice</a>
+<table>
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Created At</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="notice : ${notices}">
+        <td th:text="${notice.title}"></td>
+        <td th:text="${notice.author}"></td>
+        <td th:text="${notice.createdAt}"></td>
+        <td>
+            <a th:href="@{/notices/{id}/edit(id=${notice.id})}">Edit</a>
+            <form th:action="@{/notices/{id}/delete(id=${notice.id})}" method="post" style="display:inline;">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

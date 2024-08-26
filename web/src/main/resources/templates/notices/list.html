@@ -2,33 +2,66 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Notice List</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notice Management</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&display=swap">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
-<body>
-<h1>Notice List</h1>
-<a th:href="@{/notices/new}">Create New Notice</a>
-<table>
-    <thead>
-    <tr>
-        <th>Title</th>
-        <th>Author</th>
-        <th>Created At</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="notice : ${notices}">
-        <td th:text="${notice.title}"></td>
-        <td th:text="${notice.author}"></td>
-        <td th:text="${notice.createdAt}"></td>
-        <td>
-            <a th:href="@{/notices/{id}/edit(id=${notice.id})}">Edit</a>
-            <form th:action="@{/notices/{id}/delete(id=${notice.id})}" method="post" style="display:inline;">
-                <button type="submit">Delete</button>
-            </form>
-        </td>
-    </tr>
-    </tbody>
-</table>
+<body class="bg-light">
+
+<div class="container mt-5">
+    <header class="text-center mb-4">
+        <h1 class="h3">Notice Management</h1>
+    </header>
+
+    <main>
+        <div class="list-group">
+            <div th:each="notice : ${notices}" class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 th:text="${notice.metadata.title}" class="mb-1">Notice Title</h5>
+                    <small th:text="${notice.metadata.author}">Author</small> |
+                    <small th:text="${#temporals.format(notice.createdAt, 'yyyy-MM-dd')}">2024-08-25</small>
+                </div>
+                <div>
+                    <button class="btn btn-sm btn-primary mr-2">Edit</button>
+                    <button class="btn btn-sm btn-danger">Delete</button>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn btn-success mt-4" data-toggle="modal" data-target="#createNoticeModal">Create New Notice</button>
+    </main>
+</div>
+
+<div class="modal fade" id="createNoticeModal" tabindex="-1" aria-labelledby="createNoticeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createNoticeModalLabel">Create New Notice</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="noticeTitle">Title</label>
+                        <input type="text" class="form-control" id="noticeTitle" placeholder="Enter title">
+                    </div>
+                    <div class="form-group">
+                        <label for="noticeContent">Content</label>
+                        <textarea class="form-control" id="noticeContent" rows="3" placeholder="Enter content"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Notice</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 </body>
 </html>

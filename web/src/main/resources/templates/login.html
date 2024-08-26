@@ -2,31 +2,45 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
-<body>
-<form th:action="@{/login}" method="post">
-    <h1>Login</h1>
+<body class="bg-light d-flex align-items-center justify-content-center vh-100">
 
-    <!-- 로그인 실패 시 메시지 표시 -->
-    <div th:if="${param.error}">
-        <p class="error-message" th:text="${param.message}">Invalid username or password</p>
-    </div>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h1 class="h3 mb-3 font-weight-normal text-center">Login</h1>
 
-    <div class="input-group">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
-    </div>
+                    <div th:if="${param.error}" class="alert alert-danger">
+                        <p th:text="${param.message}">Invalid username or password</p>
+                    </div>
 
-    <div class="input-group">
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-    </div>
+                    <form th:action="@{/login}" method="post">
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" id="username" name="username" class="form-control" required>
+                        </div>
 
-    <div>
-        <button type="submit">Login</button>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" name="password" class="form-control" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block mt-4">Login</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-</form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 </body>
 </html>

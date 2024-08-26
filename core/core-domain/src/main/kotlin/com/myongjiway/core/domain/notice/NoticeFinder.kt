@@ -25,4 +25,6 @@ class NoticeFinder(
             noticeView
         }
     }
+
+    fun findNotices(): List<NoticeView> = noticeRepository.findAll()
 }

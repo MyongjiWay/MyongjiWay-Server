@@ -12,9 +12,9 @@ class UserPrincipal(
 
     override fun getAuthorities(): Collection<GrantedAuthority> = listOf(SimpleGrantedAuthority(user.role.name))
 
-    override fun getPassword(): String = user.providerId
+    override fun getPassword(): String = user.password
 
-    override fun getUsername(): String = user.name
+    override fun getUsername(): String = user.providerId
 
     override fun isAccountNonExpired(): Boolean = true
 

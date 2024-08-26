@@ -17,6 +17,7 @@ class UserReaderTest :
                 id = 1000L,
                 profileImg = "test",
                 name = "test",
+                password = "test",
                 providerId = "1234",
                 providerType = ProviderType.KAKAO,
                 role = Role.USER,

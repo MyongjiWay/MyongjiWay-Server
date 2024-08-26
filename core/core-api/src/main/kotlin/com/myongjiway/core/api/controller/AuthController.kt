@@ -7,7 +7,6 @@ import com.myongjiway.core.domain.auth.AuthService
 import com.myongjiway.core.domain.token.RefreshData
 import com.myongjiway.core.domain.token.TokenService
 import jakarta.validation.Valid
-import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -19,15 +18,12 @@ import org.springframework.web.bind.annotation.RestController
 class AuthController(
     private val authService: AuthService,
     private val tokenService: TokenService,
-    private val passwordEncoder: PasswordEncoder,
 ) {
     @PostMapping("/kakao-login")
     fun kakaoLogin(
         @Valid @RequestBody request: KakaoLoginRequest,
     ): ApiResponse<Any> {
-        val data = request.toKakaoLoginData()
-        data.providerId = passwordEncoder.encode(data.providerId)
-        val result = authService.kakaoLogin(data)
+        val result = authService.kakaoLogin(request.toKakaoLoginData())
         return ApiResponse.success(result)
     }
 

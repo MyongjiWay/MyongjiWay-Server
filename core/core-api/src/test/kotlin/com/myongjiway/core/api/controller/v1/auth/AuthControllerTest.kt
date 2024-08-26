@@ -21,28 +21,24 @@ import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import org.springframework.restdocs.payload.PayloadDocumentation.requestFields
 import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
-import org.springframework.security.crypto.password.PasswordEncoder
 
 class AuthControllerTest : RestDocsTest() {
 
     private lateinit var authService: AuthService
     private lateinit var tokenService: TokenService
     private lateinit var controller: AuthController
-    private lateinit var passwordEncoder: PasswordEncoder
 
     @BeforeEach
     fun setUp() {
         authService = mockk()
         tokenService = mockk()
-        passwordEncoder = mockk()
-        controller = AuthController(authService, tokenService, passwordEncoder)
+        controller = AuthController(authService, tokenService)
         mockMvc = mockController(controller)
     }
 
     @Test
     fun kakaoLoginPost() {
         every { authService.kakaoLogin(any()) } returns TokenResult("ACCESS_TOKEN", "REFRESH_TOKEN")
-        every { passwordEncoder.encode(any()) } returns "encoded"
 
         given()
             .contentType(ContentType.JSON)

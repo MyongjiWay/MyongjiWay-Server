@@ -54,4 +54,10 @@ class NoticeViewController(
         noticeService.createNotice(notice)
         return "redirect:/admin/notices/list"
     }
+
+    @PostMapping("/delete/{id}")
+    fun deleteNotice(@PathVariable id: Long): String {
+        noticeService.deleteNotice(id)
+        return "redirect:/admin/notices/list"
+    }
 }

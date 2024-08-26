@@ -3,9 +3,16 @@ package com.myongjiway.web.security.config
 import com.myongjiway.web.security.jwt.JwtAccessDeniedHandler
 import com.myongjiway.web.security.jwt.JwtAuthenticationEntryPoint
 import com.myongjiway.web.security.jwt.JwtAuthenticationFilter
+import com.myongjiway.web.security.web.CustomAuthenticationFailureHandler
+import com.myongjiway.web.security.web.CustomAuthenticationProvider
+import com.myongjiway.web.security.web.CustomAuthenticationSuccessHandler
+import com.myongjiway.web.security.web.CustomUserDetailsService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.authentication.AuthenticationProvider
 import org.springframework.security.config.Customizer
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer
@@ -23,16 +30,34 @@ internal class SecurityConfig(
     private val jwtAuthenticationFilter: JwtAuthenticationFilter,
     private val jwtAccessDeniedHandler: JwtAccessDeniedHandler,
     private val jwtAuthenticationEntryPoint: JwtAuthenticationEntryPoint,
+    private val userDetailsService: CustomUserDetailsService,
+    private val authenticationSuccessHandler: CustomAuthenticationSuccessHandler,
+    private val authenticationFailureHandler: CustomAuthenticationFailureHandler,
 ) {
-
     @Bean
     fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
+
+    @Bean
+    fun authenticationProvider(): AuthenticationProvider {
+        val authenticationProvider = CustomAuthenticationProvider(userDetailsService, passwordEncoder())
+        return authenticationProvider
+    }
+
+    @Bean
+    fun authenticationManager(authenticationConfiguration: AuthenticationConfiguration): AuthenticationManager =
+        authenticationConfiguration.authenticationManager
 
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain = http
         .httpBasic { basic -> basic.disable() }
         .csrf { csrf -> csrf.disable() }
-        .formLogin { form -> form.disable() }
+        .authenticationProvider(authenticationProvider())
+        .formLogin { form ->
+            form.loginPage("/login")
+                .successHandler(authenticationSuccessHandler)
+                .failureHandler(authenticationFailureHandler)
+                .permitAll()
+        }
         .headers { header -> header.frameOptions { frameOptions -> frameOptions.disable() } }
         .cors { cors -> cors.disable() }
         .sessionManagement { setSessionManagement() }
@@ -60,6 +85,8 @@ internal class SecurityConfig(
                     AntPathRequestMatcher("/h2-console/**"),
                     AntPathRequestMatcher("/docs/**"),
                     AntPathRequestMatcher("/actuator/prometheus"),
+                    AntPathRequestMatcher("/css/**"),
+                    AntPathRequestMatcher("/login/**"),
                 ).permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/v1/**").hasAnyRole("USER", "ADMIN")

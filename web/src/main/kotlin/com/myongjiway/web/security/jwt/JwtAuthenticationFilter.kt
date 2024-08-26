@@ -7,8 +7,6 @@ import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
-import org.springframework.web.context.request.RequestContextHolder
-import org.springframework.web.context.request.ServletRequestAttributes
 import org.springframework.web.filter.OncePerRequestFilter
 
 @Component
@@ -20,7 +18,7 @@ class JwtAuthenticationFilter(
         servletResponse: HttpServletResponse,
         filterChain: FilterChain,
     ) {
-        val jwt = getJwt()
+        val jwt = getJwt(servletRequest)
         val requestURI = servletRequest.requestURI
         if (!jwt.isNullOrBlank() && jwtProvider.validateAccessTokenFromRequest(servletRequest, jwt)) {
             val authentication = jwtProvider.getAuthentication(servletRequest, jwt)
@@ -40,16 +38,22 @@ class JwtAuthenticationFilter(
         MDC.put("xForwardedFor", request.getHeader("X-Forwarded-For"))
     }
 
-    private fun getJwt(): String? {
-        val request = (RequestContextHolder.currentRequestAttributes() as ServletRequestAttributes).request
+    private fun getJwt(request: HttpServletRequest): String? {
         val authHeader = request.getHeader("Authorization")
-        return authHeader?.let {
-            if (it.startsWith("Bearer ")) {
-                it.substring(7)
-            } else {
-                null
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            return authHeader.substring(7)
+        }
+
+        val cookies = request.cookies
+        if (cookies != null) {
+            for (cookie in cookies) {
+                if (cookie.name == "Authorization") {
+                    return cookie.value
+                }
             }
         }
+
+        return null
     }
 
     private fun parseUserIdFromPrincipal(userString: String): String {

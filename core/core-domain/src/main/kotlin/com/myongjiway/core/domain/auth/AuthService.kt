@@ -1,6 +1,5 @@
 package com.myongjiway.core.domain.auth
 
-import com.myongjiway.core.domain.token.RefreshData
 import com.myongjiway.core.domain.token.TokenAppender
 import com.myongjiway.core.domain.token.TokenGenerator
 import com.myongjiway.core.domain.token.TokenResult
@@ -29,9 +28,5 @@ class AuthService(
 
         tokenAppender.upsert(userId, refreshToken.token, refreshToken.expiration)
         return TokenResult(accessToken.token, refreshToken.token)
-    }
-
-    fun refresh(refreshData: RefreshData): TokenResult {
-        TODO("Not yet implemented")
     }
 }

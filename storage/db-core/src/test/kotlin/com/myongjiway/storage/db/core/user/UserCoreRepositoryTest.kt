@@ -74,6 +74,28 @@ class UserCoreRepositoryTest :
                     // then
                     actual shouldBe null
                 }
+                scenario("유저 이름으로 유저를 조회한다.") {
+                    // given
+                    val name = "test"
+                    every { userJpaRepository.findByNameAndIsDeleted(any(), false) } returns userEntity
+
+                    // when
+                    val actual = sut.findUserByUsername(name)
+
+                    // then
+                    actual?.name shouldBe name
+                }
+                scenario("유저 이름 조회시 유저가 없으면 null을 반환한다") {
+                    // given
+                    val name = "test"
+                    every { userJpaRepository.findByNameAndIsDeleted(any(), false) } returns null
+
+                    // when
+                    val actual = sut.findUserByUsername(name)
+
+                    // then
+                    actual shouldBe null
+                }
             }
 
             feature("유저 추가") {

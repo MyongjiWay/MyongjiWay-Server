@@ -22,7 +22,7 @@ class JwtProvider(
             tokenValidator.validate(
                 Keys.hmacShaKeyFor(jwtProperty.accessToken.secret.toByteArray()),
                 token!!,
-            ).subject.toLong()
+            )
             return true
         } catch (e: Exception) {
             servletRequest.setAttribute("exception", e.javaClass.simpleName)

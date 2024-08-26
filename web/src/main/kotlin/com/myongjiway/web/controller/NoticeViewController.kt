@@ -1,9 +1,13 @@
 package com.myongjiway.web.controller
 
 import com.myongjiway.core.domain.notice.NoticeService
+import com.myongjiway.core.domain.notice.NoticeView
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.ModelAttribute
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 
 @RequestMapping("/admin/notices")
@@ -16,5 +20,25 @@ class NoticeViewController(
         val noticeList = noticeService.getNotices()
         model.addAttribute("notices", noticeList)
         return "notices/list"
+    }
+
+    @GetMapping("/detail/{id}")
+    fun noticeDetail(@PathVariable id: Long, model: Model): String {
+        val notice = noticeService.getNotice(id)
+        model.addAttribute("notice", notice)
+        return "notices/detail"
+    }
+
+    @GetMapping("/edit/{id}")
+    fun editNotice(@PathVariable id: Long, model: Model): String {
+        val notice = noticeService.getNotice(id)
+        model.addAttribute("notice", notice)
+        return "notices/edit"
+    }
+
+    @PostMapping("/update")
+    fun updateNotice(@ModelAttribute notice: NoticeView): String {
+        noticeService.updateNotice(notice.metadata, notice.id)
+        return "redirect:/admin/notices/list"
     }
 }

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notice Detail</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&display=swap">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+    <header class="text-center mb-4">
+        <h1 class="h3" th:text="${notice.metadata.title}">Notice Title</h1>
+    </header>
+
+    <main>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title" th:text="${notice.metadata.title}">Title</h5>
+                <h6 class="card-subtitle mb-2 text-muted" th:text="${notice.metadata.author}">Author</h6>
+                <p class="card-text" th:text="${notice.metadata.content}">Content</p>
+
+                <!-- 수정 및 삭제 버튼 -->
+                <div class="d-flex justify-content-end mt-4">
+                    <a th:href="@{/admin/notices/edit/{id}(id=${notice.id})}" class="btn btn-primary mr-2">Edit</a>
+                    <form th:action="@{/admin/notices/delete/{id}(id=${notice.id})}" method="post" onsubmit="return confirm('Are you sure you want to delete this notice?');">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
+
+                <!-- 목록으로 돌아가기 링크 -->
+                <a th:href="@{/admin/notices/list}" class="card-link mt-3">Back to list</a>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

@@ -24,41 +24,11 @@
                     <small th:text="${notice.metadata.author}">Author</small> |
                     <small th:text="${#temporals.format(notice.createdAt, 'yyyy-MM-dd')}">2024-08-25</small>
                 </div>
-                <div>
-                    <button class="btn btn-sm btn-primary mr-2">Edit</button>
-                    <button class="btn btn-sm btn-danger">Delete</button>
-                </div>
             </a>
         </div>
 
-        <button class="btn btn-success mt-4" data-toggle="modal" data-target="#createNoticeModal">Create New Notice</button>
+        <a th:href="@{/admin/notices/create}" class="btn btn-success mt-4">Create New Notice</a>
     </main>
-</div>
-
-<div class="modal fade" id="createNoticeModal" tabindex="-1" aria-labelledby="createNoticeModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="createNoticeModalLabel">Create New Notice</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="form-group">
-                        <label for="noticeTitle">Title</label>
-                        <input type="text" class="form-control" id="noticeTitle" placeholder="Enter title">
-                    </div>
-                    <div class="form-group">
-                        <label for="noticeContent">Content</label>
-                        <textarea class="form-control" id="noticeContent" rows="3" placeholder="Enter content"></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Save Notice</button>
-                </form>
-            </div>
-        </div>
-    </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

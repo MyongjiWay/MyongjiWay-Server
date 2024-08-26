@@ -1,5 +1,6 @@
 package com.myongjiway.web.controller
 
+import com.myongjiway.core.domain.notice.NoticeMetadata
 import com.myongjiway.core.domain.notice.NoticeService
 import com.myongjiway.core.domain.notice.NoticeView
 import org.springframework.stereotype.Controller
@@ -39,6 +40,18 @@ class NoticeViewController(
     @PostMapping("/update")
     fun updateNotice(@ModelAttribute notice: NoticeView): String {
         noticeService.updateNotice(notice.metadata, notice.id)
+        return "redirect:/admin/notices/list"
+    }
+
+    @GetMapping("/create")
+    fun createNoticeForm(model: Model): String {
+        model.addAttribute("noticeMetadata", NoticeMetadata(title = "", author = "", content = ""))
+        return "notices/create"
+    }
+
+    @PostMapping("/save")
+    fun saveNotice(@ModelAttribute notice: NoticeMetadata): String {
+        noticeService.createNotice(notice)
         return "redirect:/admin/notices/list"
     }
 }

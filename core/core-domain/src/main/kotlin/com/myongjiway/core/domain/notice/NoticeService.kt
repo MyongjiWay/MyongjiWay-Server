@@ -25,5 +25,5 @@ class NoticeService(
     fun getNotice(noticeId: Long, userId: Long): NoticeView = noticeFinder.findNotice(noticeId, userId)
     fun getNotice(noticeId: Long): NoticeView = noticeFinder.findNotice(noticeId)
     fun getNotices(userId: Long): List<NoticeView> = noticeFinder.findNotices(userId)
-    fun getNotices(): List<NoticeView> = noticeFinder.findNotices()
+    fun getNotices(): List<NoticeView> = noticeFinder.findNotices().sortedByDescending { it.createdAt }
 }

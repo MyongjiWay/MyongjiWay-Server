@@ -21,6 +21,11 @@ class UserCoreRepository(
         return user?.toUser()
     }
 
+    override fun findUserByUsername(username: String): User? {
+        val user = userJpaRepository.findByNameAndIsDeleted(username, false)
+        return user?.toUser()
+    }
+
     @Transactional
     override fun append(
         providerId: String,
@@ -33,6 +38,7 @@ class UserCoreRepository(
             providerId = providerId,
             profileImg = profileImg,
             name = name,
+            password = "",
             providerType = providerType,
             role = role,
         ),

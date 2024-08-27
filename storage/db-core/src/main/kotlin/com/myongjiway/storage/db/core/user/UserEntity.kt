@@ -14,6 +14,7 @@ import jakarta.persistence.Table
 class UserEntity(
     private var profileImg: String,
     private var name: String,
+    val password: String,
     val providerId: String,
     @Enumerated(value = EnumType.STRING)
     val providerType: ProviderType,
@@ -24,6 +25,7 @@ class UserEntity(
         id = id!!,
         profileImg = profileImg,
         name = name,
+        password = password,
         providerId = providerId,
         providerType = providerType,
         role = role,

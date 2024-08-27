@@ -40,10 +40,10 @@ class NoticeCoreRepository(
     }
 
     override fun findById(noticeId: Long): NoticeView {
-        val noticeEntity = noticeJpaRepository.findByIdOrNull(noticeId)
+        val noticeEntity = noticeJpaRepository.findByIdAndIsDeleted(noticeId, false)
             ?: throw CoreException(CoreErrorType.NOTICE_NOT_FOUND)
         return noticeEntity.toNoticeView()
     }
 
-    override fun findAll(): List<NoticeView> = noticeJpaRepository.findAll().map { it.toNoticeView() }
+    override fun findAll(): List<NoticeView> = noticeJpaRepository.findAllByIsDeleted(false).map { it.toNoticeView() }
 }

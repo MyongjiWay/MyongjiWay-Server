@@ -147,6 +147,7 @@ class NoticeCreateControllerTest :
             id = 1L,
             profileImg = "profileImg",
             name = "name",
+            password = "password",
             providerId = "providerId",
             providerType = ProviderType.KAKAO,
             role = role,

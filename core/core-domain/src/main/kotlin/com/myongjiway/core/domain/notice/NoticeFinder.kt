@@ -16,6 +16,8 @@ class NoticeFinder(
         return noticeView
     }
 
+    fun findNotice(noticeId: Long): NoticeView = noticeRepository.findById(noticeId)
+
     fun findNotices(userId: Long): List<NoticeView> {
         val allNotices = noticeRepository.findAll()
         val readNotices = userNoticeRepository.findByUserId(userId).map { it.noticeId }.toSet()
@@ -25,4 +27,6 @@ class NoticeFinder(
             noticeView
         }
     }
+
+    fun findNotices(): List<NoticeView> = noticeRepository.findAll()
 }

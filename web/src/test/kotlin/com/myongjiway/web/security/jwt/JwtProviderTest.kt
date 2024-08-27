@@ -41,6 +41,7 @@ class JwtProviderTest :
                     id = userId.toLong(),
                     profileImg = "profileImg.img",
                     name = "test",
+                    password = "",
                     providerId = "providerId",
                     providerType = ProviderType.KAKAO,
                     role = Role.USER,

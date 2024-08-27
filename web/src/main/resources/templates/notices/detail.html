@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notice Management</title>
+    <title>Notice Detail</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&display=swap">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
@@ -30,23 +30,24 @@
 
 <div class="container mt-5">
     <header class="text-center mb-4">
-        <h1 class="h3">Notice Management</h1>
+        <h1 class="h3" th:text="${notice.metadata.title}">Notice Title</h1>
     </header>
 
     <main>
-        <div class="list-group">
-            <a th:each="notice : ${notices}"
-               th:href="@{/admin/notices/detail/{id}(id=${notice.id})}"
-               class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                <div>
-                    <h5 th:text="${notice.metadata.title}" class="mb-1">Notice Title</h5>
-                    <small th:text="${notice.metadata.author}">Author</small> |
-                    <small th:text="${#temporals.format(notice.createdAt, 'yyyy-MM-dd')}">2024-08-25</small>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title" th:text="${notice.metadata.title}">Title</h5>
+                <h6 class="card-subtitle mb-2 text-muted" th:text="${notice.metadata.author}">Author</h6>
+                <p class="card-text" th:text="${notice.metadata.content}">Content</p>
+                <div class="d-flex justify-content-end mt-4">
+                    <a th:href="@{/admin/notices/edit/{id}(id=${notice.id})}" class="btn btn-primary mr-2">Edit</a>
+                    <form th:action="@{/admin/notices/delete/{id}(id=${notice.id})}" method="post" onsubmit="return confirm('Are you sure you want to delete this notice?');">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
                 </div>
-            </a>
+                <a th:href="@{/admin/notices/list}" class="card-link mt-3">Back to list</a>
+            </div>
         </div>
-
-        <a th:href="@{/admin/notices/create}" class="btn btn-success mt-4">Create New Notice</a>
     </main>
 </div>
 

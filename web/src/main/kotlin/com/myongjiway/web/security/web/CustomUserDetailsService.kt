@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service
 class CustomUserDetailsService(
     private val userReader: UserReader,
 ) : UserDetailsService {
-    override fun loadUserByUsername(username: String): UserDetails {
-        val user = userReader.findByUsername(username)
+    override fun loadUserByUsername(providerId: String): UserDetails {
+        val user = userReader.find(providerId)
 
         return UserPrincipal(user)
     }

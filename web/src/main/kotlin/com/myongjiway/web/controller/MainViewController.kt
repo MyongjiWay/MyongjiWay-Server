@@ -5,7 +5,7 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 
 @Controller
-class MainController {
+class MainViewController {
 
     @GetMapping("/login")
     fun login(): String = "login"

@@ -38,6 +38,7 @@ class UserCoreRepository(
             providerId = providerId,
             profileImg = profileImg,
             name = name,
+            password = "",
             providerType = providerType,
             role = role,
         ),

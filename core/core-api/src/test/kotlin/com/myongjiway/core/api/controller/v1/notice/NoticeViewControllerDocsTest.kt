@@ -20,7 +20,7 @@ import org.springframework.restdocs.request.RequestDocumentation.parameterWithNa
 import org.springframework.restdocs.request.RequestDocumentation.pathParameters
 import java.time.LocalDateTime
 
-class NoticeControllerDocsTest : RestDocsTest() {
+class NoticeViewControllerDocsTest : RestDocsTest() {
     private lateinit var noticeService: NoticeService
     private lateinit var controller: NoticeController
 

@@ -20,6 +20,7 @@ class UserCoreRepositoryTest :
                 updatedAt = mockk(),
                 profileImg = "img.url",
                 name = "test",
+                password = "test",
                 providerId = "providerId",
                 providerType = ProviderType.KAKAO,
                 role = Role.USER,

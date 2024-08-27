@@ -17,7 +17,7 @@ class CustomAuthenticationProvider(
 ) : AuthenticationProvider {
     override fun authenticate(authentication: Authentication): Authentication {
         try {
-            val username = authentication.name
+            val username = authentication.principal.toString()
             val password = authentication.credentials.toString()
 
             val userDetails = userDetailsService.loadUserByUsername(username)

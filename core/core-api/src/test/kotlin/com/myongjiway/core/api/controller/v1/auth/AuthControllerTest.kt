@@ -14,7 +14,6 @@ import io.mockk.mockk
 import io.restassured.http.ContentType
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.restdocs.payload.JsonFieldType
@@ -71,7 +70,6 @@ class AuthControllerTest : RestDocsTest() {
         every { tokenService.refresh(any()) } returns TokenResult("ACCESS_TOKEN", "REFRESH_TOKEN")
 
         given()
-            .header(HttpHeaders.AUTHORIZATION, "Bearer access-token")
             .contentType(ContentType.JSON)
             .body(RefreshRequest("refreshToken"))
             .post("/auth/refresh")

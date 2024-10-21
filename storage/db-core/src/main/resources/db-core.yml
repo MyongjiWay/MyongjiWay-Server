@@ -137,7 +137,8 @@ storage:
       jdbc-url: jdbc:mysql://${STORAGE_DATABASE_CORE_DB_URL}
       username: ${STORAGE_DATABASE_CORE_DB_USERNAME}
       password: ${STORAGE_DATABASE_CORE_DB_PASSWORD}
-      maximum-pool-size: 25
+      maximum-pool-size: 150
+      minimum-idle: 100
       connection-timeout: 1100
       keepalive-time: 30000
       validation-timeout: 1000

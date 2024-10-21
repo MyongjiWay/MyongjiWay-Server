@@ -24,7 +24,5 @@ class BusLocationService {
      *
      * @return 모든 버스의 위치 정보 리스트
      */
-    fun getBusLocations(): List<com.myongjiway.core.domain.buslocation.BusLocation> {
-        return busLocationMap.values.toList()
-    }
+    fun getBusLocations(): List<com.myongjiway.core.domain.buslocation.BusLocation> = busLocationMap.values.toList()
 }

@@ -19,6 +19,8 @@ server:
     threads:
       max: 600
       min-spare: 100
+    max-keep-alive-requests: 1000
+    keep-alive-timeout: 30000
 
 ---
 spring.config.activate.on-profile: local
